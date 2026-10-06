@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>水木森林</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600&display=swap">
+<style>
+/* 布局：深林全屏首页 → 品牌故事 → 房间 → 活动 → 预约表；预约按钮始终固定在顶部 */
+:root {
+  --bg: #0f1c17;
+  --bg-2: #15251e;
+  --fg: #e9e6dc;
+  --muted: #a3b0a6;
+  --line: #2a3d34;
+  --gold: #c9a45c;
+  --gold-ink: #1a1405;
+  --mist: #1d3128;
+  --t1: #1d3a2f; --t2: #142a21; --t3: #0a1511;
+  --display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { color-scheme: dark; } }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) {
+    --bg: #f3f1ea; --bg-2: #e8e6dc; --fg: #16261f; --muted: #4f6057;
+    --line: #cfd3c6; --gold: #8a6a22; --gold-ink: #fff9ea; --mist: #dfe4d6;
+    --t1: #8fa595; --t2: #4f6e5c; --t3: #223d30;
+    color-scheme: light;
+  }
+}
+:root[data-theme="light"] {
+  --bg: #f3f1ea; --bg-2: #e8e6dc; --fg: #16261f; --muted: #4f6057;
+  --line: #cfd3c6; --gold: #8a6a22; --gold-ink: #fff9ea; --mist: #dfe4d6;
+  --t1: #8fa595; --t2: #4f6e5c; --t3: #223d30;
+  color-scheme: light;
+}
+:root[data-theme="dark"] { --bg:#0f1c17; --bg-2:#15251e; --fg:#e9e6dc; --muted:#a3b0a6; --line:#2a3d34; --gold:#c9a45c; --gold-ink:#1a1405; --mist:#1d3128; --t1:#1d3a2f; --t2:#142a21; --t3:#0a1511; color-scheme: dark; }
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--body); font-weight: 300; font-size: 16px; line-height: 1.8;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.wrap { width: 100%; max-width: 1080px; margin-inline: auto; padding-inline: 20px; }
+h1, h2, h3 { font-family: var(--display); font-weight: 400; margin: 0; text-wrap: balance; letter-spacing: .04em; }
+.label { font-size: 12px; letter-spacing: .3em; color: var(--gold); text-transform: uppercase; }
+
+/* 顶部栏 */
+.top {
+  position: fixed; inset: 0 0 auto 0; z-index: 10;
+  padding: calc(12px + env(safe-area-inset-top, 0px)) 20px 12px;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  background: linear-gradient(var(--bg), transparent);
+}
+.logo { font-family: var(--display); font-size: 20px; letter-spacing: .3em; text-decoration: none; }
+.top nav { display: flex; gap: 28px; font-size: 14px; }
+.top nav a { text-decoration: none; color: var(--muted); }
+.top nav a:hover { color: var(--fg); }
+.btn {
+  display: inline-block; border: 1px solid var(--gold); background: var(--gold); color: var(--gold-ink);
+  padding: 10px 24px; font: 500 14px/1.4 var(--body); letter-spacing: .15em; text-decoration: none; cursor: pointer;
+}
+.btn:hover { filter: brightness(1.08); }
+.btn.ghost { background: transparent; color: var(--fg); border-color: var(--line); }
+@media (max-width: 720px) { .top nav { display: none; } }
+
+/* 首页 */
+.hero { position: relative; overflow: hidden; background: linear-gradient(#16322a, #0f1c17 80%); padding: 150px 0 0; }
+:root[data-theme="light"] .hero { background: linear-gradient(#cdd9c8, #f3f1ea 85%); }
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) .hero { background: linear-gradient(#cdd9c8, #f3f1ea 85%); } }
+.hero .wrap { position: relative; z-index: 2; }
+.hero h1 { font-size: clamp(44px, 9vw, 92px); letter-spacing: .25em; line-height: 1.2; }
+.hero p.sub { max-width: 30em; color: var(--muted); margin: 20px 0 32px; }
+.hero .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+.forest { display: block; width: 100%; height: clamp(160px, 28vw, 300px); margin-top: -20px; margin-bottom: -1px; }
+.forest .t1 { fill: var(--t1); } .forest .t2 { fill: var(--t2); } .forest .t3 { fill: var(--t3); }
+
+/* 通用区块 */
+section { padding-block: 88px; }
+.head { margin-bottom: 40px; display: grid; gap: 10px; }
+.head h2 { font-size: clamp(28px, 4.5vw, 40px); }
+
+/* 品牌故事 */
+.story { background: var(--bg-2); }
+.story .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.story p { color: var(--muted); margin: 0 0 16px; max-width: 32em; }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 28px; }
+.facts b { display: block; font: 400 28px/1.2 var(--display); color: var(--gold); }
+.facts span { font-size: 13px; color: var(--muted); }
+.ph { /* 照片占位 */
+  position: relative; aspect-ratio: 4 / 5; width: 100%;
+  background: linear-gradient(160deg, var(--mist), var(--bg));
+  border: 1px solid var(--line); display: grid; place-items: end start; padding: 14px;
+  font-size: 12px; letter-spacing: .2em; color: var(--muted);
+}
+@media (max-width: 760px) { .story .grid { grid-template-columns: 1fr; gap: 32px; } .ph { aspect-ratio: 4 / 3; } }
+
+/* 房间 */
+.rooms { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.room { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.room .ph { aspect-ratio: 4 / 3; }
+.room:nth-child(2) .ph { background: linear-gradient(200deg, #28483a, var(--bg)); }
+.room:nth-child(3) .ph { background: linear-gradient(120deg, #3a4a35, var(--bg)); }
+.room h3 { font-size: 22px; }
+.room p { margin: 0; color: var(--muted); font-size: 15px; }
+.room .row { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; border-top: 1px solid var(--line); padding-top: 12px; }
+.price { font-family: var(--display); font-size: 22px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.price small { font: 300 13px var(--body); color: var(--muted); }
+.room .btn { align-self: flex-start; }
+@media (max-width: 860px) { .rooms { grid-template-columns: 1fr; max-width: 520px; } }
+
+/* 活动 */
+.acts { background: var(--bg-2); }
+.list { display: grid; }
+.act { display: grid; grid-template-columns: 140px 1fr auto; gap: 24px; padding-block: 26px; border-top: 1px solid var(--line); align-items: baseline; }
+.act:last-child { border-bottom: 1px solid var(--line); }
+.act time { color: var(--gold); font-size: 14px; letter-spacing: .1em; }
+.act h3 { font-size: 22px; margin-bottom: 4px; }
+.act p { margin: 0; color: var(--muted); font-size: 15px; }
+.act .tag { font-size: 13px; color: var(--muted); border: 1px solid var(--line); padding: 2px 12px; white-space: nowrap; }
+@media (max-width: 680px) { .act { grid-template-columns: 1fr; gap: 6px; } .act .tag { justify-self: start; margin-top: 6px; } }
+
+.pkgs { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.pkg { border: 1px solid var(--line); padding: 28px; display: grid; gap: 4px; min-width: 0; align-content: start; }
+.pkg h3 { font-size: 26px; margin-bottom: 8px; color: var(--gold); }
+.tier { display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center; padding-block: 14px; border-top: 1px solid var(--line); }
+.tier b { font: 400 26px var(--display); font-variant-numeric: tabular-nums; }
+.tier .btn { padding: 6px 16px; }
+.inc { grid-template-columns: repeat(4, 1fr); gap: 0 28px; }
+.inc .act { display: block; padding-block: 22px; border-bottom: 0; }
+.inc .act h3 { font-size: 19px; }
+@media (max-width: 860px) { .pkgs { grid-template-columns: 1fr; } .inc { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) { .inc { grid-template-columns: 1fr; } }
+
+/* 预约 */
+.book-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; }
+.book-grid > * { min-width: 0; }
+.book-grid p { color: var(--muted); max-width: 26em; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.f { display: grid; gap: 6px; }
+.f.full { grid-column: 1 / -1; }
+label { font-size: 13px; letter-spacing: .12em; color: var(--muted); }
+input, select, textarea {
+  width: 100%; background: transparent; color: var(--fg); border: 0; border-bottom: 1px solid var(--line);
+  padding: 10px 2px; font: 400 16px var(--body); border-radius: 0;
+}
+select option { background: var(--bg); color: var(--fg); }
+input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--gold); }
+.note { font-size: 13px; color: var(--muted); }
+.result { grid-column: 1 / -1; border: 1px solid var(--gold); padding: 18px; display: grid; gap: 12px; }
+.result pre { margin: 0; white-space: pre-wrap; font: 400 14px/1.8 var(--body); }
+.result .btns { display: flex; gap: 12px; flex-wrap: wrap; }
+@media (max-width: 800px) { .book-grid { grid-template-columns: 1fr; gap: 32px; } form { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 40px calc(40px + env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+
+<header class="top">
+  <a class="logo" href="#top">水木森林</a>
+  <nav aria-label="主菜单">
+    <a href="#story">关于我们</a><a href="#rooms">套餐</a><a href="#activities">体验</a>
+  </nav>
+  <a class="btn" href="#book">立即预约</a>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <div class="label">森林归零计划</div>
+      <h1>水木森林</h1>
+      <p class="sub">把手机放下，把呼吸放慢。在森林里住一晚，让身体先安静下来。</p>
+      <div class="cta">
+        <a class="btn" href="#book">选日期预约</a>
+        <a class="btn ghost" href="#rooms">看看套餐</a>
+      </div>
+    </div>
+    <svg class="forest" id="forest" viewBox="0 0 1200 300" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
+  </div>
+
+  <section class="story" id="story">
+    <div class="wrap grid">
+      <div>
+        <div class="head"><span class="label">关于水木森林</span><h2>森林不说话，人自然会放松</h2></div>
+        <p>水木森林是一间藏在树林里的疗愈民宿。这里没有喧闹的行程，只有清晨的鸟声、傍晚的雾气和一张好睡的床。</p>
+        <p>山顶看日落，山谷听铜锣，清晨在林间行禅。我们把住宿、餐食和疗愈体验放进同一个价格里，你只需要人到。</p>
+        <div class="facts">
+          <div><b>6间</b><span>房</span></div>
+          <div><b>16人</b><span>可入住（加床可到19人）</span></div>
+          <div><b>一价全包</b><span>住宿 + 餐食 + 疗愈体验</span></div>
+        </div>
+      </div>
+      <div class="ph" role="img" aria-label="森林照片位置">森林照片（待替换）</div>
+    </div>
+  </section>
+
+  <section id="rooms">
+    <div class="wrap">
+      <div class="head"><span class="label">10月 / 11月优惠价</span><h2>森林归零计划</h2><p class="note">一价全包：住宿 + 餐食 + 全套森林疗愈体验。价格为每个房间的价钱。</p></div>
+      <div class="pkgs">
+        <article class="pkg"><h3>2天1夜</h3><div class="tier"><span>双人房</span><b>RM 360</b><button class="btn ghost" type="button" data-pkg="2天1夜" data-size="双人房">预约</button></div><div class="tier"><span>3人房</span><b>RM 499</b><button class="btn ghost" type="button" data-pkg="2天1夜" data-size="3人房">预约</button></div><div class="tier"><span>4人房</span><b>RM 649</b><button class="btn ghost" type="button" data-pkg="2天1夜" data-size="4人房">预约</button></div></article>
+        <article class="pkg"><h3>3天2夜</h3><div class="tier"><span>双人房</span><b>RM 560</b><button class="btn ghost" type="button" data-pkg="3天2夜" data-size="双人房">预约</button></div><div class="tier"><span>3人房</span><b>RM 699</b><button class="btn ghost" type="button" data-pkg="3天2夜" data-size="3人房">预约</button></div><div class="tier"><span>4人房</span><b>RM 849</b><button class="btn ghost" type="button" data-pkg="3天2夜" data-size="4人房">预约</button></div></article>
+      </div>
+    </div>
+  </section>
+
+  <section class="acts" id="activities">
+    <div class="wrap">
+      <div class="head"><span class="label">套餐包含</span><h2>来一次，就把这些都体验到</h2></div>
+      <div class="list inc"><div class="act"><div><h3>森林住宿</h3><p>在树林里的房间，睡一个安静的觉。</p></div></div><div class="act"><div><h3>养生山林餐食</h3><p>用山里的食材，吃得清淡又踏实。</p></div></div><div class="act"><div><h3>森林导览</h3><p>跟着向导认识这片森林。</p></div></div><div class="act"><div><h3>山顶日落仪式</h3><p>在山顶看日落，把一天慢慢收起来。</p></div></div><div class="act"><div><h3>山谷铜锣音疗</h3><p>铜锣的声音在山谷里回荡，躺着听就好。</p></div></div><div class="act"><div><h3>晨光行禅</h3><p>清晨在林间慢慢走，一步一呼吸。</p></div></div><div class="act"><div><h3>草本暖足</h3><p>热草本泡脚，暖到睡前。</p></div></div><div class="act"><div><h3>森林疗愈体验</h3><p>由我们安排的整套疗愈活动。</p></div></div></div>
+    </div>
+  </section>
+
+  <section id="book">
+    <div class="wrap book-grid">
+      <div>
+        <div class="head"><span class="label">预约</span><h2>告诉我们你想哪天来</h2></div>
+        <p>告诉我们日期和人数，我们会根据人数帮你安排合适的房型。填好后点「生成预约信息」，再一键发到我们的 WhatsApp。</p>
+        <p class="note">这一步还没有付款，不会扣任何费用。</p>
+      </div>
+      <form id="form" novalidate>
+        <div class="f"><label for="in">入住日期</label><input type="date" id="in" required></div>
+        <div class="f"><label for="out">退房日期</label><input type="date" id="out" required></div>
+        <div class="f"><label for="pkg">天数</label>
+          <select id="pkg"><option>2天1夜</option><option>3天2夜</option></select></div>
+        <div class="f"><label for="size">房型</label>
+          <select id="size"><option>双人房</option><option>3人房</option><option>4人房</option></select></div>
+        <div class="f"><label for="guests">总人数</label>
+          <select id="guests"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option></select></div>
+        <div class="f"><label for="name">称呼</label><input type="text" id="name" autocomplete="name" required></div>
+        <div class="f"><label for="phone">手机号码</label><input type="tel" id="phone" autocomplete="tel" placeholder="012-345 6789" required></div>
+        <div class="f full"><label for="msg">其他需求（选填，例如多间房、加床）</label><textarea id="msg" rows="2"></textarea></div>
+        <div class="f full"><button class="btn" type="submit">生成预约信息</button><span class="note" id="err" role="alert"></span></div>
+        <div class="result" id="result" hidden>
+          <pre id="text"></pre>
+          <div class="btns">
+            <a class="btn" id="wa" href="#" target="_blank" rel="noopener">发到 WhatsApp</a>
+            <button class="btn ghost" type="button" id="copy">复制内容</button>
+          </div>
+          <span class="note" id="copied"></span>
+        </div>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© 水木森林 · 疗愈森林民宿</span>
+    <a href="https://www.facebook.com/profile.php?id=61592713596419" target="_blank" rel="noopener">Facebook 主页</a>
+  </div>
+</footer>
+
+<script>
+// 预约信息会发到这个 WhatsApp 号码。正式使用前请换成你们自己的号码（国家码 60 开头，不要加 + 或空格）。
+var WHATSAPP = "60123456789";
+
+// 森林剪影：三层松树
+(function () {
+  var svg = document.getElementById("forest"), seed = 7, out = "";
+  function rnd() { seed = (seed * 16807) % 2147483647; return seed / 2147483647; }
+  var layers = [
+    { c: "t1", y: 215, h: [60, 110], step: 26 },
+    { c: "t2", y: 255, h: [80, 150], step: 34 },
+    { c: "t3", y: 300, h: [110, 210], step: 46 }
+  ];
+  layers.forEach(function (L) {
+    var g = '<g class="' + L.c + '"><rect x="-20" y="' + (L.y - 4) + '" width="1260" height="' + (300 - L.y + 4) + '"/>';
+    for (var x = -20; x < 1240; x += L.step * (.7 + rnd() * .6)) {
+      var h = L.h[0] + rnd() * (L.h[1] - L.h[0]), w = h * .38;
+      g += '<polygon points="' + x + "," + L.y + " " + (x - w / 2) + "," + L.y + " " + x + "," + (L.y - h) + " " + (x + w / 2) + "," + L.y + '"/>';
+    }
+    out += g + "</g>";
+  });
+  svg.innerHTML = out;
+})();
+
+// 日期：今天之前不能选，退房晚于入住
+var inEl = document.getElementById("in"), outEl = document.getElementById("out");
+var today = new Date(); today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
+var todayStr = today.toISOString().slice(0, 10);
+inEl.min = outEl.min = todayStr;
+inEl.addEventListener("change", function () {
+  outEl.min = inEl.value || todayStr;
+  if (outEl.value && outEl.value <= inEl.value) outEl.value = "";
+});
+
+// 点套餐旁的「预约」，自动选好天数和房型
+document.querySelectorAll("[data-pkg]").forEach(function (b) {
+  b.addEventListener("click", function () {
+    document.getElementById("pkg").value = b.dataset.pkg;
+    document.getElementById("size").value = b.dataset.size;
+    document.getElementById("book").scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+var form = document.getElementById("form"), resultBox = document.getElementById("result");
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var v = function (id) { return document.getElementById(id).value.trim(); };
+  var err = document.getElementById("err");
+  if (!v("in") || !v("out") || !v("name") || !v("phone")) { err.textContent = "请填好日期、称呼和手机号码。"; return; }
+  if (v("out") <= v("in")) { err.textContent = "退房日期要晚于入住日期。"; return; }
+  err.textContent = "";
+  var nights = Math.round((new Date(v("out")) - new Date(v("in"))) / 864e5);
+  var text = "你好，我想预约水木森林：\n" +
+    "入住：" + v("in") + "\n退房：" + v("out") + "（共 " + nights + " 晚）\n" +
+    "套餐：" + v("pkg") + " " + v("size") + "\n人数：" + v("guests") + " 人\n" +
+    "称呼：" + v("name") + "\n手机：" + v("phone") +
+    (v("msg") ? "\n备注：" + v("msg") : "");
+  document.getElementById("text").textContent = text;
+  document.getElementById("wa").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(text);
+  document.getElementById("copied").textContent = "";
+  resultBox.hidden = false;
+  resultBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+});
+document.getElementById("copy").addEventListener("click", function () {
+  var t = document.getElementById("text"), msg = document.getElementById("copied");
+  function fallback() {
+    var r = document.createRange(); r.selectNodeContents(t);
+    var s = getSelection(); s.removeAllRanges(); s.addRange(r);
+    msg.textContent = "已选中内容，请长按或按 Ctrl+C 复制。";
+  }
+  if (navigator.clipboard) navigator.clipboard.writeText(t.textContent).then(function () { msg.textContent = "已复制。"; }, fallback);
+  else fallback();
+});
+</script>
+</body>
+</html>
