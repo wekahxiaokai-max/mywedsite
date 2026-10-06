@@ -6,328 +6,338 @@
 <title>水木森林</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500&family=Noto+Serif+SC:wght@400;500;600&display=swap">
 <style>
-/* 布局：跟海报同一个世界——夕阳山林首屏 → 优惠套餐（米白纸卡）→ 套餐包含 → 照片墙 → 预约。整站深林绿单一配色。 */
+/* 布局：实拍照片带出氛围的首屏 → 一句能打动企业家的话 → 一张价格表 → 包含什么 → 预约。
+   颜色全部取自现场照片：雨林叶绿、木头、溪石、米白。只有预约区用深色。 */
 :root {
-  color-scheme: dark;
-  --forest: #0f1c17;      /* 主底色：夜里的森林 */
-  --forest-2: #16261f;    /* 次底色 */
-  --moss: #2b4236;        /* 线条、深绿标签 */
-  --paper: #efe8d8;       /* 米白纸卡 */
-  --paper-ink: #1f3328;   /* 纸卡上的字 */
-  --ember: #e0a24e;       /* 夕阳金 */
-  --cream: #ede6d6;       /* 深底上的字 */
-  --mute: #a9b3a7;        /* 次要文字 */
-  --brush: "Ma Shan Zheng", "STXingkai", "KaiTi", serif;
+  color-scheme: light;
+  --paper: #f6f2ea;      /* 主底色：米白 */
+  --sand: #ebe4d6;       /* 次底色：溪石 */
+  --leaf: #23382b;       /* 主文字、深色区：雨林叶绿 */
+  --leaf-soft: #4b5f50;  /* 次要文字 */
+  --wood: #9a5f34;       /* 点缀：木头 */
+  --line: #d8cfbd;       /* 分隔线 */
   --serif: "Noto Serif SC", "Songti SC", "STSong", serif;
   --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--forest); color: var(--cream); font: 300 16px/1.85 var(--sans); }
+body { margin: 0; background: var(--paper); color: var(--leaf); font: 300 16px/1.85 var(--sans); }
+img { max-width: 100%; display: block; }
 a { color: inherit; }
-:focus-visible { outline: 2px solid var(--ember); outline-offset: 3px; }
-.wrap { width: 100%; max-width: 1100px; margin-inline: auto; padding-inline: 20px; }
-h1, h2, h3 { margin: 0; font-weight: 400; text-wrap: balance; }
-h2 { font: 600 clamp(28px, 4.2vw, 40px)/1.3 var(--serif); letter-spacing: .06em; }
-.eyebrow { font-size: 13px; letter-spacing: .32em; color: var(--ember); }
+:focus-visible { outline: 2px solid var(--wood); outline-offset: 3px; }
+.wrap { width: 100%; max-width: 1120px; margin-inline: auto; padding-inline: 20px; }
+h1, h2, h3 { margin: 0; font-family: var(--serif); font-weight: 500; text-wrap: balance; }
+h2 { font-size: clamp(28px, 3.6vw, 38px); line-height: 1.35; letter-spacing: .04em; }
+.kicker { display: block; font-size: 13px; letter-spacing: .24em; color: var(--wood); margin-bottom: 14px; }
+.lead { color: var(--leaf-soft); max-width: 32em; margin: 16px 0 0; }
+section { padding-block: 104px; }
+
 .btn {
-  display: inline-block; cursor: pointer; text-decoration: none;
-  padding: 12px 28px; border: 1px solid var(--ember); background: var(--ember); color: #1b1307;
-  font: 500 15px/1.4 var(--sans); letter-spacing: .18em;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; text-decoration: none;
+  padding: 13px 30px; border: 1px solid var(--leaf); background: var(--leaf); color: var(--paper);
+  font: 500 15px/1.4 var(--sans); letter-spacing: .14em; transition: background .2s, color .2s;
 }
-.btn:hover { background: #ebb565; }
-.btn.line { background: transparent; color: var(--cream); border-color: rgba(237,230,214,.45); }
-.btn.line:hover { border-color: var(--cream); }
+.btn:hover { background: #31503d; }
+.btn.ghost { background: transparent; color: var(--leaf); }
+.btn.ghost:hover { background: var(--leaf); color: var(--paper); }
 
 /* 顶部栏 */
 .top {
-  position: fixed; inset: 0 0 auto; z-index: 20;
-  padding: calc(14px + env(safe-area-inset-top, 0px)) 20px 14px;
+  position: fixed; inset: 0 0 auto; z-index: 30; color: #fff;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 24px 16px;
   display: flex; align-items: center; justify-content: space-between; gap: 16px;
-  transition: background .3s;
+  transition: background .3s, color .3s, padding .3s;
 }
-.top { color: var(--paper-ink); background: rgba(239,232,216,.9); backdrop-filter: blur(8px); }
-.top.solid { background: rgba(15,28,23,.94); backdrop-filter: blur(8px); color: var(--cream); }
-.logo { display: inline-grid; justify-items: center; gap: 2px; text-decoration: none; line-height: 1; }
-.logo svg { width: 18px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.3; }
-.logo b { font: 400 18px/1 var(--serif); letter-spacing: .32em; margin-right: -.32em; }
-.logo small { font: 400 11px/1 var(--serif); letter-spacing: .3em; margin-right: -.3em; opacity: .8; }
-.top nav { display: flex; gap: 32px; font-size: 14px; letter-spacing: .12em; }
-.top nav a { text-decoration: none; opacity: .75; }
+.top.solid { background: rgba(246,242,234,.96); color: var(--leaf); backdrop-filter: blur(10px); padding-block: calc(10px + env(safe-area-inset-top, 0px)) 10px; box-shadow: 0 1px 0 var(--line); }
+.logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; }
+.logo svg { width: 22px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.2; }
+.logo b { font: 500 20px/1 var(--serif); letter-spacing: .14em; }
+.logo small { font: 400 11px/1 var(--sans); letter-spacing: .3em; opacity: .75; }
+.top nav { display: flex; gap: 34px; font-size: 14px; letter-spacing: .1em; }
+.top nav a { text-decoration: none; opacity: .85; }
 .top nav a:hover { opacity: 1; }
-.top .btn { padding: 9px 20px; font-size: 14px; }
-@media (max-width: 760px) { .top nav { display: none; } }
+.top .btn { padding: 9px 22px; font-size: 14px; background: transparent; border-color: currentColor; color: inherit; }
+.top .btn:hover { background: var(--leaf); border-color: var(--leaf); color: var(--paper); }
+@media (max-width: 820px) { .top nav { display: none; } .logo small { display: none; } }
 
-/* 首屏：米白底 + 实拍照片拼贴 */
-.hero { background: var(--paper); color: var(--paper-ink); }
-.hero .wrap { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; padding-block: 140px 90px; }
-.hero .en { font: 400 12px/1 var(--serif); letter-spacing: .42em; opacity: .7; }
-.hero h1 { margin-top: 20px; font: 600 clamp(52px, 7vw, 92px)/1.15 var(--serif); letter-spacing: .16em; }
-.rule { display: flex; align-items: center; gap: 14px; margin: 20px 0 16px; }
-.rule i { display: block; width: 64px; height: 1px; background: currentColor; opacity: .45; }
-.rule svg { width: 18px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.3; }
-.hero p { margin: 0 0 12px; font: 400 clamp(18px, 2vw, 21px)/1.8 var(--serif); letter-spacing: .26em; }
-.hero .where { letter-spacing: .04em; font-family: var(--sans); margin: 0 0 32px; font-size: 15px; color: #5b6b60; max-width: 24em; }
+/* 首屏：现场照片当背景，柔焦带出雨林的绿和光 */
+.hero { position: relative; color: #fff; isolation: isolate; overflow: hidden; }
+.hero-bg { position: absolute; inset: -40px; z-index: -2; background: url("images/hero-bg.jpg") center / cover; filter: blur(14px) saturate(1.1); }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(20,34,25,.55), rgba(20,34,25,.35) 45%, rgba(20,34,25,.75)); }
+.hero .wrap { padding-block: 168px 150px; }
+.hero .where { font-size: 13px; letter-spacing: .3em; opacity: .85; }
+.hero h1 { margin-top: 18px; font-size: clamp(56px, 9vw, 104px); line-height: 1.1; letter-spacing: .1em; font-weight: 500; }
+.hero .tag { margin: 18px 0 0; font: 400 clamp(18px, 2.2vw, 22px)/1.7 var(--serif); letter-spacing: .2em; }
+.hero .sub { margin: 14px 0 36px; max-width: 30em; opacity: .9; }
 .hero .cta { display: flex; gap: 12px; flex-wrap: wrap; }
-.hero .btn.line { color: var(--paper-ink); border-color: rgba(31,51,40,.5); }
-.hero .btn.line:hover { border-color: var(--paper-ink); }
-.mosaic { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 640px; justify-self: end; width: 100%; }
-.mosaic figure { margin: 0; position: relative; aspect-ratio: 1; overflow: hidden; background: #d9d2bf; }
-.mosaic figure:nth-child(3n+2) { transform: translateY(28px); }
-.mosaic img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.mosaic figure:not(.tag)::after { content: ""; position: absolute; inset: 55% 0 0; background: linear-gradient(transparent, rgba(0,0,0,.55)); }
-.mosaic figcaption { position: absolute; z-index: 1; left: 8px; bottom: 6px; font-size: 12px; letter-spacing: .1em; color: #fff; text-shadow: 0 1px 6px rgba(0,0,0,.7); }
-.mosaic .tag { display: grid; place-content: center; text-align: center; background: var(--paper-ink); color: var(--paper); gap: 4px; padding: 10px; }
-.mosaic .tag b { font: 600 22px var(--serif); letter-spacing: .2em; }
-.mosaic .tag span { font-size: 12px; opacity: .75; letter-spacing: .1em; }
-@media (max-width: 860px) {
-  .hero .wrap { grid-template-columns: 1fr; gap: 40px; padding-block: 120px 70px; }
-  .mosaic { justify-self: stretch; max-width: none; gap: 6px; }
-  .mosaic figure:nth-child(3n+2) { transform: translateY(16px); }
+.hero .btn { background: var(--paper); color: var(--leaf); border-color: var(--paper); }
+.hero .btn:hover { background: #fff; }
+.hero .btn.ghost { background: transparent; color: #fff; border-color: rgba(255,255,255,.7); }
+.hero .btn.ghost:hover { background: rgba(255,255,255,.12); }
+
+/* 实拍照片条：压在首屏下缘 */
+.strip-wrap { margin-top: -96px; position: relative; z-index: 2; }
+.strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+.strip figure { margin: 0; background: var(--sand); }
+.strip img { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; box-shadow: 0 10px 30px rgba(20,34,25,.18); }
+.strip figcaption { padding: 10px 2px 0; font-size: 13px; color: var(--leaf-soft); letter-spacing: .08em; background: var(--paper); }
+.strip-note { margin: 14px 0 0; font-size: 13px; color: var(--leaf-soft); }
+@media (max-width: 760px) {
+  .strip-wrap { margin-top: -64px; }
+  .strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 10px; padding-bottom: 6px; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
+  .strip figure { flex: 0 0 62%; scroll-snap-align: start; }
 }
 
 /* 能量运作 */
-.energy { background: var(--forest); text-align: center; }
-.energy .wrap { display: grid; justify-items: center; gap: 22px; }
-.energy h2 { font: 600 clamp(40px, 7vw, 72px)/1.2 var(--serif); letter-spacing: .2em; margin-right: -.2em; color: var(--cream); }
-.energy blockquote { margin: 0; font: 400 clamp(19px, 2.4vw, 25px)/1.9 var(--serif); letter-spacing: .08em; color: var(--ember); }
-.energy p { margin: 0; max-width: 34em; color: var(--mute); }
+.energy .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 72px; align-items: start; }
+.energy blockquote { margin: 0; font: 500 clamp(30px, 4.2vw, 46px)/1.45 var(--serif); letter-spacing: .03em; }
+.energy blockquote em { font-style: normal; color: var(--wood); }
+.energy .body p { margin: 0 0 18px; color: var(--leaf-soft); }
+.facts { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); margin-top: 30px; }
+.facts div { padding: 18px 0 0; }
+.facts b { display: block; font: 500 28px/1.2 var(--serif); font-variant-numeric: tabular-nums; }
+.facts span { font-size: 13px; color: var(--leaf-soft); }
+@media (max-width: 820px) { .energy .wrap { grid-template-columns: 1fr; gap: 32px; } }
 
-/* 优惠横条 */
-.promo { background: var(--paper); color: var(--paper-ink); }
-.promo .wrap { display: flex; flex-wrap: wrap; gap: 8px 28px; align-items: center; justify-content: center; padding-block: 18px; text-align: center; }
-.promo b { font: 700 20px var(--serif); letter-spacing: .12em; }
-.promo span { font-size: 15px; letter-spacing: .08em; }
-
-section { padding-block: 96px; }
-.head { display: grid; gap: 12px; margin-bottom: 44px; }
-.head p { margin: 0; color: var(--mute); max-width: 36em; }
-
-/* 套餐价格 */
-.pkgs { display: grid; gap: 22px; }
-.pkg { background: var(--paper); color: var(--paper-ink); padding: 26px 28px 30px; display: grid; gap: 20px; }
-.pkg-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-.chip { display: inline-block; background: var(--paper-ink); color: var(--paper); font: 400 30px/1 var(--brush); padding: 10px 22px 8px; letter-spacing: .06em; }
-.pkg-head small { font-size: 14px; color: #5b6b60; }
-.tiers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-.tier { border: 1px solid #cbbf9f; padding: 20px 18px; display: grid; gap: 6px; justify-items: center; text-align: center; min-width: 0; }
-.tier .who { display: flex; align-items: center; gap: 8px; font: 600 17px var(--serif); letter-spacing: .1em; }
-.tier .who svg { height: 20px; fill: var(--paper-ink); }
-.tier .rm { font: 700 clamp(34px, 4.6vw, 48px)/1.1 var(--serif); font-variant-numeric: tabular-nums; }
-.tier .rm small { font-size: .5em; margin-right: 2px; }
-.tier button { margin-top: 6px; background: transparent; border: 1px solid var(--paper-ink); color: var(--paper-ink); font: 500 14px var(--sans); letter-spacing: .15em; padding: 7px 20px; cursor: pointer; }
-.tier button:hover { background: var(--paper-ink); color: var(--paper); }
-@media (max-width: 600px) {
-  .tiers { grid-template-columns: 1fr; gap: 10px; }
-  .tier { grid-template-columns: 1fr auto; justify-items: start; text-align: left; align-items: center; padding: 14px 16px; }
-  .tier .rm { font-size: 32px; }
-  .tier button { grid-column: 1 / -1; justify-self: stretch; }
+/* 价格表 */
+.prices { background: var(--sand); }
+.prices-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
+.badge { display: inline-block; border: 1px solid var(--wood); color: var(--wood); padding: 6px 16px; font-size: 14px; letter-spacing: .12em; }
+.table { background: var(--paper); }
+.row { display: grid; grid-template-columns: 1.2fr 1fr 1fr; align-items: center; border-bottom: 1px solid var(--line); }
+.row:last-child { border-bottom: 0; }
+.row > * { padding: 22px 28px; min-width: 0; }
+.row.head { background: var(--leaf); color: var(--paper); }
+.row.head span { font: 500 18px var(--serif); letter-spacing: .1em; }
+.row.head small { display: block; font-size: 12px; opacity: .7; letter-spacing: .1em; }
+.room b { display: block; font: 500 20px var(--serif); letter-spacing: .08em; }
+.room span { font-size: 13px; color: var(--leaf-soft); }
+.pick {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 12px; width: 100%; text-align: left;
+  background: none; border: 0; border-left: 1px solid var(--line); cursor: pointer; color: var(--leaf); font: inherit;
+}
+.pick .rm { font: 500 clamp(26px, 3vw, 34px)/1 var(--serif); font-variant-numeric: tabular-nums; }
+.pick .rm small { font-size: .5em; margin-right: 3px; color: var(--leaf-soft); }
+.pick .go { font-size: 13px; color: var(--wood); letter-spacing: .1em; white-space: nowrap; }
+.pick:hover { background: #fbf8f2; }
+.pick:hover .go { text-decoration: underline; }
+.prices .fine { margin: 18px 0 0; font-size: 14px; color: var(--leaf-soft); }
+@media (max-width: 620px) {
+  .row { grid-template-columns: 1fr 1fr; }
+  .row .room { grid-column: 1 / -1; padding-bottom: 4px; }
+  .row.head .room { display: none; }
+  .row > * { padding: 14px 16px; }
+  .pick { border-left: 0; flex-direction: column; gap: 6px; }
+  .pick + .pick { border-left: 1px solid var(--line); }
 }
 
 /* 套餐包含 */
-.inc { background: var(--forest-2); }
-.icons { display: grid; grid-template-columns: repeat(8, 1fr); border-block: 1px solid var(--moss); }
-.ic { display: grid; justify-items: center; align-content: start; gap: 12px; padding: 30px 6px; text-align: center; border-left: 1px solid var(--moss); min-width: 0; }
-.ic:first-child { border-left: 0; }
-.ic svg { width: 44px; height: 44px; stroke: var(--ember); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
-.ic b { font: 600 15px/1.4 var(--serif); letter-spacing: .08em; }
-.ic span { font-size: 13px; color: var(--mute); line-height: 1.6; }
-@media (max-width: 900px) {
-  .icons { grid-template-columns: repeat(4, 1fr); }
-  .ic:nth-child(5) { border-left: 0; }
-  .ic:nth-child(n+5) { border-top: 1px solid var(--moss); }
-}
-@media (max-width: 480px) {
-  .icons { grid-template-columns: repeat(2, 1fr); }
-  .ic:nth-child(odd) { border-left: 0; }
-  .ic:nth-child(n+3) { border-top: 1px solid var(--moss); }
-}
-
-/* 房型安排 */
-.stay { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--moss); }
-.stay-note { margin: 16px 0 0; font-size: 14px; color: var(--mute); }
-.stay div { padding: 26px 24px; border-left: 1px solid var(--moss); }
-.stay div:first-child { border-left: 0; }
-.stay b { display: block; font: 700 40px/1.1 var(--serif); color: var(--ember); font-variant-numeric: tabular-nums; }
-.stay span { color: var(--mute); font-size: 14px; }
-@media (max-width: 600px) { .stay { grid-template-columns: 1fr; } .stay div { border-left: 0; border-top: 1px solid var(--moss); } .stay div:first-child { border-top: 0; } }
+.inc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--line); margin-top: 44px; }
+.inc-grid div { padding: 28px 24px 30px 0; border-bottom: 1px solid var(--line); display: grid; gap: 8px; align-content: start; }
+.inc-grid svg { width: 34px; height: 34px; stroke: var(--wood); fill: none; stroke-width: 1.3; stroke-linecap: round; stroke-linejoin: round; }
+.inc-grid b { font: 500 18px var(--serif); letter-spacing: .06em; }
+.inc-grid span { font-size: 14px; color: var(--leaf-soft); }
+@media (max-width: 860px) { .inc-grid { grid-template-columns: repeat(2, 1fr); } }
 
 /* 预约 */
-.book { background: var(--forest-2); }
-.book-grid { display: grid; grid-template-columns: 1fr 1.25fr; gap: 64px; }
+.book { background: var(--leaf); color: var(--paper); }
+.book .kicker { color: #d7a777; }
+.book-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: start; }
 .book-grid > * { min-width: 0; }
-.book-grid .lead { color: var(--mute); max-width: 24em; }
-.free { display: inline-block; margin-top: 8px; font-size: 14px; color: var(--ember); border: 1px solid var(--moss); padding: 6px 14px; }
-form { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+.book .lead { color: rgba(246,242,234,.75); }
+.steps { list-style: none; padding: 0; margin: 32px 0 0; display: grid; gap: 14px; counter-reset: s; }
+.steps li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 12px; color: rgba(246,242,234,.85); font-size: 15px; }
+.steps li::before { content: counter(s); width: 28px; height: 28px; border: 1px solid rgba(246,242,234,.4); border-radius: 50%; display: grid; place-items: center; font-size: 13px; }
+.card { background: var(--paper); color: var(--leaf); padding: 32px; }
+form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .f { display: grid; gap: 6px; min-width: 0; }
 .f.full { grid-column: 1 / -1; }
-label { font-size: 13px; letter-spacing: .14em; color: var(--mute); }
+label { font-size: 13px; letter-spacing: .1em; color: var(--leaf-soft); }
 input, select, textarea {
-  width: 100%; background: transparent; color: var(--cream); border: 0; border-bottom: 1px solid #44594c;
-  padding: 10px 2px; font: 400 16px var(--sans); border-radius: 0;
+  width: 100%; background: #fff; color: var(--leaf); border: 1px solid var(--line);
+  padding: 11px 12px; font: 400 16px var(--sans); border-radius: 0;
 }
-select option { background: var(--forest); }
-input:focus, select:focus, textarea:focus { outline: none; border-bottom-color: var(--ember); }
-.total { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--moss); padding-top: 18px; }
-.total span { color: var(--mute); font-size: 14px; }
-.total b { font: 700 30px var(--serif); color: var(--ember); font-variant-numeric: tabular-nums; }
-.submit { grid-column: 1 / -1; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
-.err { color: #f0b48a; font-size: 14px; }
-.result { grid-column: 1 / -1; background: var(--paper); color: var(--paper-ink); padding: 22px; display: grid; gap: 14px; }
+input:focus, select:focus, textarea:focus { outline: none; border-color: var(--leaf); }
+.total { grid-column: 1 / -1; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; border-top: 1px solid var(--line); padding-top: 18px; }
+.total span { color: var(--leaf-soft); font-size: 14px; }
+.total b { font: 500 30px var(--serif); font-variant-numeric: tabular-nums; }
+.submit { grid-column: 1 / -1; display: grid; gap: 8px; }
+.submit .btn { width: 100%; }
+.err { color: #a2402a; font-size: 14px; min-height: 1em; }
+.result { grid-column: 1 / -1; background: var(--sand); padding: 20px; display: grid; gap: 14px; }
 .result pre { margin: 0; white-space: pre-wrap; font: 400 15px/1.8 var(--sans); }
-.result .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.result .btn.line { color: var(--paper-ink); border-color: var(--paper-ink); }
-.result small { font-size: 13px; color: #5b6b60; }
-@media (max-width: 820px) { .book-grid { grid-template-columns: 1fr; gap: 36px; } }
-@media (max-width: 480px) { form { grid-template-columns: 1fr; } }
+.result .acts { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.result small { font-size: 13px; color: var(--leaf-soft); }
+@media (max-width: 860px) { .book-grid { grid-template-columns: 1fr; gap: 40px; } }
+@media (max-width: 480px) { form { grid-template-columns: 1fr; } .card { padding: 22px 18px; } }
 
-footer { padding-block: 44px calc(44px + env(safe-area-inset-bottom, 0px)); font-size: 14px; color: var(--mute); }
+footer { background: var(--leaf); color: rgba(246,242,234,.7); border-top: 1px solid rgba(246,242,234,.12); padding-block: 36px calc(36px + env(safe-area-inset-bottom, 0px)); font-size: 14px; }
 footer .wrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
-footer .logo { color: var(--cream); }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .top { transition: none; } }
+footer .logo { color: var(--paper); }
+
+/* 手机底部常驻预约条 */
+.dock { display: none; }
+@media (max-width: 760px) {
+  .dock {
+    position: fixed; inset: auto 0 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    background: var(--paper); box-shadow: 0 -1px 0 var(--line), 0 -8px 24px rgba(20,34,25,.08);
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom, 0px));
+    transition: transform .3s;
+  }
+  .dock.hide { transform: translateY(110%); }
+  .dock span { font-size: 13px; color: var(--leaf-soft); line-height: 1.4; }
+  .dock b { display: block; font: 500 18px var(--serif); color: var(--leaf); }
+  .dock .btn { padding: 11px 22px; }
+  footer { padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .top, .dock, .btn { transition: none; } }
 </style>
 </head>
 <body>
 
 <header class="top" id="topbar">
-  <a class="logo" href="#top" aria-label="水木森林"><svg viewBox="0 0 18 14" aria-hidden="true"><path d="M9 13V6M9 6C9 3 7 1 3 1c0 3 2 5 6 5ZM9 7c0-3 2-5 6-5 0 3-2 5-6 5Z"/></svg><b>SHUIMU</b><small>水木森林</small></a>
+  <a class="logo" href="#top" aria-label="水木森林 首页">
+    <svg viewBox="0 0 22 18" aria-hidden="true"><path d="M11 17V8M11 8C11 4 8.5 1.5 3 1.5c0 4 2.5 6.5 8 6.5ZM11 9.5c0-4 2.5-6.5 8-6.5 0 4-2.5 6.5-8 6.5Z"/></svg>
+    <b>水木森林</b><small>SHUIMU</small>
+  </a>
   <nav aria-label="主菜单">
-    <a href="#energy">能量运作</a><a href="#packages">优惠套餐</a><a href="#included">疗愈体验</a><a href="#stay">住宿</a>
+    <a href="#energy">关于</a><a href="#prices">优惠价</a><a href="#included">疗愈体验</a>
   </nav>
   <a class="btn" href="#book">立即预约</a>
 </header>
 
 <main id="top">
   <div class="hero">
+    <div class="hero-bg" aria-hidden="true"></div>
     <div class="wrap">
-      <div>
-        <span class="en">FOREST HEALING RETREAT</span>
-        <h1>水木森林</h1>
-        <div class="rule"><i></i><svg viewBox="0 0 18 14" aria-hidden="true"><path d="M9 13V6M9 6C9 3 7 1 3 1c0 3 2 5 6 5ZM9 7c0-3 2-5 6-5 0 3-2 5-6 5Z"/></svg><i></i></div>
-        <p>回归自然 · 回到自己</p>
-        <p class="where">大树、溪石、木亭和山风。一个真正藏在热带雨林里的疗愈民宿。</p>
-        <div class="cta">
-          <a class="btn" href="#book">选日期预约</a>
-          <a class="btn line" href="#packages">查看优惠价</a>
-        </div>
+      <span class="where">FOREST HEALING RETREAT · 马来西亚雨林</span>
+      <h1>水木森林</h1>
+      <p class="tag">回归自然 · 回到自己</p>
+      <p class="sub">大树、溪石、木亭和山风。两天时间，住进雨林里，把自己放空、充满电。</p>
+      <div class="cta">
+        <a class="btn" href="#book">选日期预约</a>
+        <a class="btn ghost" href="#prices">RM 360 起 · 看优惠价</a>
       </div>
-      <div class="mosaic">
-        <figure><img src="images/photo-1.jpg" alt="大树下的木亭和石板路" width="206" height="206"><figcaption>林荫木亭</figcaption></figure>
-        <figure><img src="images/photo-3.jpg" alt="客人跟着向导在山坡上看森林" width="206" height="206"><figcaption>森林导览</figcaption></figure>
-        <figure><img src="images/photo-2.jpg" alt="木屋屋檐下的石头庭院" width="206" height="206"><figcaption>石头庭院</figcaption></figure>
-        <figure><img src="images/photo-4.jpg" alt="挂着红灯笼的木头茶座和植物" width="206" height="206"><figcaption>山间茶座</figcaption></figure>
-        <figure><img src="images/photo-5.jpg" alt="溪石边的户外洗手台" width="206" height="206"><figcaption>溪石小径</figcaption></figure>
-        <figure class="tag"><b>实拍</b><span>真实拍摄的水木森林</span></figure>
+    </div>
+  </div>
+
+  <div class="strip-wrap">
+    <div class="wrap">
+      <div class="strip">
+        <figure><img src="images/photo-1.jpg" alt="大树下的木亭和石板路" width="412" height="412"><figcaption>林荫木亭</figcaption></figure>
+        <figure><img src="images/photo-3.jpg" alt="客人跟着向导在山坡上看森林" width="412" height="412"><figcaption>森林导览</figcaption></figure>
+        <figure><img src="images/photo-2.jpg" alt="木屋屋檐下的石头庭院" width="412" height="412"><figcaption>石头庭院</figcaption></figure>
+        <figure><img src="images/photo-4.jpg" alt="挂着红灯笼的木头茶座和植物" width="412" height="412"><figcaption>山间茶座</figcaption></figure>
+        <figure><img src="images/photo-5.jpg" alt="溪石边的户外洗手台" width="412" height="412"><figcaption>溪石小径</figcaption></figure>
       </div>
+      <p class="strip-note">以上都是水木森林的现场实拍。</p>
     </div>
   </div>
 
   <section class="energy" id="energy">
     <div class="wrap">
-      <span class="eyebrow">森林归零计划</span>
-      <h2>能量运作</h2>
-      <blockquote>企业需要资本运作，<br>人，也需要能量运作。</blockquote>
-      <p>每天在会议、数字和决定里转，身体比公司更早透支。来山上住两天，看一场日落，听一次铜锣，让自己重新充满电，再回去带团队。</p>
-    </div>
-  </section>
-
-  <div class="promo">
-    <div class="wrap">
-      <b>10月 / 11月优惠价</b>
-      <span>一价全包 ｜ 住宿 + 餐食 + 全套森林疗愈体验</span>
-    </div>
-  </div>
-
-  <section id="packages">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">优惠套餐</span>
-        <h2>选好天数和房型，价格一目了然</h2>
-        <p>价格以每间房计算，已包含住宿、餐食和所有疗愈体验，现场没有额外收费。</p>
+      <div>
+        <span class="kicker">能量运作</span>
+        <blockquote>企业需要资本运作，<br><em>人，也需要能量运作。</em></blockquote>
       </div>
-      <div class="pkgs" id="pkgs"></div>
-    </div>
-  </section>
-
-  <section class="inc" id="included">
-    <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">套餐包含</span>
-        <h2>八种体验，全部包含在价格里</h2>
-      </div>
-      <div class="icons">
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M4 15 16 5l12 10M7 13v14h18V13M13 27v-7h6v7"/></svg><b>森林住宿</b><span>睡在树林里</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M4 16h24a12 11 0 0 1-24 0ZM12 12c-1-2 1-3 0-5M17 12c-1-2 1-3 0-5M22 12c-1-2 1-3 0-5"/></svg><b>养生山林餐食</b><span>山里的食材</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M16 4v24M16 8h9l3 3-3 3h-9M16 17H7l-3 3 3 3h9M11 28h10"/></svg><b>森林导览</b><span>认识这片森林</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M3 22h26M9 22a7 7 0 0 1 14 0M16 7v4M7 12l2.5 2.5M25 12l-2.5 2.5M3 27l7-4 6 3 6-3 7 4"/></svg><b>山顶日落仪式</b><span>把一天收起来</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M4 5h24M8 5v23M24 5v23M16 5v4"/><circle cx="16" cy="16" r="6"/><circle cx="16" cy="16" r="2"/></svg><b>山谷铜锣音疗</b><span>躺着听就好</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><circle cx="16" cy="6.5" r="2.5"/><path d="M16 10v8M9 15l7-3 7 3M7 25c3-5 15-5 18 0Z"/></svg><b>晨光行禅</b><span>一步一呼吸</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M4 15h24l-3 12H7ZM11 11c-1-2 1-3 0-5M16 11c-1-2 1-3 0-5M21 11c-1-2 1-3 0-5"/></svg><b>草本暖足</b><span>暖到睡前</span></div>
-        <div class="ic"><svg viewBox="0 0 32 32"><path d="M6 26C6 14 14 6 27 5c0 12-8 21-21 21ZM6 26 18 14"/></svg><b>森林疗愈体验</b><span>整套由我们安排</span></div>
+      <div class="body">
+        <p>每天在会议、数字和决定里转，身体往往比公司更早透支。</p>
+        <p>来水木森林住两天：清晨在林间行禅，傍晚上山顶看日落，夜里在山谷听铜锣。手机放下，人慢下来，回去才有力气带团队。</p>
+        <div class="facts">
+          <div><b>6 间</b><span>客房</span></div>
+          <div><b>16 人</b><span>可入住，加床到 19 人</span></div>
+          <div><b>全包</b><span>住宿、餐食、疗愈体验</span></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="stay">
+  <section class="prices" id="prices">
     <div class="wrap">
-      <div class="head">
-        <span class="eyebrow">住宿</span>
-        <h2>整栋包下来，也只住得下一个小团队</h2>
+      <div class="prices-head">
+        <div>
+          <span class="kicker">森林归零计划</span>
+          <h2>一个价格，住宿、餐食、疗愈全包</h2>
+        </div>
+        <span class="badge">10月 / 11月优惠价</span>
       </div>
-      <div class="stay">
-        <div><b>6 间房</b><span>整栋共 6 间客房</span></div>
-        <div><b>16 人</b><span>标准可入住人数</span></div>
-        <div><b>19 人</b><span>加床后最多可入住</span></div>
+      <div class="table" id="table"></div>
+      <p class="fine">价格以每间房计算。点任意价格即可带入预约表。</p>
+    </div>
+  </section>
+
+  <section id="included">
+    <div class="wrap">
+      <span class="kicker">套餐包含</span>
+      <h2>来一次，这八样都会体验到</h2>
+      <div class="inc-grid">
+        <div><svg viewBox="0 0 32 32"><path d="M4 15 16 5l12 10M7 13v14h18V13M13 27v-7h6v7"/></svg><b>森林住宿</b><span>睡在雨林里，听着虫鸣入睡。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M4 16h24a12 11 0 0 1-24 0ZM12 12c-1-2 1-3 0-5M17 12c-1-2 1-3 0-5M22 12c-1-2 1-3 0-5"/></svg><b>养生山林餐食</b><span>清淡、温和，用山里的食材。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M16 4v24M16 8h9l3 3-3 3h-9M16 17H7l-3 3 3 3h9M11 28h10"/></svg><b>森林导览</b><span>跟着向导认识这片雨林。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M3 22h26M9 22a7 7 0 0 1 14 0M16 7v4M7 12l2.5 2.5M25 12l-2.5 2.5M3 27l7-4 6 3 6-3 7 4"/></svg><b>山顶日落仪式</b><span>在山顶把一天慢慢收起来。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M4 5h24M8 5v23M24 5v23M16 5v4"/><circle cx="16" cy="16" r="6"/><circle cx="16" cy="16" r="2"/></svg><b>山谷铜锣音疗</b><span>躺着听，让声音带你放松。</span></div>
+        <div><svg viewBox="0 0 32 32"><circle cx="16" cy="6.5" r="2.5"/><path d="M16 10v8M9 15l7-3 7 3M7 25c3-5 15-5 18 0Z"/></svg><b>晨光行禅</b><span>清晨慢走，一步一呼吸。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M4 15h24l-3 12H7ZM11 11c-1-2 1-3 0-5M16 11c-1-2 1-3 0-5M21 11c-1-2 1-3 0-5"/></svg><b>草本暖足</b><span>热草本泡脚，暖到睡前。</span></div>
+        <div><svg viewBox="0 0 32 32"><path d="M6 26C6 14 14 6 27 5c0 12-8 21-21 21ZM6 26 18 14"/></svg><b>森林疗愈体验</b><span>整套流程由我们安排好。</span></div>
       </div>
-      <p class="stay-note">我们会根据人数帮你安排合适的房型。房间照片整理中，很快补上。</p>
     </div>
   </section>
 
   <section class="book" id="book">
     <div class="wrap book-grid">
       <div>
-        <div class="head">
-          <span class="eyebrow">预约</span>
-          <h2>告诉我们日期和人数</h2>
-        </div>
-        <p class="lead">我们会根据人数帮你安排合适的房型。填好后点「生成预约信息」，再一键发到我们的 WhatsApp，一天内回复你。</p>
-        <span class="free">这一步不用付款</span>
+        <span class="kicker">预约</span>
+        <h2>告诉我们日期和人数</h2>
+        <p class="lead">我们会根据人数帮你安排合适的房型。这一步不用付款。</p>
+        <ol class="steps">
+          <li>选日期、天数和房型，下方会自动算出价格。</li>
+          <li>点「生成预约信息」，再一键发到我们的 WhatsApp。</li>
+          <li>我们一天内回复，确认房间和付款方式。</li>
+        </ol>
       </div>
-      <form id="form" novalidate>
-        <div class="f"><label for="in">入住日期</label><input type="date" id="in" required></div>
-        <div class="f"><label for="pkg">天数</label>
-          <select id="pkg"><option value="0">2天1夜</option><option value="1">3天2夜</option></select></div>
-        <div class="f"><label for="size">房型</label>
-          <select id="size"><option value="0">双人房</option><option value="1">3人房</option><option value="2">4人房</option></select></div>
-        <div class="f"><label for="rooms">间数</label>
-          <select id="rooms"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
-        <div class="f"><label for="name">称呼</label><input type="text" id="name" autocomplete="name" required></div>
-        <div class="f"><label for="phone">手机号码</label><input type="tel" id="phone" autocomplete="tel" placeholder="012-345 6789" required></div>
-        <div class="f full"><label for="msg">其他需求（选填，例如加床、饮食禁忌）</label><textarea id="msg" rows="2"></textarea></div>
-        <div class="total"><span id="sum">2天1夜 · 双人房 × 1 间</span><b id="price">RM 360</b></div>
-        <div class="submit"><button class="btn" type="submit">生成预约信息</button><span class="err" id="err" role="alert"></span></div>
-        <div class="result" id="result" hidden>
-          <pre id="text"></pre>
-          <div class="row">
-            <a class="btn" id="wa" href="#" target="_blank" rel="noopener">发到 WhatsApp</a>
-            <button class="btn line" type="button" id="copy">复制内容</button>
-            <small id="copied"></small>
+      <div class="card">
+        <form id="form" novalidate>
+          <div class="f"><label for="in">入住日期</label><input type="date" id="in" required></div>
+          <div class="f"><label for="pkg">天数</label>
+            <select id="pkg"><option value="0">2天1夜</option><option value="1">3天2夜</option></select></div>
+          <div class="f"><label for="size">房型</label>
+            <select id="size"><option value="0">双人房</option><option value="1">3人房</option><option value="2">4人房</option></select></div>
+          <div class="f"><label for="rooms">间数</label>
+            <select id="rooms"><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></div>
+          <div class="f"><label for="name">称呼</label><input type="text" id="name" autocomplete="name" required></div>
+          <div class="f"><label for="phone">手机号码</label><input type="tel" id="phone" autocomplete="tel" placeholder="012-345 6789" required></div>
+          <div class="f full"><label for="msg">其他需求（选填，例如加床、饮食禁忌、公司包场）</label><textarea id="msg" rows="2"></textarea></div>
+          <div class="total"><span id="sum">2天1夜 · 双人房 × 1 间</span><b id="price">RM 360</b></div>
+          <div class="submit"><button class="btn" type="submit">生成预约信息</button><span class="err" id="err" role="alert"></span></div>
+          <div class="result" id="result" hidden>
+            <pre id="text"></pre>
+            <div class="acts">
+              <a class="btn" id="wa" href="#" target="_blank" rel="noopener">发到 WhatsApp</a>
+              <button class="btn ghost" type="button" id="copy">复制内容</button>
+              <small id="copied"></small>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </section>
 </main>
 
 <footer>
   <div class="wrap">
-    <span class="logo"><svg viewBox="0 0 18 14" aria-hidden="true"><path d="M9 13V6M9 6C9 3 7 1 3 1c0 3 2 5 6 5ZM9 7c0-3 2-5 6-5 0 3-2 5-6 5Z"/></svg><b>SHUIMU</b><small>水木森林</small></span>
-    <span>森林归零计划 · 疗愈森林民宿</span>
+    <span class="logo"><b>水木森林</b></span>
+    <span>森林归零计划 · 马来西亚疗愈森林民宿</span>
     <a href="https://www.facebook.com/profile.php?id=61592713596419" target="_blank" rel="noopener">Facebook 主页</a>
   </div>
 </footer>
+
+<div class="dock" id="dock">
+  <span>森林归零计划 · 一价全包<b>RM 360 起</b></span>
+  <a class="btn" href="#book">立即预约</a>
+</div>
 
 <script>
 // 预约信息会发到这个 WhatsApp 号码。正式使用前请换成你们自己的号码（60 开头，不加 + 和空格）。
@@ -337,34 +347,30 @@ var PLANS = [
   { name: "2天1夜", prices: [360, 499, 649] },
   { name: "3天2夜", prices: [560, 699, 849] }
 ];
-var SIZES = ["双人房", "3人房", "4人房"];
+var SIZES = [["双人房", "2 人"], ["3人房", "3 人"], ["4人房", "4 人"]];
 var $ = function (id) { return document.getElementById(id); };
+var rm = function (n) { return "RM " + n.toLocaleString("en-MY"); };
 
 function updateTotal() {
   var p = PLANS[$("pkg").value], s = +$("size").value, n = +$("rooms").value;
-  $("sum").textContent = p.name + " · " + SIZES[s] + " × " + n + " 间";
-  $("price").textContent = "RM " + (p.prices[s] * n).toLocaleString("en-MY");
+  $("sum").textContent = p.name + " · " + SIZES[s][0] + " × " + n + " 间";
+  $("price").textContent = rm(p.prices[s] * n);
 }
 
-// 价格卡
+// 价格表
 (function () {
-  var person = '<circle cx="5" cy="4.5" r="3.5"/><path d="M0 18c0-5 2.2-7.5 5-7.5s5 2.5 5 7.5Z"/>';
-  function people(n) {
-    var g = "";
-    for (var i = 0; i < n; i++) g += '<g transform="translate(' + (i * 11) + ' 0)">' + person + "</g>";
-    return '<svg viewBox="0 0 ' + (n * 11 - 1) + ' 18" style="width:' + Math.round((n * 11 - 1) * 1.1) + 'px">' + g + "</svg>";
-  }
-  var html = "";
-  PLANS.forEach(function (p, pi) {
-    html += '<article class="pkg"><div class="pkg-head"><span class="chip">' + p.name + '</span><small>每间房价格 · 一价全包</small></div><div class="tiers">';
-    p.prices.forEach(function (rm, si) {
-      html += '<div class="tier"><span class="who">' + people(si + 2) + SIZES[si] + '</span><span class="rm"><small>RM</small>' + rm +
-        '</span><button type="button" data-plan="' + pi + '" data-size="' + si + '">预约</button></div>';
+  var html = '<div class="row head"><span class="room"></span>' +
+    PLANS.map(function (p) { return "<span>" + p.name + "<small>每间房</small></span>"; }).join("") + "</div>";
+  SIZES.forEach(function (sz, si) {
+    html += '<div class="row"><div class="room"><b>' + sz[0] + "</b><span>适合 " + sz[1] + "</span></div>";
+    PLANS.forEach(function (p, pi) {
+      html += '<button class="pick" type="button" data-plan="' + pi + '" data-size="' + si + '" aria-label="预约 ' + p.name + " " + sz[0] + " " + rm(p.prices[si]) + '">' +
+        '<span class="rm"><small>RM</small>' + p.prices[si] + '</span><span class="go">' + p.name + " · 预约 →</span></button>";
     });
-    html += "</div></article>";
+    html += "</div>";
   });
-  $("pkgs").innerHTML = html;
-  document.querySelectorAll("[data-plan]").forEach(function (b) {
+  $("table").innerHTML = html;
+  document.querySelectorAll(".pick").forEach(function (b) {
     b.addEventListener("click", function () {
       $("pkg").value = b.dataset.plan;
       $("size").value = b.dataset.size;
@@ -374,8 +380,12 @@ function updateTotal() {
   });
 })();
 
-// 顶部栏滚动后变实色
-function onScroll() { $("topbar").classList.toggle("solid", window.scrollY > 40); }
+// 顶部栏滚动后变实色；手机底部预约条到了预约区就收起
+function onScroll() {
+  $("topbar").classList.toggle("solid", window.scrollY > 60);
+  var b = $("book").getBoundingClientRect();
+  $("dock").classList.toggle("hide", window.scrollY < 300 || (b.top < window.innerHeight && b.bottom > 0));
+}
 window.addEventListener("scroll", onScroll, { passive: true }); onScroll();
 
 // 预约表
@@ -392,8 +402,8 @@ $("form").addEventListener("submit", function (e) {
   var p = PLANS[v("pkg")], s = +v("size"), n = +v("rooms");
   var text = "你好，我想预约水木森林「森林归零计划」：\n" +
     "入住日期：" + v("in") + "\n" +
-    "套餐：" + p.name + " · " + SIZES[s] + " × " + n + " 间\n" +
-    "参考价格：RM " + (p.prices[s] * n).toLocaleString("en-MY") + "\n" +
+    "套餐：" + p.name + " · " + SIZES[s][0] + " × " + n + " 间\n" +
+    "参考价格：" + rm(p.prices[s] * n) + "\n" +
     "称呼：" + v("name") + "\n手机：" + v("phone") +
     (v("msg") ? "\n其他需求：" + v("msg") : "");
   $("text").textContent = text;
