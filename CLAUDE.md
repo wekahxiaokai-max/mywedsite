@@ -17,3 +17,10 @@
 - 产品：3 小时 preview 股权课、全赢资本 3 天线下股权课、私董会陪跑服务、企业股权咨询
 - 营业地点：Zoom 线上、KL、Johor Bahru、Penang
 - 团队 8 人：管理 2（Founder & CEO）、Marketing 2、Designer 1、Business Development 1、Sales 2
+
+## 水木森林网站
+
+- 网站就是 `index.html`（中文版，单页：介绍、房型目录、价钱表、设施、自助预订、常见问题、联系）。
+- 所有可改内容集中在页面里 `SITE` 那一段：WhatsApp 号码、地址、房型、价钱、问答。
+- 照片放 `images/` 文件夹：首页大图 `hero.jpg`，房型图 `a.jpg` `b.jpg` `c.jpg`。
+- 目前房型、价钱、号码都是示范数据，等客户给真实资料后替换。

@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>水木森林 · 民宿</title>
+<meta name="description" content="水木森林民宿：房型介绍、价钱表、在线自助预订。">
+<style>
+:root{--g:#2f5d46;--gd:#1f3f2f;--gl:#e8efe6;--bg:#faf8f3;--ink:#2b2b2b;--mut:#6b7468;--gold:#b98a4a}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Serif SC","Songti SC","PingFang SC","Microsoft YaHei",serif;color:var(--ink);background:var(--bg);line-height:1.8}
+a{color:inherit}
+nav{position:sticky;top:0;z-index:9;background:rgba(250,248,243,.95);backdrop-filter:blur(6px);display:flex;justify-content:space-between;align-items:center;padding:12px 5vw;border-bottom:1px solid #e3e0d6}
+nav b{font-size:20px;color:var(--gd);letter-spacing:3px}
+nav div a{margin-left:18px;text-decoration:none;font-size:15px;color:var(--mut)}
+nav div a:hover{color:var(--g)}
+.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:0 6vw;background:linear-gradient(rgba(20,45,32,.55),rgba(20,45,32,.7)),url("images/hero.jpg") center/cover,linear-gradient(135deg,#3d6b52,#1f3f2f)}
+.hero h1{font-size:clamp(38px,8vw,72px);letter-spacing:12px;margin:0;font-weight:600}
+.hero p{font-size:clamp(16px,2.6vw,22px);letter-spacing:4px;margin:14px 0 30px}
+.btn{display:inline-block;background:var(--gold);color:#fff;border:0;padding:13px 34px;border-radius:30px;font-size:17px;text-decoration:none;cursor:pointer;font-family:inherit}
+.btn:hover{background:#a37a3d}
+section{padding:70px 6vw;max-width:1100px;margin:auto}
+h2{text-align:center;font-size:30px;color:var(--gd);letter-spacing:6px;margin:0 0 6px}
+.sub{text-align:center;color:var(--mut);margin:0 0 38px}
+.about{text-align:center;max-width:720px;margin:auto;font-size:17px}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.07)}
+.card .ph{height:170px;background:linear-gradient(135deg,#7da38b,#2f5d46);display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;letter-spacing:2px;background-size:cover;background-position:center}
+.card .b{padding:18px 20px}
+.card h3{margin:0 0 4px;color:var(--gd)}
+.tags span{display:inline-block;background:var(--gl);color:var(--g);font-size:13px;padding:1px 10px;border-radius:12px;margin:2px 4px 2px 0}
+.price{color:var(--gold);font-size:22px;font-weight:700;margin-top:8px}
+.price small{color:var(--mut);font-size:13px;font-weight:400}
+.alt{background:var(--gl);max-width:none}
+.alt>*{max-width:1100px;margin-left:auto;margin-right:auto}
+table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,.06)}
+th,td{padding:14px 12px;text-align:center;border-bottom:1px solid #eee}
+th{background:var(--g);color:#fff;font-weight:500}
+td:first-child{text-align:left;font-weight:600;color:var(--gd)}
+.note{color:var(--mut);font-size:14px;margin-top:12px;text-align:center}
+.tbl{overflow-x:auto}
+.fac{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:16px;text-align:center}
+.fac div{background:#fff;border-radius:12px;padding:20px 8px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.fac i{font-style:normal;font-size:30px;display:block}
+form{background:#fff;border-radius:16px;padding:28px;box-shadow:0 4px 22px rgba(0,0,0,.08);max-width:640px;margin:auto}
+label{display:block;font-size:15px;color:var(--gd);margin:14px 0 4px}
+input,select,textarea{width:100%;padding:11px 12px;border:1px solid #cfd6cb;border-radius:8px;font-size:16px;font-family:inherit;background:#fdfdfb}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum{background:var(--gl);border-radius:10px;padding:14px 16px;margin:20px 0;color:var(--gd)}
+.sum b{font-size:22px;color:var(--gold)}
+form .btn{width:100%}
+details{background:#fff;border-radius:10px;padding:14px 18px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+summary{cursor:pointer;font-weight:600;color:var(--gd)}
+footer{background:var(--gd);color:#dfe8dc;text-align:center;padding:40px 6vw}
+footer a{color:#fff}
+.wa{position:fixed;right:18px;bottom:18px;z-index:9;background:#25a244;color:#fff;border-radius:30px;padding:12px 20px;text-decoration:none;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+@media(max-width:600px){nav div a{margin-left:10px;font-size:13px}.row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav><b>水木森林</b><div><a href="#rooms">房型</a><a href="#prices">价钱</a><a href="#book">预订</a><a href="#contact">联系</a></div></nav>
+
+<header class="hero">
+  <h1>水木森林</h1>
+  <p>躲进森林 · 慢下来 · 好好生活</p>
+  <a class="btn" href="#book">立即预订</a>
+</header>
+
+<section id="about">
+  <h2>关于我们</h2><p class="sub">About</p>
+  <p class="about" id="aboutText"></p>
+</section>
+
+<section id="rooms" class="alt">
+  <h2>房型目录</h2><p class="sub">选一间适合你的小屋</p>
+  <div class="cards" id="roomCards"></div>
+</section>
+
+<section id="prices">
+  <h2>价钱表</h2><p class="sub">每晚价钱（马币 RM）</p>
+  <div class="tbl"><table id="priceTable"></table></div>
+  <p class="note" id="priceNote"></p>
+</section>
+
+<section id="facilities" class="alt">
+  <h2>设施与体验</h2><p class="sub">来这里可以做什么</p>
+  <div class="fac" id="facList"></div>
+</section>
+
+<section id="book">
+  <h2>自助预订</h2><p class="sub">选好日期和房型，价钱自动算好，一键发给我们确认</p>
+  <form id="bookForm">
+    <div class="row">
+      <div><label>入住日期</label><input type="date" id="ci" required></div>
+      <div><label>退房日期</label><input type="date" id="co" required></div>
+    </div>
+    <div class="row">
+      <div><label>房型</label><select id="room"></select></div>
+      <div><label>人数</label><input type="number" id="pax" min="1" value="2" required></div>
+    </div>
+    <div class="row">
+      <div><label>您的名字</label><input id="name" required></div>
+      <div><label>联络电话 (WhatsApp)</label><input id="tel" type="tel" required></div>
+    </div>
+    <label>备注（选填）</label><textarea id="remark" rows="2" placeholder="例如：庆生、需要加床、吃素…"></textarea>
+    <div class="sum" id="sum">请先选日期</div>
+    <button class="btn" type="submit">通过 WhatsApp 发送预订</button>
+    <p class="note">发送后我们会尽快回复确认房况，确认后再付订金。</p>
+  </form>
+</section>
+
+<section id="faq" class="alt">
+  <h2>常见问题</h2><p class="sub">FAQ</p>
+  <div id="faqList"></div>
+</section>
+
+<section id="contact" style="text-align:center">
+  <h2>联系我们</h2><p class="sub">Contact</p>
+  <p id="contactText"></p>
+</section>
+
+<footer>© 水木森林 · <a id="fb" target="_blank" rel="noopener">Facebook 专页</a></footer>
+<a class="wa" id="waFloat" target="_blank" rel="noopener">💬 WhatsApp 咨询</a>
+
+<script>
+/* ====== 这里是全部可以改的内容：改文字、价钱、电话，网站自动跟着变 ====== */
+const SITE = {
+  whatsapp: "60123456789",   // 待填：WhatsApp 号码（国家号码开头，不加 + 号）
+  facebook: "https://www.facebook.com/profile.php?id=61590557827762",
+  address: "地址待填（请填写民宿详细地址）",
+  checkin: "15:00 入住", checkout: "12:00 退房",
+  about: "水木森林坐落于大自然之中，被树木与流水环绕。在这里，你可以远离城市的喧嚣，听鸟鸣、看日出、围炉聊天，让身心真正放松。适合家庭聚会、朋友小聚与情侣度假。",
+  rooms: [
+    {id:"a", name:"森林双人房", pax:2, tags:["双人床","独立浴室","冷气"], desc:"小而温馨，推开窗就是绿意。", wk:180, we:240, ph:260},
+    {id:"b", name:"家庭房", pax:4, tags:["1大床+2单人床","独立浴室","冷气"], desc:"适合一家大小同住。", wk:280, we:360, ph:400},
+    {id:"c", name:"木屋别墅", pax:8, tags:["3间睡房","客厅厨房","BBQ区"], desc:"整栋包下，适合团体聚会。", wk:580, we:760, ph:850}
+  ],
+  priceNote: "平日＝周日至周四；周末＝周五、周六；假日＝公共假期及学校假期。以上价钱为参考，请以确认为准。",
+  facilities: [["🌳","森林步道"],["🔥","BBQ烧烤"],["☕","咖啡茶点"],["📶","免费 WiFi"],["🅿️","免费停车"],["🏊","戏水区"]],
+  faq: [
+    ["可以带小孩和长辈吗？","可以，家庭房与别墅都适合一家大小。"],
+    ["怎么付订金？","发送预订后，我们确认房况并告知订金方式（银行转账/TnG）。"],
+    ["可以改期或取消吗？","请至少提前 7 天告知，我们会协助改期。（规则可再调整）"],
+    ["可以自己烧烤吗？","可以，请提前告知，我们会准备好场地。"]
+  ]
+};
+/* ====== 以下是程序，不用改 ====== */
+const $=id=>document.getElementById(id);
+$("aboutText").textContent=SITE.about;
+$("fb").href=SITE.facebook;
+$("waFloat").href="https://wa.me/"+SITE.whatsapp;
+$("contactText").innerHTML=`📍 ${SITE.address}<br>🕒 ${SITE.checkin} ／ ${SITE.checkout}<br>💬 <a href="https://wa.me/${SITE.whatsapp}" target="_blank">WhatsApp 联系我们</a>`;
+$("roomCards").innerHTML=SITE.rooms.map(r=>`<div class="card"><div class="ph" style="background-image:url(images/${r.id}.jpg)">${r.name}</div><div class="b"><h3>${r.name}</h3><div>可住 ${r.pax} 人</div><div class="tags">${r.tags.map(t=>`<span>${t}</span>`).join("")}</div><p>${r.desc}</p><div class="price">RM ${r.wk} 起 <small>/ 晚</small></div></div></div>`).join("");
+$("priceTable").innerHTML=`<tr><th>房型</th><th>可住</th><th>平日</th><th>周末</th><th>假日</th></tr>`+SITE.rooms.map(r=>`<tr><td>${r.name}</td><td>${r.pax} 人</td><td>RM ${r.wk}</td><td>RM ${r.we}</td><td>RM ${r.ph}</td></tr>`).join("");
+$("priceNote").textContent=SITE.priceNote;
+$("facList").innerHTML=SITE.facilities.map(f=>`<div><i>${f[0]}</i>${f[1]}</div>`).join("");
+$("faqList").innerHTML=SITE.faq.map(f=>`<details><summary>${f[0]}</summary><p>${f[1]}</p></details>`).join("");
+$("room").innerHTML=SITE.rooms.map(r=>`<option value="${r.id}">${r.name}（${r.pax}人）</option>`).join("");
+
+// 预订：自动算价
+const today=new Date().toISOString().slice(0,10);
+$("ci").min=today;$("co").min=today;
+function calc(){
+  const ci=$("ci").value,co=$("co").value;
+  if(!ci||!co||co<=ci){$("sum").textContent="请选好入住和退房日期";return null}
+  const r=SITE.rooms.find(x=>x.id===$("room").value);
+  let total=0,n=0;
+  for(let d=new Date(ci);d<new Date(co);d.setDate(d.getDate()+1)){
+    const w=d.getDay();total+=(w===5||w===6)?r.we:r.wk;n++;
+  }
+  $("sum").innerHTML=`${n} 晚，预计总价 <b>RM ${total}</b><br><small>（按平日/周末价计算，假日价以确认为准）</small>`;
+  return {r,n,total};
+}
+["ci","co","room"].forEach(i=>$(i).addEventListener("change",calc));
+$("ci").addEventListener("change",()=>{$("co").min=$("ci").value});
+$("bookForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const c=calc();if(!c)return alert("请选好入住和退房日期");
+  if(+$("pax").value>c.r.pax&&!confirm(`此房型可住 ${c.r.pax} 人，您填了 ${$("pax").value} 人，继续吗？`))return;
+  const msg=`您好，我想预订水木森林：\n房型：${c.r.name}\n入住：${$("ci").value}\n退房：${$("co").value}（${c.n}晚）\n人数：${$("pax").value}\n预计总价：RM ${c.total}\n名字：${$("name").value}\n电话：${$("tel").value}\n备注：${$("remark").value||"无"}`;
+  window.open("https://wa.me/"+SITE.whatsapp+"?text="+encodeURIComponent(msg),"_blank");
+});
+</script>
+</body>
+</html>
