@@ -14,7 +14,24 @@ nav{position:sticky;top:0;z-index:9;background:rgba(250,248,243,.95);backdrop-fi
 nav b{font-size:20px;color:var(--gd);letter-spacing:3px}
 nav div a{margin-left:18px;text-decoration:none;font-size:15px;color:var(--mut)}
 nav div a:hover{color:var(--g)}
-.hero{min-height:78vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:0 6vw;background:linear-gradient(rgba(20,45,32,.55),rgba(20,45,32,.7)),url("images/hero.jpg") center/cover,linear-gradient(135deg,#3d6b52,#1f3f2f)}
+.hero{position:relative;overflow:hidden;min-height:88vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;color:#fff;padding:0 6vw 90px;background:linear-gradient(rgba(20,45,32,.35),rgba(20,45,32,.55)),url("images/hero.jpg") center/cover,linear-gradient(180deg,#f3d9a8 0%,#9fc3a4 38%,#3d6b52 75%,#1f3f2f 100%)}
+.hero>*{position:relative;z-index:2}
+.hero svg{position:absolute;left:0;bottom:-2px;width:100%;height:42%;z-index:1}
+.hero .sun{position:absolute;z-index:0;top:14%;right:14%;width:min(18vw,140px);aspect-ratio:1;border-radius:50%;background:radial-gradient(#fff6dc,#f6d58f 60%,transparent 72%);opacity:.9}
+.hero small{letter-spacing:8px;font-size:14px;opacity:.9;margin-bottom:14px}
+.reveal{opacity:0;transform:translateY(24px);transition:.8s}
+.reveal.in{opacity:1;transform:none}
+.why{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:26px;text-align:center}
+.why div{padding:10px 14px}
+.why i{font-style:normal;display:flex;width:64px;height:64px;margin:0 auto 12px;border-radius:50%;background:var(--gl);align-items:center;justify-content:center;font-size:30px}
+.why h3{margin:0;color:var(--gd)}
+.why p{margin:6px 0 0;color:var(--mut);font-size:15px}
+.rev{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.rev blockquote{margin:0;background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 16px rgba(0,0,0,.06);position:relative}
+.rev blockquote:before{content:"“";position:absolute;top:-6px;left:14px;font-size:64px;color:var(--gold);opacity:.5}
+.rev cite{display:block;margin-top:10px;color:var(--mut);font-size:14px;font-style:normal}
+.step{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:26px;color:var(--g);font-size:15px}
+.step span{background:#fff;border-radius:20px;padding:4px 16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .hero h1{font-size:clamp(38px,8vw,72px);letter-spacing:12px;margin:0;font-weight:600}
 .hero p{font-size:clamp(16px,2.6vw,22px);letter-spacing:4px;margin:14px 0 30px}
 .btn{display:inline-block;background:var(--gold);color:#fff;border:0;padding:13px 34px;border-radius:30px;font-size:17px;text-decoration:none;cursor:pointer;font-family:inherit}
@@ -61,10 +78,23 @@ footer a{color:#fff}
 <nav><b>水木森林</b><div><a href="#rooms">房型</a><a href="#prices">价钱</a><a href="#book">预订</a><a href="#contact">联系</a></div></nav>
 
 <header class="hero">
+  <div class="sun"></div>
+  <small>FOREST · WATER · WOOD</small>
   <h1>水木森林</h1>
   <p>躲进森林 · 慢下来 · 好好生活</p>
   <a class="btn" href="#book">立即预订</a>
+  <svg viewBox="0 0 1200 300" preserveAspectRatio="none"><path fill="#4f7f64" opacity=".55" d="M0 300V160l40-70 40 70 30-50 50 90 40-80 50 100 40-60 50 80 40-90 50 110 40-70 50 90 40-60 50 90 40-100 50 110 40-70 50 80 40-60 50 90 40-90 50 100 40-70 50 80 40-50 40 80v130z"/><path fill="#2f5d46" opacity=".85" d="M0 300V210l30-60 30 60 40-90 40 100 30-50 40 70 40-100 40 110 30-60 40 80 40-110 40 120 30-60 40 70 40-90 40 100 30-50 40 80 40-110 40 100 30-60 40 90 40-80 40 90 30-50 40 70 40-100 40 110 30-60 40 60v110z"/><path fill="#1f3f2f" d="M0 300v-50l25-40 25 40 25-70 30 80 25-50 30 60 30-90 25 80 25-40 30 60 25-80 30 90 25-50 30 60 25-70 30 80 25-40 30 50 25-60 30 70 25-50 30 60 25-80 30 90 25-50 30 60 25-40 30 50 25-60 30 70 25-40 30 50 25-70 30 80 25-50 30 60 25-40 25 50v70z"/></svg>
 </header>
+
+<section id="why">
+  <h2>为什么选择水木森林</h2><p class="sub">Why us</p>
+  <div class="why">
+    <div class="reveal"><i>🌿</i><h3>被绿意包围</h3><p>推窗就是树林，空气清新，一夜好眠。</p></div>
+    <div class="reveal"><i>🔥</i><h3>围炉聊天</h3><p>BBQ、咖啡、夜里看星星，适合聚会。</p></div>
+    <div class="reveal"><i>👨‍👩‍👧</i><h3>老少皆宜</h3><p>家庭房、整栋别墅，大人小孩都自在。</p></div>
+    <div class="reveal"><i>📲</i><h3>预订简单</h3><p>选日期、看总价、WhatsApp 一键确认。</p></div>
+  </div>
+</section>
 
 <section id="about">
   <h2>关于我们</h2><p class="sub">About</p>
@@ -89,6 +119,7 @@ footer a{color:#fff}
 
 <section id="book">
   <h2>自助预订</h2><p class="sub">选好日期和房型，价钱自动算好，一键发给我们确认</p>
+  <div class="step"><span>① 选日期房型</span><span>② 看总价</span><span>③ WhatsApp 发送</span><span>④ 确认并付订金</span></div>
   <form id="bookForm">
     <div class="row">
       <div><label>入住日期</label><input type="date" id="ci" required></div>
@@ -107,6 +138,15 @@ footer a{color:#fff}
     <button class="btn" type="submit">通过 WhatsApp 发送预订</button>
     <p class="note">发送后我们会尽快回复确认房况，确认后再付订金。</p>
   </form>
+</section>
+
+<section id="reviews">
+  <h2>住客心声</h2><p class="sub">Reviews（示范文字，之后换成真实评价）</p>
+  <div class="rev">
+    <blockquote class="reveal">空气好，小孩玩得很开心，晚上 BBQ 气氛很棒！<cite>— 陈先生一家</cite></blockquote>
+    <blockquote class="reveal">房间干净舒服，老板人很好，下次还会再来。<cite>— Jessica</cite></blockquote>
+    <blockquote class="reveal">包下整栋木屋跟朋友小聚，价钱合理，很值得。<cite>— 阿杰</cite></blockquote>
+  </div>
 </section>
 
 <section id="faq" class="alt">
@@ -158,6 +198,10 @@ $("faqList").innerHTML=SITE.faq.map(f=>`<details><summary>${f[0]}</summary><p>${
 $("room").innerHTML=SITE.rooms.map(r=>`<option value="${r.id}">${r.name}（${r.pax}人）</option>`).join("");
 
 // 预订：自动算价
+const io=new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting&&e.target.classList.add("in")),{threshold:.15});
+document.querySelectorAll(".reveal").forEach(el=>io.observe(el));
+document.querySelectorAll(".card,.fac div").forEach(el=>{el.classList.add("reveal");io.observe(el)});
+document.documentElement.style.scrollBehavior="smooth";
 const today=new Date().toISOString().slice(0,10);
 $("ci").min=today;$("co").min=today;
 function calc(){
