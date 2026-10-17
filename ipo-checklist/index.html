@@ -1,0 +1,572 @@
+<title>IPO 上市体检表</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: ledger-style checklist on the left, sticky "readiness meter" on the right; stacks to one column on phones */
+:root {
+  --bg: #f4f6f4;
+  --surface: #ffffff;
+  --ink: #15231f;
+  --muted: #5d6c67;
+  --line: #dde3e0;
+  --accent: #0e5a4a;
+  --accent-soft: #e3efeb;
+  --brass: #9a6f24;
+  --ok: #2d7a4c;
+  --ok-soft: #e2f1e7;
+  --warn: #a8701a;
+  --warn-soft: #f8eedb;
+  --bad: #b03f2c;
+  --bad-soft: #f7e3df;
+  --na: #7a8682;
+  --na-soft: #eceeed;
+  --f-display: "Noto Serif SC", "Songti SC", "STSong", serif;
+  --f-body: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --f-num: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1513; --surface: #151f1c; --ink: #e5ebe8; --muted: #94a39e; --line: #26332f;
+    --accent: #52b89d; --accent-soft: #1b2d28; --brass: #d3a85c;
+    --ok: #5fc086; --ok-soft: #173025; --warn: #e2a84d; --warn-soft: #33281a;
+    --bad: #e8735e; --bad-soft: #3a1f1a; --na: #8b9894; --na-soft: #222b28;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1513; --surface: #151f1c; --ink: #e5ebe8; --muted: #94a39e; --line: #26332f;
+  --accent: #52b89d; --accent-soft: #1b2d28; --brass: #d3a85c;
+  --ok: #5fc086; --ok-soft: #173025; --warn: #e2a84d; --warn-soft: #33281a;
+  --bad: #e8735e; --bad-soft: #3a1f1a; --na: #8b9894; --na-soft: #222b28;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 15px; line-height: 1.65;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--f-display); text-wrap: balance; margin: 0; line-height: 1.3; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.num { font-family: var(--f-num); font-variant-numeric: tabular-nums; }
+
+.wrap { max-width: 1140px; margin: 0 auto; padding-block: 40px 64px; }
+.layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 40px; align-items: start; }
+
+/* Header */
+.eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--brass); font-weight: 700; }
+header.top { display: grid; gap: 14px; margin-bottom: 28px; max-width: 760px; }
+header.top h1 { font-size: clamp(30px, 5vw, 44px); }
+header.top p { margin: 0; color: var(--muted); max-width: 62ch; }
+.setup { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 20px; align-items: end; margin-top: 8px; padding: 18px 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field > span { font-size: 13px; color: var(--muted); font-weight: 500; }
+.field input[type="text"] { width: 100%; padding: 9px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.board { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--bg); }
+.board label { position: relative; cursor: pointer; }
+.board input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.board span { display: block; padding: 9px 14px; font-size: 14px; white-space: nowrap; }
+.board label + label span { border-left: 1px solid var(--line); }
+.board input:checked + span { background: var(--accent); color: var(--surface); font-weight: 500; }
+.board input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -2px; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--muted); grid-column: 1 / -1; }
+.legend b { font-family: var(--f-num); color: var(--ink); font-weight: 600; }
+
+/* Modules */
+.module { padding-block: 28px 8px; border-top: 2px solid var(--ink); }
+.module + .module { margin-top: 28px; }
+.mod-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 14px; align-items: baseline; }
+.mod-no { font-family: var(--f-num); font-size: 14px; color: var(--brass); font-weight: 600; }
+.mod-head h2 { font-size: 22px; }
+.mod-en { grid-column: 2; font-size: 13px; color: var(--muted); }
+.mod-score { grid-row: 1 / span 2; grid-column: 3; align-self: center; font-family: var(--f-num); font-size: 14px; padding: 3px 10px; border-radius: 99px; background: var(--na-soft); color: var(--na); white-space: nowrap; }
+.mod-score.ok { background: var(--ok-soft); color: var(--ok); }
+.mod-score.warn { background: var(--warn-soft); color: var(--warn); }
+.mod-score.bad { background: var(--bad-soft); color: var(--bad); }
+.standard { margin: 12px 0 4px; font-size: 13.5px; color: var(--muted); max-width: 70ch; }
+.standard strong { color: var(--ink); font-weight: 500; }
+
+.items { list-style: none; margin: 8px 0 0; padding: 0; }
+.item { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px 24px; padding-block: 16px; border-bottom: 1px solid var(--line); align-items: start; }
+.item-text { min-width: 0; }
+.item-q { margin: 0; font-weight: 500; }
+.item-h { margin: 4px 0 0; font-size: 13px; color: var(--muted); }
+.tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .06em; padding: 1px 7px; border-radius: 4px; background: var(--bad-soft); color: var(--bad); margin-right: 6px; vertical-align: 2px; }
+
+.choice { display: inline-grid; grid-template-columns: repeat(4, auto); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--surface); }
+.choice label { position: relative; cursor: pointer; }
+.choice label + label { border-left: 1px solid var(--line); }
+.choice input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+.choice span { display: block; padding: 6px 11px; font-size: 13px; color: var(--muted); white-space: nowrap; transition: background .15s, color .15s; }
+.choice label:hover span { color: var(--ink); }
+.choice input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: -2px; }
+.choice input[value="y"]:checked + span { background: var(--ok); color: var(--surface); font-weight: 500; }
+.choice input[value="p"]:checked + span { background: var(--warn); color: var(--surface); font-weight: 500; }
+.choice input[value="n"]:checked + span { background: var(--bad); color: var(--surface); font-weight: 500; }
+.choice input[value="na"]:checked + span { background: var(--na); color: var(--surface); font-weight: 500; }
+
+/* Sticky meter */
+aside.meter { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); display: grid; gap: 16px; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.meter-label { font-size: 13px; color: var(--muted); }
+.meter-score { display: flex; align-items: baseline; gap: 6px; }
+.meter-score .big { font-family: var(--f-num); font-size: 48px; font-weight: 600; line-height: 1; }
+.meter-score .of { color: var(--muted); font-family: var(--f-num); }
+.light { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; padding: 4px 12px 4px 10px; border-radius: 99px; justify-self: start; background: var(--na-soft); color: var(--na); }
+.light::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; }
+.light.ok { background: var(--ok-soft); color: var(--ok); }
+.light.warn { background: var(--warn-soft); color: var(--warn); }
+.light.bad { background: var(--bad-soft); color: var(--bad); }
+.progress { display: grid; gap: 6px; font-size: 13px; color: var(--muted); }
+.track { height: 6px; border-radius: 3px; background: var(--na-soft); overflow: hidden; }
+.track i { display: block; height: 100%; background: var(--accent); width: 0; transition: width .3s; }
+.mini { display: grid; gap: 5px; list-style: none; margin: 0; padding: 0; }
+.mini li { display: grid; grid-template-columns: 76px minmax(0, 1fr) 30px; gap: 8px; align-items: center; font-size: 12px; color: var(--muted); }
+.mini a { color: inherit; text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mini a:hover { color: var(--ink); }
+.mini .bar { height: 6px; border-radius: 3px; background: var(--na-soft); overflow: hidden; }
+.mini .bar i { display: block; height: 100%; width: 0; background: var(--na); transition: width .3s; }
+.mini .v { font-family: var(--f-num); text-align: right; color: var(--ink); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px 16px; border-radius: 6px; border: 1px solid var(--accent); background: var(--accent); color: var(--surface); font-weight: 500; cursor: pointer; text-decoration: none; font-size: 14px; }
+.btn.ghost { background: transparent; color: var(--accent); }
+.btn.danger { background: var(--bad); border-color: var(--bad); }
+
+/* Results */
+#result { margin-top: 48px; padding: 28px; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; display: grid; gap: 28px; }
+.res-head { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 8px 28px; align-items: center; }
+.res-head .big { font-family: var(--f-num); font-size: 72px; font-weight: 600; line-height: 1; }
+.res-head .big small { font-size: 20px; color: var(--muted); font-weight: 500; }
+.res-head h2 { font-size: 24px; }
+.res-head p { margin: 4px 0 0; color: var(--muted); max-width: 60ch; }
+.res-head .verdict { display: grid; gap: 8px; min-width: 0; }
+.chart { display: grid; gap: 10px; }
+.chart h3, .list-block h3 { font-size: 17px; }
+.bars { display: grid; gap: 8px; list-style: none; margin: 0; padding: 0; }
+.bars li { display: grid; grid-template-columns: 150px minmax(0, 1fr) 40px; gap: 12px; align-items: center; font-size: 14px; }
+.bars .bar { position: relative; height: 14px; background: var(--na-soft); border-radius: 3px; }
+.bars .bar i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 3px; background: var(--na); }
+.bars .bar .mark { position: absolute; top: -3px; bottom: -3px; width: 0; border-left: 1px dashed var(--muted); }
+.bars .v { font-family: var(--f-num); text-align: right; }
+.scale { display: grid; grid-template-columns: 150px minmax(0, 1fr) 40px; gap: 12px; font-size: 11px; color: var(--muted); font-family: var(--f-num); }
+.scale div { position: relative; height: 14px; }
+.scale span { position: absolute; transform: translateX(-50%); }
+.scale span:first-child { transform: none; }
+.scale span:last-child { transform: translateX(-100%); }
+.list-block { display: grid; gap: 10px; }
+.list-block ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.list-block li { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; font-size: 14px; padding: 10px 12px; border-radius: 6px; background: var(--bg); }
+.list-block li .who { font-size: 12px; color: var(--muted); }
+.pill { font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 4px; align-self: start; white-space: nowrap; }
+.pill.n { background: var(--bad-soft); color: var(--bad); }
+.pill.p { background: var(--warn-soft); color: var(--warn); }
+.empty { color: var(--muted); font-size: 14px; margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px; }
+#copyFallback { width: 100%; min-height: 160px; font-family: var(--f-num); font-size: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); }
+.status { font-size: 13px; color: var(--ok); }
+
+footer.note { margin-top: 32px; font-size: 12.5px; color: var(--muted); max-width: 80ch; display: grid; gap: 6px; }
+footer.note p { margin: 0; }
+
+@media (max-width: 920px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+  aside.meter { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; grid-row: 1; padding: 12px 16px; gap: 8px; grid-template-columns: auto minmax(0, 1fr); align-items: center; border-radius: 0 0 10px 10px; border-top: 0; }
+  body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--surface); }
+  aside.meter .meter-label, aside.meter .mini, aside.meter .btn { display: none; }
+  .meter-score .big { font-size: 32px; }
+  .progress { grid-column: 1 / -1; }
+  .wrap { padding-block: 24px 48px; }
+}
+@media (max-width: 640px) {
+  .setup { grid-template-columns: minmax(0, 1fr); }
+  .board { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .board span { text-align: center; padding-inline: 6px; }
+  .item { grid-template-columns: minmax(0, 1fr); }
+  .choice { display: grid; width: 100%; grid-template-columns: repeat(4, 1fr); }
+  .choice span { text-align: center; padding-inline: 4px; }
+  .res-head { grid-template-columns: minmax(0, 1fr); }
+  .bars li, .scale { grid-template-columns: 92px minmax(0, 1fr) 32px; gap: 8px; font-size: 13px; }
+  #result { padding: 20px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Bursa Malaysia · Main Market / ACE Market</div>
+    <h1>IPO 上市体检表</h1>
+    <p>10 大模块、60 个检查点，对照证券监督委员会（SC）与大马交易所（Bursa Malaysia）的上市要求。每一项按公司现况如实选择，右边会即时算出「上市就绪指数」，最下方列出需要优先整改的项目。</p>
+    <form class="setup" id="setup" autocomplete="off">
+      <label class="field">
+        <span>公司名称</span>
+        <input type="text" id="company" placeholder="例如：ABC Holdings Sdn Bhd">
+      </label>
+      <div class="field">
+        <span id="boardLabel">目标上市板块</span>
+        <div class="board" role="radiogroup" aria-labelledby="boardLabel">
+          <label><input type="radio" name="board" id="board-main" value="main"><span>主板 Main</span></label>
+          <label><input type="radio" name="board" id="board-ace" value="ace"><span>创业板 ACE</span></label>
+          <label><input type="radio" name="board" id="board-tbd" value="tbd" checked><span>还没决定</span></label>
+        </div>
+      </div>
+      <div class="legend">
+        <span>符合 <b>2 分</b></span><span>部分符合 <b>1 分</b></span><span>不符合 <b>0 分</b></span><span>不适用：不计分</span><span><span class="tag">关键</span>不符合即列为硬伤</span>
+      </div>
+    </form>
+  </header>
+
+  <div class="layout">
+    <main id="modules"></main>
+
+    <aside class="meter" aria-label="上市就绪指数">
+      <div class="meter-label">上市就绪指数</div>
+      <div class="meter-score"><span class="big num" id="mScore">0</span><span class="of">/ 100</span></div>
+      <span class="light" id="mLight">尚未作答</span>
+      <div class="progress">
+        <span>已完成 <b class="num" id="mDone">0</b> / <span class="num" id="mTotal">0</span> 项</span>
+        <div class="track"><i id="mTrack"></i></div>
+      </div>
+      <ul class="mini" id="mMini"></ul>
+      <a class="btn ghost" href="#result">看完整体检结果</a>
+    </aside>
+  </div>
+
+  <section id="result" aria-labelledby="resTitle">
+    <div class="res-head">
+      <div class="big" id="rScore">0<small> / 100</small></div>
+      <div class="verdict">
+        <span class="light" id="rLight">尚未作答</span>
+        <h2 id="resTitle">体检结果</h2>
+        <p id="rText">开始在上面逐项选择，这里会自动算出总分、红黄绿灯与整改清单。</p>
+      </div>
+    </div>
+
+    <div class="chart">
+      <h3>10 大模块得分</h3>
+      <div class="scale" aria-hidden="true"><span></span><div><span style="left:0">0</span><span style="left:60%">60</span><span style="left:85%">85</span><span style="left:100%">100</span></div><span></span></div>
+      <ul class="bars" id="rBars"></ul>
+    </div>
+
+    <div class="list-block">
+      <h3>关键硬伤（优先处理）</h3>
+      <ul id="rCritical"></ul>
+    </div>
+
+    <div class="list-block">
+      <h3>待整改项目</h3>
+      <ul id="rTodo"></ul>
+    </div>
+
+    <div class="actions">
+      <button type="button" class="btn" id="copyBtn">复制体检报告（可贴到 WhatsApp）</button>
+      <button type="button" class="btn ghost" id="resetBtn">全部重填</button>
+      <span class="status" id="copyStatus" role="status"></span>
+    </div>
+    <div class="confirm" id="resetConfirm" hidden>
+      <span>确定清空所有答案？</span>
+      <button type="button" class="btn danger" id="resetYes">清空</button>
+      <button type="button" class="btn ghost" id="resetNo">取消</button>
+    </div>
+    <textarea id="copyFallback" readonly hidden aria-label="体检报告文字"></textarea>
+  </section>
+
+  <footer class="note">
+    <p>本体检表只供企业初步自我评估，不构成法律、会计或投资意见。上市门槛以 SC《Equity Guidelines》与 Bursa《Listing Requirements》最新版本为准，正式申请前请与主要顾问（Principal Adviser）或保荐人（Sponsor）确认。</p>
+    <p>Wekah (PG) Sdn Bhd · 企业股权与上市规划</p>
+  </footer>
+</div>
+
+<script>
+const MODULES = [
+  { name: "业务与集团架构", short: "业务架构", en: "Core Business & Group Structure",
+    std: "Bursa 要求公司有一项<strong>清晰、可辨认的核心业务</strong>，集团架构干净，上市前完成重组。",
+    items: [
+      { t: "公司有一项清晰的核心业务，大部分收入来自这项业务。", h: "投资者要一眼看懂公司靠什么赚钱，业务太杂会被要求先拆分。" },
+      { t: "过去 3 年核心业务持续经营，没有大幅转行或主营频繁改变。", h: "业绩记录期内主营业务要连贯，才能证明盈利可持续。" },
+      { t: "集团每家公司的股权都清楚，没有替人代持、口头协议或历史股权纠纷。", h: "代持（nominee）和口头股份是上市尽调最常卡住的地方。", c: true },
+      { t: "老板私人资产（私人房产、车、其他生意）已与公司分开，或已有剥离计划。", h: "公私混在一起会让账目和资产归属说不清。" },
+      { t: "已规划上市架构（例如设立上市控股公司 Berhad），并了解重组步骤与税务成本。", h: "重组涉及印花税、产业盈利税（RPGT）等，越早规划成本越低。" },
+      { t: "关键资产（商标、专利、核心设备、主要厂房）登记在集团公司名下，而不是个人名下。", h: "核心资产在个人名下，等于公司命脉不在公司手里。" }
+    ] },
+  { name: "财务报表与审计", short: "财务审计", en: "MFRS Reporting & Audit Readiness",
+    std: "账目须按<strong>马来西亚财务报告准则（MFRS）</strong>编制，过去 3 个财政年度由认可审计师出具<strong>无保留意见</strong>。",
+    items: [
+      { t: "账目按 MFRS 编制，或已安排从中小企业准则（MPERS）转换到 MFRS。", h: "大多数私人公司用较简化的 MPERS，上市公司必须用 MFRS，转换要提前做。" },
+      { t: "最近 3 个财政年度的账目都已审计，审计意见是「无保留意见」（clean opinion）。", h: "审计报告有保留意见或特别强调事项，上市申请基本过不了。", c: true },
+      { t: "审计会计师行已在证监会审计监督委员会（AOB）注册，或已计划更换。", h: "上市公司的审计师必须是 AOB 注册的会计师行。" },
+      { t: "所有收入都进公司户口，没有用私人户口收款、现金不入账或两套账。", h: "私账私收是最严重的财务硬伤，必须在业绩记录期前彻底停止。", c: true },
+      { t: "每月能在 30 天内关好账，出管理报表（损益、资产负债、现金流）。", h: "上市后每季度要公布业绩，月结做不到就跟不上披露节奏。" },
+      { t: "发票、合同、送货单、采购单能互相对得上，单据完整可查。", h: "审计和尽调会抽查交易，单据不齐会被质疑收入真实性。" }
+    ] },
+  { name: "盈利与现金流", short: "盈利现金流", en: "Financial Track Record & Cash Flow",
+    std: "主板走盈利测试或市值测试；ACE 创业板没有最低盈利门槛，但更看重成长性与保荐人的认可。",
+    items: [
+      { tb: {
+          main: "符合主板门槛：过去 3–5 个完整财政年度持续盈利，累计税后利润 ≥ RM2,000 万，且最近一年 ≥ RM600 万；或上市时市值 ≥ RM5 亿。",
+          ace: "有清楚的成长故事与可信的业绩预测，且已有 ACE 保荐人（Sponsor）愿意支持。",
+          tbd: "盈利达到目标板块门槛（主板：3–5 年累计税后利润 ≥ RM2,000 万、最近一年 ≥ RM600 万，或市值 ≥ RM5 亿；ACE：无盈利门槛，需有保荐人支持）。"
+        }, h: "这是能否申请的硬门槛，先确定走哪个板块。", c: true },
+      { t: "过去 3 年营业额稳定或增长，下滑年份能清楚解释原因。", h: "投资者买的是未来，业绩趋势比单一年份更重要。" },
+      { t: "过去 2–3 年经营现金流（Operating Cash Flow）是正数。", h: "有利润但收不到钱，会被质疑利润质量。" },
+      { t: "现有营运资金足够应付未来 12 个月的营运需要。", h: "上市文件里董事须声明营运资金充足。" },
+      { t: "毛利率与同行相比合理，波动能说明原因。", h: "毛利明显高于同行会引来尽调深挖。" },
+      { t: "没有过度依赖单一客户或供应商（单一客户约占营收 30% 以上时，有长期合约或说明）。", h: "客户集中是招股书必须披露的风险，太集中会影响估值。" }
+    ] },
+  { name: "关联方交易与资金往来", short: "关联交易", en: "Related Party Transactions",
+    std: "上市前须清理董事、大股东及其关联方对公司的<strong>非贸易欠款</strong>；关联交易必须按<strong>市场公允价</strong>（arm's length）。",
+    items: [
+      { t: "董事、大股东及其家人或关联公司没有向公司借钱或占用公司资金（非贸易欠款已清零）。", h: "股东从公司拿钱是上市前必须清零的项目。", c: true },
+      { t: "公司没有替董事、股东或关联公司做担保或抵押。", h: "上市前通常须解除这类担保，或换成由关联方担保公司。" },
+      { t: "与关联公司的买卖按市场价，有合同和比价记录。", h: "要能证明交易没有把利益输送给大股东。" },
+      { t: "董事和大股东没有在外面经营与公司竞争的同类生意。", h: "利益冲突（conflict of interest）上市前必须解决，例如注入集团或结束营业。", c: true },
+      { t: "关联交易占营收或采购的比例不高，或已有逐步降低的计划。", h: "比例太高会被质疑公司是否能独立经营。" },
+      { t: "有一份关联方清单（谁是关联人、哪些公司），并定期更新。", h: "上市后每笔关联交易都要按规定审批与公告。" }
+    ] },
+  { name: "董事会与内部控制", short: "董事会内控", en: "Board, Internal Control & MCCG",
+    std: "须符合 Bursa 上市条例与<strong>马来西亚企业管治守则（MCCG）</strong>：独立董事比例、女性董事、各委员会与内控制度。",
+    items: [
+      { t: "独立非执行董事至少 2 名或占董事会 1/3（取较高者）；MCCG 建议达半数。", h: "这是 Bursa 上市条例的硬性要求。" },
+      { t: "董事会至少有 1 名女性董事。", h: "Bursa 现行上市条例要求上市公司董事会至少有 1 名女性。" },
+      { t: "已设立或规划审计委员会（至少 3 名非执行董事，多数独立），以及提名、薪酬、风险管理委员会。", h: "审计委员会主席须为独立董事，且须有成员具会计资格。" },
+      { t: "有书面内控制度：审批权限表（谁能批多少钱）、采购、付款、存货、收款流程。", h: "老板一人拍板所有事，是上市尽调最常见的内控缺口。" },
+      { t: "有内部审计功能（自设或外包），定期检查内控执行情况。", h: "上市公司须设内部审计，并向审计委员会汇报。" },
+      { t: "有反贪污政策与举报机制，符合 MACC 法令第 17A 条「足够程序」要求。", h: "公司员工行贿，公司与董事可能要负刑事责任；有足够程序才可作为抗辩。" }
+    ] },
+  { name: "管理层与关键人才", short: "管理团队", en: "Management Continuity & Key Personnel",
+    std: "主要管理层在业绩记录期内须<strong>保持连续稳定</strong>，并降低对单一创始人的依赖（Key-man risk）。",
+    items: [
+      { t: "核心管理团队过去 3 年基本稳定，没有频繁更换。", h: "主板要求主要管理层在业绩记录期内保持连续。" },
+      { t: "老板离开 1 个月，公司日常运营照样正常。", h: "业务过度依赖一个人，投资者会担心可持续性，估值会打折。" },
+      { t: "有合格的财务总监（CFO），具专业会计资格（如 MIA、ACCA、CPA）。", h: "CFO 的资历是保荐人和监管机构必看的项目。" },
+      { t: "主要部门都有第二梯队或接班人。", h: "有接班梯队，才能说服投资者公司能长期增长。" },
+      { t: "关键人员签有劳动合同、保密与竞业条款，并有留人激励方案（如员工股权计划 ESOS）。", h: "股权激励是上市前留住核心人才最常用的工具。" },
+      { t: "董事与高管没有破产、刑事定罪或被监管机构处罚的记录。", h: "董事背景审查不过关，会直接影响上市申请。", c: true }
+    ] },
+  { name: "法律、税务与执照", short: "法律税务", en: "Legal, Tax & Regulatory Clearances",
+    std: "公司及子公司须持有所有<strong>营运执照与准证</strong>，<strong>LHDN 税务</strong>记录合规，没有威胁持续经营的重大诉讼。",
+    items: [
+      { t: "营运所需的执照与准证齐全且有效（地方政府营业执照、BOMBA 消防证、行业执照如 KPDN、CIDB 等）。", h: "缺照营运会在招股书里被列为风险，严重的要先补齐。" },
+      { t: "所得税、SST 销售及服务税准时申报，没有重大未解决的税务稽查或争议。", h: "LHDN 大额追税或争议未结，是常见的上市障碍。", c: true },
+      { t: "已按 LHDN 时间表实施电子发票（e-Invoice）。", h: "e-Invoice 已分阶段强制实施，也让收入记录更透明。" },
+      { t: "自有或租用的土地、厂房、办公室有合法地契或租约，用途符合规定（无违建、无地契用途不符）。", h: "例如在农业地或住宅区经营工厂，会被要求整改或搬迁。" },
+      { t: "没有可能严重影响公司持续经营的重大诉讼或仲裁。", h: "所有重大诉讼都要在招股书披露。", c: true },
+      { t: "主要合约（客户、供应商、银行贷款）都有书面合同，且没有「控制权变更即终止」等会影响上市的条款。", h: "银行贷款常有股权变动需事先同意的条款，上市前要先取得同意。" }
+    ] },
+  { name: "股权架构与上市安排", short: "股权安排", en: "Shareholding, Public Spread & Moratorium",
+    std: "须符合<strong>公众持股分布</strong>（Public Spread）、<strong>土著股权</strong>分配与控股股东<strong>禁售期</strong>（Moratorium）规定。",
+    items: [
+      { t: "股东名册清楚，所有股东身份明确，股份已全额缴付，没有未登记的口头承诺股份。", h: "答应给员工或朋友的「口头股份」上市前一定要处理清楚。", c: true },
+      { t: "创始人了解并接受上市后至少 6 个月不能卖股，之后分阶段解禁。", h: "禁售期让投资者安心，控股股东的变现要按规定逐步进行。" },
+      { tb: {
+          main: "了解主板公众持股要求：上市时至少 25% 股份由至少 1,000 名公众股东持有（每人至少 100 股）。",
+          ace: "了解 ACE 公众持股要求：上市时至少 25% 股份由至少 200 名公众股东持有（每人至少 100 股）。",
+          tbd: "了解公众持股要求：至少 25% 股份由公众持有（主板至少 1,000 名公众股东，ACE 至少 200 名，每人至少 100 股）。"
+        }, h: "这决定了创始人上市后的持股比例上限。" },
+      { t: "了解土著（Bumiputera）股权分配要求，并已纳入股权规划。", h: "主板上市时一般须把部分股份（目前为扩大后股本 12.5%）分配给 MITI 认可的土著投资者；ACE 的安排不同，须与顾问确认。" },
+      { t: "Pre-IPO 投资者的协议已检查过，没有与上市规则冲突的特别权利（如否决权、对赌回购条款）。", h: "这类特别权利通常须在上市前终止，否则影响审批。" },
+      { t: "创始人已想清楚上市后要保留多少控股权，以及家族成员的持股安排。", h: "股权稀释后仍要守住控制权，越早设计越有空间。" }
+    ] },
+  { name: "ESG 与员工合规", short: "ESG 员工", en: "ESG, Labour & Environmental Compliance",
+    std: "Bursa 要求上市公司披露<strong>可持续发展报告</strong>，劳工、环境与职业安全合规是基本门槛。",
+    items: [
+      { t: "EPF（KWSP）、SOCSO（PERKESO）、EIS、HRD Corp 都按时足额缴交，没有欠款。", h: "法定缴款欠交会被罚款，也会被尽调列为风险。" },
+      { t: "遵守雇佣法令与最低薪金规定；外劳准证有效，宿舍符合第 446 号法令（员工住宿最低标准）。", h: "外劳问题也会影响出口客户与外国买家的采购决定。" },
+      { t: "符合环境局（DOE）规定：排放、废料（含 scheduled waste）处理有记录、有许可。", h: "制造业尤其要注意，违规可能被勒令停工。" },
+      { t: "符合职业安全与卫生法令（OSHA）：有安全负责人或安全委员会，有事故记录。", h: "OSHA 2022 年修订后，雇主责任和罚款都提高了。" },
+      { t: "已开始收集基础 ESG 数据（用电、用水、碳排放、员工人数与培训时数）。", h: "上市后须按 Bursa 要求发布可持续发展报告，包括气候相关披露。" },
+      { t: "能回应大客户或外国买家的 ESG 问卷（例如不使用强迫劳动、供应链诚信）。", h: "很多跨国客户已把 ESG 列为供应商门槛。" }
+    ] },
+  { name: "顾问团队与筹备进度", short: "顾问筹备", en: "Adviser Ecosystem & IPO Timeline",
+    std: "上市是系统工程，必须有<strong>主要顾问或保荐人</strong>、报告会计师、律师等专业团队，以及清楚的时间表与预算。",
+    items: [
+      { t: "已初步接触主要顾问（Principal Adviser，主板）或保荐人（Sponsor，ACE），通常是投资银行。", h: "上市申请必须由他们提交，越早接触越能提前发现问题。" },
+      { t: "已接触报告会计师（Reporting Accountant）、法律顾问，及（需要时）估值师与独立市场调查机构（IMR）。", h: "这几方的报告都会放进招股书。" },
+      { t: "公司内部有 IPO 项目负责人和小组，定期开会跟进。", h: "老板一个人推动，上市进度通常会拖很久。" },
+      { t: "有清楚的上市时间表（一般从筹备到挂牌约 18–36 个月）与预算（顾问费、审计、包销等）。", h: "提前预留预算和时间，才不会因资金或进度卡住。" },
+      { t: "有清楚的募资用途：上市集到的钱用来做什么（扩厂、还债、并购、研发），并能说明回报。", h: "募资用途是投资者和监管机构都会仔细看的部分。" },
+      { t: "已做过 Pre-IPO 内部体检或模拟尽职调查（due diligence），并有整改清单。", h: "先自己查出问题，比被投行查出来更省时间和费用。" }
+    ] }
+];
+
+const PTS = { y: 2, p: 1, n: 0 };
+const OPTS = [["y", "符合"], ["p", "部分符合"], ["n", "不符合"], ["na", "不适用"]];
+const KEY = "wekah-ipo-checklist-v1";
+const $ = id => document.getElementById(id);
+
+let state = { company: "", board: "tbd", ans: {} };
+try { const s = JSON.parse(localStorage.getItem(KEY)); if (s && s.ans) state = Object.assign(state, s); } catch (e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} };
+
+const itemText = it => it.tb ? it.tb[state.board] : it.t;
+const level = s => s == null ? "" : s >= 85 ? "ok" : s >= 60 ? "warn" : "bad";
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function render() {
+  const root = $("modules");
+  root.innerHTML = MODULES.map((m, mi) => `
+    <section class="module" id="m${mi + 1}">
+      <div class="mod-head">
+        <span class="mod-no">${String(mi + 1).padStart(2, "0")}</span>
+        <h2>${m.name}</h2>
+        <span class="mod-score" id="ms${mi}">—</span>
+        <span class="mod-en">${m.en}</span>
+      </div>
+      <p class="standard">${m.std}</p>
+      <ol class="items">
+        ${m.items.map((it, ii) => {
+          const k = `${mi}-${ii}`;
+          return `<li class="item">
+            <div class="item-text">
+              <p class="item-q" id="q${k}">${it.c ? '<span class="tag">关键</span>' : ""}<span data-t="${k}">${itemText(it)}</span></p>
+              <p class="item-h">${it.h}</p>
+            </div>
+            <div class="choice" role="radiogroup" aria-labelledby="q${k}">
+              ${OPTS.map(([v, l]) => `<label><input type="radio" name="a${k}" id="a${k}-${v}" value="${v}"${state.ans[k] === v ? " checked" : ""}><span>${l}</span></label>`).join("")}
+            </div>
+          </li>`;
+        }).join("")}
+      </ol>
+    </section>`).join("");
+
+  $("mMini").innerHTML = MODULES.map((m, mi) =>
+    `<li><a href="#m${mi + 1}">${mi + 1}. ${m.short}</a><span class="bar"><i id="mb${mi}"></i></span><span class="v" id="mv${mi}">—</span></li>`).join("");
+  $("rBars").innerHTML = MODULES.map((m, mi) =>
+    `<li><span>${m.short}</span><span class="bar"><i id="rb${mi}"></i><span class="mark" style="left:60%"></span><span class="mark" style="left:85%"></span></span><span class="v" id="rv${mi}">—</span></li>`).join("");
+  $("mTotal").textContent = MODULES.reduce((a, m) => a + m.items.length, 0);
+}
+
+function compute() {
+  let done = 0, total = 0;
+  const critical = [], todo = [];
+  const mods = MODULES.map((m, mi) => {
+    let got = 0, max = 0;
+    m.items.forEach((it, ii) => {
+      const a = state.ans[`${mi}-${ii}`];
+      total++;
+      if (a) done++;
+      if (a === "na") return;
+      max += 2;
+      if (a) got += PTS[a];
+      if (a === "n" && it.c) critical.push({ mi, it });
+      else if (a === "n" || a === "p") todo.push({ mi, it, a });
+    });
+    const answered = m.items.some((_, ii) => state.ans[`${mi}-${ii}`]);
+    return answered && max ? Math.round(got / max * 100) : null;
+  });
+  const scored = mods.filter(s => s != null);
+  const score = scored.length ? Math.round(scored.reduce((a, b) => a + b, 0) / scored.length) : null;
+  todo.sort((a, b) => (a.a === "n" ? 0 : 1) - (b.a === "n" ? 0 : 1) || a.mi - b.mi);
+  return { mods, score, done, total, critical, todo };
+}
+
+function verdict(r) {
+  if (r.score == null) return { lv: "", label: "尚未作答", text: "开始在上面逐项选择，这里会自动算出总分、红黄绿灯与整改清单。" };
+  let lv = level(r.score);
+  const hard = r.critical.length;
+  if (hard && lv === "ok") lv = "warn";
+  const base = {
+    ok: ["绿灯：具备申报雏形", "企业已基本具备 Bursa 上市雏形，建议对接投资银行，进入 Pre-IPO 尽职调查阶段。"],
+    warn: ["黄灯：需专项整改", "方向正确，但在财务、内控或关联交易等方面仍有缺口。建议针对失分模块做 6–18 个月的专项整改。"],
+    bad: ["红灯：暂未就绪", "目前合规风险较高。建议先做集团架构重组与财务规范化，再评估上市时间表。"]
+  }[lv];
+  let text = base[1];
+  if (hard) text = `有 ${hard} 项关键硬伤未解决，须先处理才能进入申报阶段。` + text;
+  if (r.done < r.total) text += `（目前完成 ${r.done}/${r.total} 项，未答项目以 0 分计算。）`;
+  return { lv, label: base[0], text };
+}
+
+function setLight(el, v) { el.className = "light" + (v.lv ? " " + v.lv : ""); el.textContent = v.label; }
+
+function update() {
+  const r = compute(), v = verdict(r);
+  const sc = r.score == null ? 0 : r.score;
+  $("mScore").textContent = sc;
+  $("rScore").innerHTML = `${sc}<small> / 100</small>`;
+  setLight($("mLight"), v); setLight($("rLight"), v);
+  $("rText").textContent = v.text;
+  $("mDone").textContent = r.done;
+  $("mTrack").style.width = (r.done / r.total * 100) + "%";
+
+  r.mods.forEach((s, mi) => {
+    const lv = level(s), w = (s == null ? 0 : s) + "%";
+    const color = lv ? `var(--${lv})` : "var(--na)";
+    const chip = $("ms" + mi);
+    chip.className = "mod-score" + (lv ? " " + lv : "");
+    chip.textContent = s == null ? "未作答" : `${s} 分`;
+    $("mb" + mi).style.width = w; $("mb" + mi).style.background = color;
+    $("rb" + mi).style.width = w; $("rb" + mi).style.background = color;
+    $("mv" + mi).textContent = s == null ? "—" : s;
+    $("rv" + mi).textContent = s == null ? "—" : s;
+  });
+
+  const row = (x, pill, cls) => `<li><span class="pill ${cls}">${pill}</span><div><div class="who">${MODULES[x.mi].name}</div>${esc(itemText(x.it))}</div></li>`;
+  $("rCritical").innerHTML = r.critical.length
+    ? r.critical.map(x => row(x, "不符合", "n")).join("")
+    : `<li><span></span><p class="empty">${r.done ? "目前没有关键项目被标为不符合。" : "关键项目（标有「关键」）若选「不符合」，会列在这里。"}</p></li>`;
+  $("rTodo").innerHTML = r.todo.length
+    ? r.todo.map(x => row(x, x.a === "n" ? "不符合" : "部分符合", x.a)).join("")
+    : `<li><span></span><p class="empty">${r.done ? "目前没有待整改项目。" : "选了「不符合」或「部分符合」的项目会列在这里，作为整改清单。"}</p></li>`;
+}
+
+function reportText() {
+  const r = compute(), v = verdict(r);
+  const boardName = { main: "主板 Main Market", ace: "创业板 ACE Market", tbd: "未决定" }[state.board];
+  const lines = [
+    "【IPO 上市体检结果】",
+    `公司：${state.company || "（未填写）"}`,
+    `目标板块：${boardName}`,
+    `上市就绪指数：${r.score == null ? 0 : r.score} / 100（${v.label}）`,
+    `完成度：${r.done} / ${r.total} 项`,
+    "",
+    "各模块得分："
+  ];
+  r.mods.forEach((s, mi) => lines.push(`${mi + 1}. ${MODULES[mi].name}：${s == null ? "未作答" : s + " 分"}`));
+  lines.push("", "关键硬伤：");
+  if (r.critical.length) r.critical.forEach(x => lines.push(`• [${MODULES[x.mi].short}] ${itemText(x.it)}`)); else lines.push("• 无");
+  lines.push("", "待整改：");
+  if (r.todo.length) r.todo.forEach(x => lines.push(`• [${x.a === "n" ? "不符合" : "部分符合"}] ${itemText(x.it)}`)); else lines.push("• 无");
+  lines.push("", v.text, "", "—— Wekah (PG) Sdn Bhd · 企业股权与上市规划");
+  return lines.join("\n");
+}
+
+$("modules").addEventListener("change", e => {
+  const t = e.target;
+  if (t.type !== "radio") return;
+  state.ans[t.name.slice(1)] = t.value;
+  save(); update();
+});
+$("company").value = state.company;
+$("company").addEventListener("input", e => { state.company = e.target.value; save(); });
+$("setup").addEventListener("submit", e => e.preventDefault());
+const boardInput = $("board-" + state.board);
+if (boardInput) boardInput.checked = true;
+document.querySelectorAll('input[name="board"]').forEach(el => el.addEventListener("change", () => {
+  state.board = el.value; save();
+  MODULES.forEach((m, mi) => m.items.forEach((it, ii) => {
+    if (it.tb) document.querySelector(`[data-t="${mi}-${ii}"]`).textContent = itemText(it);
+  }));
+  update();
+}));
+
+$("copyBtn").addEventListener("click", () => {
+  const text = reportText(), fb = $("copyFallback");
+  const fallback = () => { fb.hidden = false; fb.value = text; fb.focus(); fb.select(); $("copyStatus").textContent = "请按 Ctrl+C（手机长按）复制下方文字。"; };
+  try {
+    navigator.clipboard.writeText(text).then(() => { fb.hidden = true; $("copyStatus").textContent = "已复制，可直接贴到 WhatsApp 或电邮。"; }, fallback);
+  } catch (e) { fallback(); }
+});
+$("resetBtn").addEventListener("click", () => { $("resetConfirm").hidden = false; });
+$("resetNo").addEventListener("click", () => { $("resetConfirm").hidden = true; });
+$("resetYes").addEventListener("click", () => {
+  state.ans = {}; save();
+  document.querySelectorAll('#modules input[type="radio"]').forEach(el => { el.checked = false; });
+  $("resetConfirm").hidden = true; $("copyFallback").hidden = true; $("copyStatus").textContent = "已清空。";
+  update();
+});
+
+render();
+update();
+</script>
