@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!--PAGE-->
+<title>林栖森林疗愈民宿</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Cormorant+Garamond:ital,wght@0,500;1,500&display=swap">
+<style>
+/* 版式：像走进森林——雾气浅色的白天，夜里切换成萤火虫配色；内容左对齐，一条竖向“步道”贯穿 */
+:root {
+  --bg: #EDF0EA;          /* 晨雾 */
+  --surface: #F7F8F4;
+  --fg: #1B2A21;          /* 深林 */
+  --muted: #56655B;
+  --line: #CBD3C8;
+  --moss: #2E5A43;        /* 苔藓（主色） */
+  --moss-ink: #F2F5EF;
+  --fern: #8BA884;
+  --glow: #B9C24A;        /* 萤火虫（点缀） */
+  --wa: #1E8E57;
+  --serif: "Noto Serif SC", "Songti SC", "SimSun", serif;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --latin: "Cormorant Garamond", Georgia, serif;
+  --r: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0E1813; --surface: #15221B; --fg: #E1E9DF; --muted: #9AAB9E; --line: #2A3B31;
+    --moss: #7FB592; --moss-ink: #0E1813; --fern: #5E8268; --glow: #DCE77A; --wa: #3DBE7E;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0E1813; --surface: #15221B; --fg: #E1E9DF; --muted: #9AAB9E; --line: #2A3B31;
+  --moss: #7FB592; --moss-ink: #0E1813; --fern: #5E8268; --glow: #DCE77A; --wa: #3DBE7E;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--sans); font-size: 16px; line-height: 1.7;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { animation: none !important; transition: none !important; } }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--glow); outline-offset: 3px; }
+h1, h2, h3 { font-family: var(--serif); text-wrap: balance; margin: 0; line-height: 1.3; }
+.wrap {
+  max-width: 1120px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+section { padding-block: 72px; }
+.eyebrow { font-size: 13px; letter-spacing: .16em; color: var(--muted); text-transform: uppercase; }
+.eyebrow .en { font-family: var(--latin); font-style: italic; letter-spacing: .04em; text-transform: none; font-size: 16px; }
+.sec-head { display: grid; gap: 10px; max-width: 640px; margin-bottom: 36px; }
+.sec-head h2 { font-size: clamp(26px, 4vw, 36px); font-weight: 600; }
+.sec-head p { margin: 0; color: var(--muted); }
+
+/* 顶部导航 */
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.nav { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 12px; }
+.brand { font-family: var(--serif); font-weight: 700; font-size: 20px; text-decoration: none; display: flex; align-items: baseline; gap: 8px; }
+.brand small { font-family: var(--latin); font-style: italic; font-weight: 500; font-size: 15px; color: var(--muted); }
+.nav ul { display: flex; gap: 22px; list-style: none; margin: 0; padding: 0; font-size: 15px; }
+.nav ul a { text-decoration: none; color: var(--muted); }
+.nav ul a:hover { color: var(--fg); }
+@media (max-width: 760px) { .nav ul { display: none; } }
+
+.btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 999px; font-weight: 500; text-decoration: none; border: 1px solid transparent; cursor: pointer; font: inherit; font-size: 15px; }
+.btn-wa { background: var(--wa); color: #fff; }
+.btn-wa:hover { filter: brightness(1.08); }
+.btn-ghost { border-color: var(--line); background: transparent; color: var(--fg); }
+.btn-ghost:hover { border-color: var(--moss); }
+.wa-ico { width: 18px; height: 18px; flex: none; }
+
+/* 照片占位：用画出来的森林代替，之后换成真照片 */
+.ph {
+  --a: #9DB59A; --b: #2E5A43; --sun: rgba(255,250,215,.55);
+  position: relative; overflow: hidden; border-radius: var(--r);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='46' height='70' viewBox='0 0 46 70'%3E%3Cpath d='M23 4 L37 34 H30 L42 62 H4 L16 34 H9 Z' fill='rgba(8,24,16,.55)'/%3E%3Crect x='21' y='60' width='4' height='10' fill='rgba(8,24,16,.55)'/%3E%3C/svg%3E") repeat-x left bottom / 46px 70px,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='120' viewBox='0 0 80 120'%3E%3Cpath d='M40 6 L62 56 H51 L70 104 H10 L29 56 H18 Z' fill='rgba(8,24,16,.25)'/%3E%3C/svg%3E") repeat-x 20px calc(100% - 26px) / 80px 120px,
+    radial-gradient(ellipse 60% 50% at 70% 18%, var(--sun), transparent 70%),
+    linear-gradient(180deg, var(--a), var(--b));
+}
+.ph .tag { position: absolute; left: 10px; top: 10px; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.78); color: #1B2A21; }
+
+/* 首屏 */
+.hero { padding-block: 40px 56px; }
+.hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 40px; align-items: center; }
+.hero h1 { font-size: clamp(36px, 6vw, 64px); font-weight: 700; letter-spacing: .02em; }
+.hero h1 em { font-style: normal; color: var(--moss); }
+.hero .lead { font-size: 18px; color: var(--muted); max-width: 30em; margin: 18px 0 26px; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.hero .ph { aspect-ratio: 4 / 5; max-width: 100%; --a: #C9D8C2; --b: #3B6B50; }
+.facts { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; margin-top: 40px; border-top: 1px solid var(--line); }
+.fact { padding: 16px 12px 0 0; display: grid; gap: 2px; }
+.fact b { font-family: var(--latin); font-size: 30px; font-weight: 500; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.fact span { font-size: 13px; color: var(--muted); }
+@media (max-width: 860px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero .ph { aspect-ratio: 16 / 10; order: -1; }
+  .facts { grid-template-columns: repeat(2, 1fr); row-gap: 16px; }
+}
+
+/* 疗愈活动 */
+.acts { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 24px; }
+.act { display: grid; gap: 12px; align-content: start; }
+.act .ph { aspect-ratio: 3 / 2; }
+.act h3 { font-size: 20px; font-weight: 600; }
+.act p { margin: 0; color: var(--muted); font-size: 15px; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px; font-size: 13px; }
+.chip { padding: 2px 10px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.inc { border-color: var(--moss); color: var(--moss); }
+@media (max-width: 900px) { .acts { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .acts { grid-template-columns: 1fr; } }
+
+/* 一天的节奏 */
+.day { background: var(--surface); border-block: 1px solid var(--line); }
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+.timeline li { display: grid; gap: 4px; padding-top: 14px; border-top: 2px solid var(--fern); }
+.timeline time { font-family: var(--latin); font-size: 22px; font-variant-numeric: tabular-nums; }
+.timeline span { font-size: 14px; color: var(--muted); }
+@media (max-width: 900px) { .timeline { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 520px) { .timeline { grid-template-columns: repeat(2, 1fr); } }
+
+/* 房间 */
+.rooms { display: grid; grid-template-columns: repeat(2, 1fr); gap: 28px; }
+.room { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: grid; grid-template-rows: auto 1fr; }
+.room .ph { aspect-ratio: 16 / 9; border-radius: 0; }
+.room-body { padding: 20px 22px 22px; display: grid; gap: 12px; align-content: start; }
+.room-top { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.room h3 { font-size: 22px; font-weight: 600; }
+.room h3 small { display: block; font-family: var(--latin); font-style: italic; font-weight: 500; font-size: 15px; color: var(--muted); }
+.price { text-align: right; font-variant-numeric: tabular-nums; }
+.price b { font-family: var(--latin); font-size: 30px; font-weight: 500; }
+.price span { display: block; font-size: 12px; color: var(--muted); }
+.room p { margin: 0; color: var(--muted); font-size: 15px; }
+.specs { display: grid; grid-template-columns: repeat(3, 1fr); border-block: 1px solid var(--line); padding-block: 10px; font-size: 14px; }
+.specs div { display: grid; }
+.specs small { color: var(--muted); font-size: 12px; }
+.room .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 4px; }
+@media (max-width: 820px) { .rooms { grid-template-columns: 1fr; } }
+
+/* 预约咨询 */
+.book-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+form.book { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); padding: 24px; display: grid; gap: 16px; }
+.field { display: grid; gap: 6px; min-width: 0; }
+.field label { font-size: 14px; color: var(--muted); }
+.field input, .field select, .field textarea { font: inherit; font-size: 16px; color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: var(--r); padding: 10px 12px; width: 100%; min-width: 0; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.quote { border-top: 1px dashed var(--line); padding-top: 14px; display: grid; gap: 4px; font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.quote .total { font-size: 15px; color: var(--fg); }
+.quote .total b { font-family: var(--latin); font-size: 30px; font-weight: 500; }
+.err { color: #B4442F; font-size: 14px; }
+.notes { display: grid; gap: 22px; }
+.notes h3 { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+.notes p, .notes ul { margin: 0; color: var(--muted); font-size: 15px; }
+.notes ul { padding-left: 1.2em; }
+@media (max-width: 820px) { .book-grid { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .row2 { grid-template-columns: 1fr; } }
+
+footer { border-top: 1px solid var(--line); padding-block: 32px; color: var(--muted); font-size: 14px; }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 32px; justify-content: space-between; }
+
+.float-wa { position: fixed; right: calc(18px + env(safe-area-inset-right, 0px)); bottom: calc(18px + env(safe-area-inset-bottom, 0px)); z-index: 6; box-shadow: 0 6px 20px rgba(0,0,0,.18); }
+</style>
+<!--/HEAD-->
+</head>
+<body>
+
+<nav class="nav" aria-label="主菜单">
+  <div class="wrap">
+    <a class="brand" href="#top">林栖 <small>Linqi Forest Retreat</small></a>
+    <ul>
+      <li><a href="#activities">疗愈活动</a></li>
+      <li><a href="#rooms">房间与价钱</a></li>
+      <li><a href="#book">预约咨询</a></li>
+    </ul>
+    <a class="btn btn-wa wa-link" data-msg="你好，我想了解林栖森林民宿。" href="#" target="_blank" rel="noopener">
+      <svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2c.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3Z"/></svg>
+      WhatsApp
+    </a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow">彭亨 · 文冬山区 <span class="en">— a quiet place in the rainforest</span></p>
+        <h1>把手机放下，<br>让<em>森林</em>替你呼吸。</h1>
+        <p class="lead">离吉隆坡一个半小时的雨林里，只有六间房。早上做森林浴，晚上看萤火虫，中间什么都不用做。</p>
+        <div class="cta">
+          <a class="btn btn-wa" href="#rooms">看房间和价钱</a>
+          <a class="btn btn-ghost" href="#activities">看疗愈活动</a>
+        </div>
+        <div class="facts">
+          <div class="fact"><b>1.5h</b><span>吉隆坡开车</span></div>
+          <div class="fact"><b>18–24°C</b><span>全年平均气温</span></div>
+          <div class="fact"><b>800m</b><span>海拔</span></div>
+          <div class="fact"><b>6</b><span>间房，最多 20 人</span></div>
+        </div>
+      </div>
+      <div class="ph" role="img" aria-label="民宿外观照片位置"><span class="tag">放民宿外观照片</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="activities">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">疗愈活动 <span class="en">Healing in the forest</span></p>
+      <h2>每天都有带领老师，跟着做就好</h2>
+      <p>标着「住客免费」的活动已经包含在房价里；其他活动可以入住时再加。</p>
+    </div>
+    <div class="acts">
+      <article class="act">
+        <div class="ph" style="--a:#B9CFB0;--b:#2F5A40" role="img" aria-label="森林浴照片位置"><span class="tag">放活动照片</span></div>
+        <h3>森林浴 · 慢走</h3>
+        <p>老师带你在雨林步道慢慢走，听溪水、摸树皮、闻泥土。不是爬山，是放慢。</p>
+        <div class="meta"><span class="chip">07:30</span><span class="chip">2 小时</span><span class="chip">最多 12 人</span><span class="chip inc">住客免费</span></div>
+      </article>
+      <article class="act">
+        <div class="ph" style="--a:#D7DDC4;--b:#55714F" role="img" aria-label="晨间瑜伽照片位置"><span class="tag">放活动照片</span></div>
+        <h3>晨间瑜伽</h3>
+        <p>在木平台上面对山谷做温和瑜伽，零基础也可以，主要是伸展和呼吸。</p>
+        <div class="meta"><span class="chip">06:45</span><span class="chip">45 分钟</span><span class="chip">最多 15 人</span><span class="chip inc">住客免费</span></div>
+      </article>
+      <article class="act">
+        <div class="ph" style="--a:#C7B99A;--b:#5A4A33;--sun:rgba(255,220,170,.5)" role="img" aria-label="颂钵疗愈照片位置"><span class="tag">放活动照片</span></div>
+        <h3>颂钵声音疗愈</h3>
+        <p>躺着听颂钵的声音和振动，很多客人说是这几年睡得最好的一次午觉。</p>
+        <div class="meta"><span class="chip">15:00</span><span class="chip">60 分钟</span><span class="chip">最多 10 人</span><span class="chip">RM 80 / 人</span></div>
+      </article>
+      <article class="act">
+        <div class="ph" style="--a:#A8C4BE;--b:#2C5650" role="img" aria-label="溪边冥想照片位置"><span class="tag">放活动照片</span></div>
+        <h3>溪边冥想</h3>
+        <p>坐在溪边的石头上，老师用简单的引导带你静下来。可以把脚泡进冰凉的溪水。</p>
+        <div class="meta"><span class="chip">17:00</span><span class="chip">40 分钟</span><span class="chip">最多 12 人</span><span class="chip inc">住客免费</span></div>
+      </article>
+      <article class="act">
+        <div class="ph" style="--a:#33463C;--b:#0E1A14;--sun:rgba(220,231,122,.35)" role="img" aria-label="夜观萤火虫照片位置"><span class="tag">放活动照片</span></div>
+        <h3>夜观萤火虫</h3>
+        <p>天黑后打着红光手电走进森林，看萤火虫和夜行小动物。小孩最喜欢。</p>
+        <div class="meta"><span class="chip">20:00</span><span class="chip">90 分钟</span><span class="chip">最多 12 人</span><span class="chip">RM 50 / 人</span></div>
+      </article>
+      <article class="act">
+        <div class="ph" style="--a:#D9C9A8;--b:#6B5233;--sun:rgba(255,236,190,.6)" role="img" aria-label="茶席照片位置"><span class="tag">放活动照片</span></div>
+        <h3>山中茶席</h3>
+        <p>用山泉水泡茶，配本地小点心。适合一家人或朋友坐下来好好聊天。</p>
+        <div class="meta"><span class="chip">随时预约</span><span class="chip">60 分钟</span><span class="chip">2–8 人</span><span class="chip">RM 120 / 桌</span></div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section class="day" aria-labelledby="day-h">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">住一晚是这样的 <span class="en">A day at Linqi</span></p>
+      <h2 id="day-h">一天的节奏</h2>
+    </div>
+    <ol class="timeline">
+      <li><time>06:45</time><span>晨间瑜伽，看山谷起雾</span></li>
+      <li><time>07:30</time><span>森林浴慢走</span></li>
+      <li><time>09:30</time><span>早餐：本地蔬果和山泉咖啡</span></li>
+      <li><time>15:00</time><span>颂钵疗愈或午睡</span></li>
+      <li><time>17:00</time><span>溪边冥想</span></li>
+      <li><time>20:00</time><span>夜观萤火虫，然后早点睡</span></li>
+    </ol>
+  </div>
+</section>
+
+<section id="rooms">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">房间与价钱 <span class="en">Rooms &amp; rates</span></p>
+      <h2>六间房，每间都朝着森林</h2>
+      <p>价钱是每晚每间，含早餐和「住客免费」活动。周五、周六晚上用周末价。</p>
+    </div>
+    <div class="rooms" id="room-list"></div>
+  </div>
+</section>
+
+<section id="book" class="day">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="eyebrow">预约咨询 <span class="en">Ask us on WhatsApp</span></p>
+      <h2>选好日期，直接 WhatsApp 我们</h2>
+      <p>填好下面几项，按钮会帮你把信息打好，发送就可以。我们一般 1 小时内回复。</p>
+    </div>
+    <div class="book-grid">
+      <form class="book" id="book-form" novalidate>
+        <div class="field">
+          <label for="f-room">房型</label>
+          <select id="f-room"></select>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-in">入住日期</label><input id="f-in" type="date"></div>
+          <div class="field"><label for="f-out">退房日期</label><input id="f-out" type="date"></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label for="f-guests">人数</label><input id="f-guests" type="number" min="1" max="20" value="2"></div>
+          <div class="field"><label for="f-name">您的称呼</label><input id="f-name" type="text" placeholder="例如：陈先生"></div>
+        </div>
+        <div class="field"><label for="f-note">其他需要（可不填）</label><textarea id="f-note" rows="2" placeholder="例如：想加订颂钵疗愈、有小孩同行"></textarea></div>
+        <div class="quote" id="quote" aria-live="polite"></div>
+        <a class="btn btn-wa" id="book-btn" href="#" target="_blank" rel="noopener" style="justify-content:center">
+          <svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
+          用 WhatsApp 发送咨询
+        </a>
+      </form>
+      <div class="notes">
+        <div><h3>怎么来</h3><p>吉隆坡市中心开车约 1.5 小时（经加拉巴沙叻大道 Karak Highway）。最后 3 公里是山路，普通轿车可以上。也可以安排文冬镇接送，RM 60 / 趟。</p></div>
+        <div><h3>入住须知</h3><ul><li>入住 15:00 后，退房 12:00 前</li><li>订房先付 50% 订金，入住当天付余款</li><li>入住前 7 天以上取消，订金全退</li><li>山上信号较弱，公共区有 Wi-Fi</li></ul></div>
+        <div><h3>包场 / 公司团建</h3><p>整个民宿最多 20 人，可以包场做公司静修、读书会或家庭聚会。WhatsApp 说明人数和日期，我们给你报价。</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>林栖森林疗愈民宿 · Linqi Forest Retreat</span>
+    <span>WhatsApp：<span id="wa-number-text"></span></span>
+  </div>
+</footer>
+
+<a class="btn btn-wa float-wa wa-link" data-msg="你好，我想了解林栖森林民宿。" href="#" target="_blank" rel="noopener" aria-label="WhatsApp 咨询">
+  <svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>
+  咨询
+</a>
+
+<script>
+// ===== 要改内容就改这里 =====
+const WHATSAPP = "60123456789";   // WhatsApp 号码：60 开头，不要加号和空格
+const ROOMS = [
+  { id: "canopy", name: "树冠房", en: "Canopy Room", weekday: 380, weekend: 450, size: "28㎡", guests: "2 人", bed: "1 张大床",
+    desc: "二楼高度正对树冠，早上醒来窗外就是雾和鸟声。有小阳台可以喝咖啡。", colors: ["#BFD3B6", "#2F5A40"] },
+  { id: "stream", name: "溪声房", en: "Stream Room", weekday: 420, weekend: 520, size: "32㎡", guests: "2 人", bed: "1 张大床",
+    desc: "最靠近溪流的一间，晚上听着水声睡觉。带户外石砌浴池。", colors: ["#A9C6C0", "#2B5550"] },
+  { id: "family", name: "林间家庭房", en: "Family Lodge", weekday: 580, weekend: 680, size: "45㎡", guests: "4 人", bed: "1 大床 + 2 单人床",
+    desc: "独栋木屋，有小客厅和前院草地，适合带孩子的一家人。", colors: ["#D3CDA9", "#5C6A3C"] },
+  { id: "glass", name: "星空玻璃屋", en: "Glass Cabin", weekday: 650, weekend: 780, size: "30㎡", guests: "2 人", bed: "1 张大床",
+    desc: "屋顶是玻璃，躺在床上就能看星星。全民宿最隐蔽、最安静的一间。", colors: ["#3A4E5A", "#101C22"] }
+];
+// ===========================
+
+const $ = s => document.querySelector(s);
+const rm = n => "RM " + n.toLocaleString("en-MY");
+const waUrl = msg => "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
+const WA_SVG = '<svg class="wa-ico" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Z"/></svg>';
+
+document.querySelectorAll(".wa-link").forEach(a => a.href = waUrl(a.dataset.msg));
+$("#wa-number-text").textContent = "+" + WHATSAPP;
+
+$("#room-list").innerHTML = ROOMS.map(r => `
+  <article class="room">
+    <div class="ph" style="--a:${r.colors[0]};--b:${r.colors[1]}" role="img" aria-label="${r.name}照片位置"><span class="tag">放房间照片</span></div>
+    <div class="room-body">
+      <div class="room-top">
+        <h3>${r.name}<small>${r.en}</small></h3>
+        <div class="price"><b>${rm(r.weekday)}</b><span>平日 / 晚 · 周末 ${rm(r.weekend)}</span></div>
+      </div>
+      <p>${r.desc}</p>
+      <div class="specs">
+        <div><small>面积</small>${r.size}</div>
+        <div><small>可住</small>${r.guests}</div>
+        <div><small>床型</small>${r.bed}</div>
+      </div>
+      <div class="actions">
+        <a class="btn btn-wa" target="_blank" rel="noopener" href="${waUrl(`你好，我想问「${r.name}」还有没有空房？`)}">${WA_SVG}问这间有没有空</a>
+        <a class="btn btn-ghost" href="#book" data-pick="${r.id}">算一算价钱</a>
+      </div>
+    </div>
+  </article>`).join("");
+
+const sel = $("#f-room");
+sel.innerHTML = ROOMS.map(r => `<option value="${r.id}">${r.name}（平日 ${rm(r.weekday)} / 周末 ${rm(r.weekend)}）</option>`).join("");
+document.querySelectorAll("[data-pick]").forEach(a => a.addEventListener("click", () => { sel.value = a.dataset.pick; update(); }));
+
+const iso = d => d.toISOString().slice(0, 10);
+const addDays = (d, n) => { const x = new Date(d); x.setDate(x.getDate() + n); return x; };
+const today = new Date(); today.setHours(12, 0, 0, 0);
+$("#f-in").min = iso(today);
+$("#f-in").value = iso(addDays(today, 7));
+$("#f-out").value = iso(addDays(today, 9));
+
+function update() {
+  const room = ROOMS.find(r => r.id === sel.value);
+  const inD = new Date($("#f-in").value + "T12:00:00");
+  const outD = new Date($("#f-out").value + "T12:00:00");
+  const q = $("#quote"), btn = $("#book-btn");
+  const nights = Math.round((outD - inD) / 86400000);
+  let msg = `你好，我想咨询林栖森林民宿：\n房型：${room.name}\n人数：${$("#f-guests").value} 人`;
+  if (!isNaN(nights) && nights > 0) {
+    let wd = 0, we = 0;
+    for (let i = 0; i < nights; i++) { const day = addDays(inD, i).getDay(); (day === 5 || day === 6) ? we++ : wd++; }
+    const total = wd * room.weekday + we * room.weekend;
+    q.innerHTML = `<span>${nights} 晚：平日 ${wd} 晚 × ${rm(room.weekday)}${we ? `，周末 ${we} 晚 × ${rm(room.weekend)}` : ""}</span>
+      <span class="total">预计 <b>${rm(total)}</b></span><span>实际价钱以我们回复为准</span>`;
+    msg += `\n入住：${$("#f-in").value}\n退房：${$("#f-out").value}（${nights} 晚，网站预计 ${rm(total)}）`;
+  } else {
+    q.innerHTML = `<span class="err">退房日期要比入住日期晚，请再选一下。</span>`;
+  }
+  const name = $("#f-name").value.trim(), note = $("#f-note").value.trim();
+  if (name) msg += `\n称呼：${name}`;
+  if (note) msg += `\n其他需要：${note}`;
+  btn.href = waUrl(msg);
+}
+["#f-room", "#f-in", "#f-out", "#f-guests", "#f-name", "#f-note"].forEach(s => $(s).addEventListener("input", update));
+$("#book-form").addEventListener("submit", e => e.preventDefault());
+update();
+</script>
+<!--/PAGE-->
+</body>
+</html>
