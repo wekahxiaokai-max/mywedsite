@@ -86,6 +86,14 @@ button.danger{color:var(--late);border-color:var(--late)}
 @media (max-width:560px){.entry{grid-template-columns:minmax(0,1fr);gap:4px}.date small{display:inline;margin-left:6px}}
 .empty{color:var(--muted);text-align:center;padding:28px 12px;font-size:14px}
 .confirm{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--late-soft);color:var(--late);border-radius:6px;padding:8px 10px;margin-top:8px;font-size:13px}
+.thumbs{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.thumb{position:relative;width:96px;height:96px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--accent-soft);padding:0}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .x{position:absolute;top:2px;right:2px;width:24px;height:24px;padding:0;border-radius:50%;background:var(--ink);color:var(--bg);border:0;font-size:14px;line-height:24px}
+.drop{border:1px dashed var(--line);border-radius:8px;padding:12px;display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;font-size:13px;color:var(--muted)}
+.drop.over{border-color:var(--accent);background:var(--accent-soft)}
+.lightbox{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:max(16px,env(safe-area-inset-top,0px)) max(16px,env(safe-area-inset-right,0px)) max(16px,env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));cursor:zoom-out}
+.lightbox img{max-width:100%;max-height:100%;object-fit:contain;border-radius:4px}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--ink);color:var(--bg);padding:8px 16px;border-radius:999px;font-size:14px;z-index:20}
 .banner{background:var(--due-soft);color:var(--due);border-radius:8px;padding:10px 14px;font-size:14px}
 .seg-of{font-weight:500;color:var(--accent)}
@@ -124,9 +132,10 @@ button.danger{color:var(--late);border-color:var(--late)}
   </div>
 </div>
 <div id="toast" class="toast" hidden></div>
+<div id="lb" class="lightbox" hidden><img id="lbImg" alt="放大的图片"></div>
 
 <script>
-const S = { db:null, user:null, me:null, segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, formOpen:false, expanded:{}, q:"", names:{}, canWrite:true };
+const S = { db:null, user:null, me:null, segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, formOpen:false, assets:null, pending:[], keep:[], expanded:{}, q:"", names:{}, canWrite:true };
 try { S.sel = localStorage.getItem("crm.sel"); } catch(e) {}
 
 const $ = id => document.getElementById(id);
@@ -207,6 +216,7 @@ function entryHTML(m, showSeg){
       <div class="chips">${seg?`<span class="seg-of">${esc(seg.name)}</span>`:""}${planned?'<span class="pill plan">计划要发</span>':""}${m.channel?`<span class="chip">${esc(m.channel)}</span>`:""}${who?`<span>记录人：${esc(who)}</span>`:""}</div>
       ${(()=>{ const long=(m.content||"").length>160 || (m.content||"").split("\n").length>4; const open=S.expanded[m.id];
         return `<p class="text ${long&&!open?"clamp":""}">${text}</p>${long?`<button class="ghost more" type="button" data-more="${esc(m.id)}">${open?"收起":"展开全文"}</button>`:""}`; })()}
+      ${(m.images||[]).length?`<div class="thumbs">${m.images.map(id=>`<button type="button" class="thumb" data-zoom="${esc(id)}" aria-label="放大图片"><img loading="lazy" src="/_blob/${esc(id)}" alt="附图"></button>`).join("")}</div>`:""}
       <div class="tools">
         <button class="ghost" type="button" data-copy="${esc(m.id)}">复制内容</button>
         ${planned?`<button class="ghost" type="button" data-mark="${esc(m.id)}">标记为已发送</button>`:""}
@@ -258,7 +268,8 @@ function renderMain(){
     <div class="field"><label class="label" for="mfCh">发送渠道</label><select id="mfCh">${CHANNELS.map(c=>`<option ${ (ed?ed.channel:"WhatsApp")===c?"selected":""}>${c}</option>`).join("")}</select></div>
     <div class="field"><label class="label" for="mfSt">状态</label><select id="mfSt"><option value="sent" ${ed?.status!=="planned"?"selected":""}>已发送</option><option value="planned" ${ed?.status==="planned"?"selected":""}>计划要发</option></select></div>
     ${ed?`<div class="field full"><label class="label" for="mfSeg">客户类型</label><select id="mfSeg">${S.segs.map(s=>`<option value="${esc(s.id)}" ${s.id===ed.segmentId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>`:""}
-    <div class="field full"><label class="label" for="mfText">发了什么内容</label><textarea id="mfText" required placeholder="把发出去的信息原文贴在这里">${esc(ed?.content)}</textarea></div>
+    <div class="field full"><label class="label" for="mfText">发了什么内容</label><textarea id="mfText" placeholder="把发出去的信息原文贴在这里（也可以直接把截图贴进来）">${esc(ed?.content)}</textarea></div>
+    <div class="field full"><span class="label">图片</span>${S.assets?`<div class="drop" id="mfDrop"><button type="button" id="mfPick">＋ 上载图片</button><input id="mfFile" type="file" accept="image/*" multiple hidden><span>可以一次选多张，或把图片拖进来、直接贴上（Ctrl+V）</span><div class="thumbs" id="mfImgs" style="flex-basis:100%;margin-top:0"></div></div>`:`<div class="drop">你目前没有上载图片的权限。请网页拥有人在「Share」里把你设为 Editor 或 Contributor。</div>`}</div>
     <div class="full actions"><button type="button" id="mfCancel">取消</button><button class="primary" type="submit">${ed?"保存修改":"保存这条记录"}</button></div>
   </form>
 
@@ -270,22 +281,65 @@ function renderMain(){
   $("editSeg").onclick=()=>openSegForm(seg);
   $("delSeg").onclick=()=>{ S.confirmDel="seg:"+seg.id; renderMain(); };
   const dy=$("delSegYes"); if(dy) dy.onclick=async()=>{ try{ await S.db.doc("segments/"+seg.id).delete(); S.confirmDel=null; select(null); toast("已删除类型"); }catch(e){ fail(e); } };
-  $("mfCancel").onclick=()=>{ S.editing=null; S.formOpen=false; renderMain(); };
-  $("newMsg").onclick=()=>{ S.formOpen=true; S.editing=null; renderMain(); $("mfText").focus(); };
+  $("mfCancel").onclick=()=>{ S.editing=null; S.formOpen=false; clearPending(); S.keep=[]; renderMain(); };
+  $("newMsg").onclick=()=>{ S.formOpen=true; S.editing=null; clearPending(); S.keep=[]; renderMain(); $("mfText").focus(); };
+  if(S.assets){
+    $("mfPick").onclick=()=>$("mfFile").click();
+    $("mfFile").onchange=e=>{ addFiles(e.target.files); e.target.value=""; };
+    const dz=$("mfDrop");
+    dz.ondragover=e=>{ e.preventDefault(); dz.classList.add("over"); };
+    dz.ondragleave=()=>dz.classList.remove("over");
+    dz.ondrop=e=>{ e.preventDefault(); dz.classList.remove("over"); addFiles(e.dataTransfer.files); };
+    renderPending();
+  }
   $("mf").onsubmit=async ev=>{
     ev.preventDefault();
-    const content=$("mfText").value.trim(); if(!content) return;
+    const content=$("mfText").value.trim();
+    if(!content && !S.keep.length && !S.pending.length){ toast("请填内容，或放一张图片"); return; }
     const data={ date:$("mfDate").value||todayStr(), channel:$("mfCh").value, status:$("mfSt").value, content };
-    const btn=ev.submitter; if(btn) btn.disabled=true;
+    const btn=ev.submitter; if(btn){ btn.disabled=true; btn.textContent=S.pending.length?"图片上载中…":"保存中…"; }
     try{
+      const ids=[...S.keep];
+      for(const p of S.pending){ const blob=await shrink(p.file); const res=await S.assets.upload(blob); ids.push(res.id); }
+      data.images=ids;
+      if(ed) for(const old of (ed.images||[])) if(!ids.includes(old)) S.assets?.delete(old).catch(()=>{});
+      clearPending();
       if(ed){ data.segmentId=$("mfSeg").value; data.updatedAt=new Date().toISOString(); await S.db.doc("messages/"+ed.id).update(data); S.editing=null; S.formOpen=false; toast("已保存修改"); renderSegs(); renderMain(); }
       else { Object.assign(data,{ segmentId:seg.id, by:S.me||"", createdAt:new Date().toISOString() }); await S.db.collection("messages").add(data); S.formOpen=false; toast("已记录"); renderSegs(); renderMain(); }
-    }catch(e){ fail(e); if(btn) btn.disabled=false; }
+    }catch(e){ fail(e); if(btn){ btn.disabled=false; btn.textContent=ed?"保存修改":"保存这条记录"; } }
   };
 }
 
+function addFiles(list){
+  const imgs=[...(list||[])].filter(f=>f.type && f.type.startsWith("image/"));
+  if(!imgs.length) return;
+  for(const f of imgs){ if(S.keep.length+S.pending.length>=9){ toast("每条最多 9 张图片"); break; } S.pending.push({file:f, url:URL.createObjectURL(f)}); }
+  renderPending();
+}
+function clearPending(){ S.pending.forEach(p=>URL.revokeObjectURL(p.url)); S.pending=[]; }
+function renderPending(){
+  const box=$("mfImgs"); if(!box) return;
+  box.innerHTML = S.keep.map((id,i)=>`<div class="thumb"><img src="/_blob/${esc(id)}" alt="已上载的图片"><button type="button" class="x" data-rmkeep="${i}" aria-label="移除这张">×</button></div>`).join("")
+    + S.pending.map((p,i)=>`<div class="thumb"><img src="${p.url}" alt="待上载的图片"><button type="button" class="x" data-rmpend="${i}" aria-label="移除这张">×</button></div>`).join("");
+}
+// 大图先缩小再上载，省空间也上载得快
+async function shrink(file){
+  if(file.type==="image/gif" || file.type==="image/svg+xml" || file.size<800*1024) return file;
+  try{
+    const bmp=await createImageBitmap(file); const max=1800; const k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas"); c.width=Math.round(bmp.width*k); c.height=Math.round(bmp.height*k);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    const out=await new Promise(res=>c.toBlob(res,"image/jpeg",0.85));
+    return out && out.size<file.size ? out : file;
+  }catch(e){ return file; }
+}
+function openLightbox(id){ $("lbImg").src="/_blob/"+id; $("lb").hidden=false; }
+$("lb").onclick=()=>{ $("lb").hidden=true; $("lbImg").removeAttribute("src"); };
+document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("lb").hidden) $("lb").click(); });
+document.addEventListener("paste",e=>{ if(!S.assets || !$("mf") || $("mf").hidden) return; const fs=[...(e.clipboardData?.files||[])]; if(fs.length){ e.preventDefault(); addFiles(fs); } });
+
 function render(){ renderSegs(); renderMain(); }
-function select(id){ S.sel=id; S.editing=null; S.formOpen=false; S.confirmDel=null; try{ id?localStorage.setItem("crm.sel",id):localStorage.removeItem("crm.sel"); }catch(e){} if(S.q){ S.q=""; $("q").value=""; } render(); }
+function select(id){ S.sel=id; S.editing=null; S.formOpen=false; clearPending(); S.keep=[]; S.confirmDel=null; try{ id?localStorage.setItem("crm.sel",id):localStorage.removeItem("crm.sel"); }catch(e){} if(S.q){ S.q=""; $("q").value=""; } render(); }
 
 document.addEventListener("click", async ev=>{
   const t=ev.target.closest("button"); if(!t) return;
@@ -293,12 +347,15 @@ document.addEventListener("click", async ev=>{
   if(t.dataset.copy){ const m=S.msgs.find(x=>x.id===t.dataset.copy); if(!m) return;
     try{ await navigator.clipboard.writeText(m.content); toast("已复制，可以直接贴到 WhatsApp"); }
     catch(e){ const p=t.closest(".body").querySelector(".text"); const r=document.createRange(); r.selectNodeContents(p); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("已选中文字，请按复制"); } return; }
-  if(t.dataset.edit){ const m=S.msgs.find(x=>x.id===t.dataset.edit); if(!m) return; if(S.q){ S.q=""; $("q").value=""; } S.sel=m.segmentId; S.editing=m.id; S.formOpen=true; S.confirmDel=null; render(); $("mf").scrollIntoView({behavior:"smooth"}); $("mfText").focus({preventScroll:true}); return; }
+  if(t.dataset.edit){ const m=S.msgs.find(x=>x.id===t.dataset.edit); if(!m) return; if(S.q){ S.q=""; $("q").value=""; } S.sel=m.segmentId; S.editing=m.id; S.formOpen=true; S.confirmDel=null; clearPending(); S.keep=[...(m.images||[])]; render(); $("mf").scrollIntoView({behavior:"smooth"}); $("mfText").focus({preventScroll:true}); return; }
   if(t.dataset.mark){ try{ await S.db.doc("messages/"+t.dataset.mark).update({status:"sent", date:todayStr()}); toast("已标记为今天发送"); }catch(e){ fail(e); } return; }
+  if(t.dataset.zoom){ openLightbox(t.dataset.zoom); return; }
+  if(t.dataset.rmkeep){ S.keep.splice(Number(t.dataset.rmkeep),1); renderPending(); return; }
+  if(t.dataset.rmpend){ const [p]=S.pending.splice(Number(t.dataset.rmpend),1); if(p) URL.revokeObjectURL(p.url); renderPending(); return; }
   if(t.dataset.more){ S.expanded[t.dataset.more]=!S.expanded[t.dataset.more]; renderMain(); return; }
   if(t.dataset.del){ S.confirmDel=t.dataset.del; renderMain(); return; }
   if(t.dataset.delno){ S.confirmDel=null; renderMain(); return; }
-  if(t.dataset.delyes){ try{ await S.db.doc("messages/"+t.dataset.delyes).delete(); S.confirmDel=null; toast("已删除"); }catch(e){ fail(e); } return; }
+  if(t.dataset.delyes){ const m=S.msgs.find(x=>x.id===t.dataset.delyes); try{ await S.db.doc("messages/"+t.dataset.delyes).delete(); for(const id of (m?.images||[])) S.assets?.delete(id).catch(()=>{}); S.confirmDel=null; toast("已删除"); }catch(e){ fail(e); } return; }
 });
 $("addSegBtn").onclick=()=>openSegForm(null);
 let qt; $("q").addEventListener("input", e=>{ clearTimeout(qt); qt=setTimeout(()=>{ S.q=e.target.value.trim(); S.confirmDel=null; renderMain(); },200); });
@@ -314,7 +371,8 @@ async function resolveNames(){
 }
 
 (async()=>{
-  const [db,user]=await Promise.all([window.claude?.use("db") ?? null, window.claude?.use("user") ?? null]);
+  const [db,user,assets]=await Promise.all([window.claude?.use("db") ?? null, window.claude?.use("user") ?? null, window.claude?.use("assets") ?? null]);
+  S.assets=assets;
   if(!db){ $("segList").innerHTML=""; const b=$("banner"); b.hidden=false; b.textContent="现在无法连接资料库。请先登入 claude.ai，再重新打开这个网页。"; return; }
   S.db=db; S.user=user;
   try{ S.me = user ? await user.id() : null; }catch(e){}
