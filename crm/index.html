@@ -49,6 +49,10 @@ button.danger{color:var(--late);border-color:var(--late)}
 .seg .name{font-weight:700;min-width:0;overflow-wrap:anywhere}
 .seg .meta{font-size:12px;color:var(--muted);grid-column:2}
 .seg .pill{grid-row:1/span 2;grid-column:3}
+.text.clamp{display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden}
+.more{color:var(--accent);font-weight:500}
+@media (min-width:821px){aside.side{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow-y:auto}}
+@media (max-width:820px){#segList{flex-direction:row;overflow-x:auto;padding-bottom:4px;scroll-snap-type:x proximity}#segList .seg{flex:0 0 78%;scroll-snap-align:start}}
 .pill{display:inline-block;font-size:12px;font-weight:500;padding:2px 9px;border-radius:999px;white-space:nowrap}
 .pill.late{background:var(--late-soft);color:var(--late)}
 .pill.due{background:var(--due-soft);color:var(--due)}
@@ -122,7 +126,7 @@ button.danger{color:var(--late);border-color:var(--late)}
 <div id="toast" class="toast" hidden></div>
 
 <script>
-const S = { db:null, user:null, me:null, segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, q:"", names:{}, canWrite:true };
+const S = { db:null, user:null, me:null, segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, formOpen:false, expanded:{}, q:"", names:{}, canWrite:true };
 try { S.sel = localStorage.getItem("crm.sel"); } catch(e) {}
 
 const $ = id => document.getElementById(id);
@@ -201,7 +205,8 @@ function entryHTML(m, showSeg){
     <div class="date">${esc(m.date)}<small>${weekday(m.date)}</small></div>
     <div class="body">
       <div class="chips">${seg?`<span class="seg-of">${esc(seg.name)}</span>`:""}${planned?'<span class="pill plan">计划要发</span>':""}${m.channel?`<span class="chip">${esc(m.channel)}</span>`:""}${who?`<span>记录人：${esc(who)}</span>`:""}</div>
-      <p class="text">${text}</p>
+      ${(()=>{ const long=(m.content||"").length>160 || (m.content||"").split("\n").length>4; const open=S.expanded[m.id];
+        return `<p class="text ${long&&!open?"clamp":""}">${text}</p>${long?`<button class="ghost more" type="button" data-more="${esc(m.id)}">${open?"收起":"展开全文"}</button>`:""}`; })()}
       <div class="tools">
         <button class="ghost" type="button" data-copy="${esc(m.id)}">复制内容</button>
         ${planned?`<button class="ghost" type="button" data-mark="${esc(m.id)}">标记为已发送</button>`:""}
@@ -242,44 +247,45 @@ function renderMain(){
         </div>
         ${seg.note?`<p class="note">${esc(seg.note)}</p>`:""}
       </div>
-      <div class="actions"><button class="ghost" type="button" id="editSeg">修改类型</button><button class="ghost" type="button" id="delSeg">删除类型</button></div>
+      <div class="actions"><button class="primary" type="button" id="newMsg" ${S.formOpen?"hidden":""}>＋ 记一条新信息</button><button class="ghost" type="button" id="editSeg">修改类型</button><button class="ghost" type="button" id="delSeg">删除类型</button></div>
     </div>
     ${S.confirmDel==="seg:"+seg.id?`<div class="confirm">${list.length?`这个类型下还有 ${list.length} 条记录，请先删除或改到其他类型，才能删除这个类型。<button type="button" data-delno="1">知道了</button>`:`确定删除这个类型？<button type="button" class="danger" id="delSegYes">删除</button><button type="button" data-delno="1">取消</button>`}</div>`:""}
   </div>
 
-  <form class="card form" id="mf">
+  <form class="card form" id="mf" ${S.formOpen?"":"hidden"}>
     <div class="full label">${ed?"修改这条记录":"记一条新信息"}</div>
     <div class="field"><label class="label" for="mfDate">日期</label><input id="mfDate" type="date" required value="${esc(defDate)}"></div>
     <div class="field"><label class="label" for="mfCh">发送渠道</label><select id="mfCh">${CHANNELS.map(c=>`<option ${ (ed?ed.channel:"WhatsApp")===c?"selected":""}>${c}</option>`).join("")}</select></div>
     <div class="field"><label class="label" for="mfSt">状态</label><select id="mfSt"><option value="sent" ${ed?.status!=="planned"?"selected":""}>已发送</option><option value="planned" ${ed?.status==="planned"?"selected":""}>计划要发</option></select></div>
     ${ed?`<div class="field full"><label class="label" for="mfSeg">客户类型</label><select id="mfSeg">${S.segs.map(s=>`<option value="${esc(s.id)}" ${s.id===ed.segmentId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>`:""}
     <div class="field full"><label class="label" for="mfText">发了什么内容</label><textarea id="mfText" required placeholder="把发出去的信息原文贴在这里">${esc(ed?.content)}</textarea></div>
-    <div class="full actions">${ed?'<button type="button" id="mfCancel">取消修改</button>':""}<button class="primary" type="submit">${ed?"保存修改":"保存这条记录"}</button></div>
+    <div class="full actions"><button type="button" id="mfCancel">取消</button><button class="primary" type="submit">${ed?"保存修改":"保存这条记录"}</button></div>
   </form>
 
   <div class="card">
-    <div class="label" style="margin-bottom:6px">发送记录（最新的在上面）</div>
-    ${list.length?`<ul class="log">${list.map(m=>entryHTML(m,false)).join("")}</ul>`:'<div class="empty">这个类型还没有记录。在上面贴上第一封信息的内容，按「保存这条记录」。</div>'}
+    <div class="label" style="margin-bottom:6px">发送记录 · 共 ${list.length} 条（最新的在上面）</div>
+    ${list.length?`<ul class="log">${list.map(m=>entryHTML(m,false)).join("")}</ul>`:'<div class="empty">这个类型还没有记录。点上面的「＋ 记一条新信息」，贴上第一封信息的内容。</div>'}
   </div>`;
 
   $("editSeg").onclick=()=>openSegForm(seg);
   $("delSeg").onclick=()=>{ S.confirmDel="seg:"+seg.id; renderMain(); };
   const dy=$("delSegYes"); if(dy) dy.onclick=async()=>{ try{ await S.db.doc("segments/"+seg.id).delete(); S.confirmDel=null; select(null); toast("已删除类型"); }catch(e){ fail(e); } };
-  const mc=$("mfCancel"); if(mc) mc.onclick=()=>{ S.editing=null; renderMain(); };
+  $("mfCancel").onclick=()=>{ S.editing=null; S.formOpen=false; renderMain(); };
+  $("newMsg").onclick=()=>{ S.formOpen=true; S.editing=null; renderMain(); $("mfText").focus(); };
   $("mf").onsubmit=async ev=>{
     ev.preventDefault();
     const content=$("mfText").value.trim(); if(!content) return;
     const data={ date:$("mfDate").value||todayStr(), channel:$("mfCh").value, status:$("mfSt").value, content };
     const btn=ev.submitter; if(btn) btn.disabled=true;
     try{
-      if(ed){ data.segmentId=$("mfSeg").value; data.updatedAt=new Date().toISOString(); await S.db.doc("messages/"+ed.id).update(data); S.editing=null; toast("已保存修改"); renderSegs(); renderMain(); }
-      else { Object.assign(data,{ segmentId:seg.id, by:S.me||"", createdAt:new Date().toISOString() }); await S.db.collection("messages").add(data); toast("已记录"); renderSegs(); renderMain(); }
+      if(ed){ data.segmentId=$("mfSeg").value; data.updatedAt=new Date().toISOString(); await S.db.doc("messages/"+ed.id).update(data); S.editing=null; S.formOpen=false; toast("已保存修改"); renderSegs(); renderMain(); }
+      else { Object.assign(data,{ segmentId:seg.id, by:S.me||"", createdAt:new Date().toISOString() }); await S.db.collection("messages").add(data); S.formOpen=false; toast("已记录"); renderSegs(); renderMain(); }
     }catch(e){ fail(e); if(btn) btn.disabled=false; }
   };
 }
 
 function render(){ renderSegs(); renderMain(); }
-function select(id){ S.sel=id; S.editing=null; S.confirmDel=null; try{ id?localStorage.setItem("crm.sel",id):localStorage.removeItem("crm.sel"); }catch(e){} if(S.q){ S.q=""; $("q").value=""; } render(); }
+function select(id){ S.sel=id; S.editing=null; S.formOpen=false; S.confirmDel=null; try{ id?localStorage.setItem("crm.sel",id):localStorage.removeItem("crm.sel"); }catch(e){} if(S.q){ S.q=""; $("q").value=""; } render(); }
 
 document.addEventListener("click", async ev=>{
   const t=ev.target.closest("button"); if(!t) return;
@@ -287,8 +293,9 @@ document.addEventListener("click", async ev=>{
   if(t.dataset.copy){ const m=S.msgs.find(x=>x.id===t.dataset.copy); if(!m) return;
     try{ await navigator.clipboard.writeText(m.content); toast("已复制，可以直接贴到 WhatsApp"); }
     catch(e){ const p=t.closest(".body").querySelector(".text"); const r=document.createRange(); r.selectNodeContents(p); const s=getSelection(); s.removeAllRanges(); s.addRange(r); toast("已选中文字，请按复制"); } return; }
-  if(t.dataset.edit){ const m=S.msgs.find(x=>x.id===t.dataset.edit); if(!m) return; if(S.q){ S.q=""; $("q").value=""; } S.sel=m.segmentId; S.editing=m.id; S.confirmDel=null; render(); $("mf").scrollIntoView({behavior:"smooth"}); $("mfText").focus({preventScroll:true}); return; }
+  if(t.dataset.edit){ const m=S.msgs.find(x=>x.id===t.dataset.edit); if(!m) return; if(S.q){ S.q=""; $("q").value=""; } S.sel=m.segmentId; S.editing=m.id; S.formOpen=true; S.confirmDel=null; render(); $("mf").scrollIntoView({behavior:"smooth"}); $("mfText").focus({preventScroll:true}); return; }
   if(t.dataset.mark){ try{ await S.db.doc("messages/"+t.dataset.mark).update({status:"sent", date:todayStr()}); toast("已标记为今天发送"); }catch(e){ fail(e); } return; }
+  if(t.dataset.more){ S.expanded[t.dataset.more]=!S.expanded[t.dataset.more]; renderMain(); return; }
   if(t.dataset.del){ S.confirmDel=t.dataset.del; renderMain(); return; }
   if(t.dataset.delno){ S.confirmDel=null; renderMain(); return; }
   if(t.dataset.delyes){ try{ await S.db.doc("messages/"+t.dataset.delyes).delete(); S.confirmDel=null; toast("已删除"); }catch(e){ fail(e); } return; }
