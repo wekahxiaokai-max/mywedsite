@@ -104,7 +104,7 @@ button.danger{color:var(--late);border-color:var(--late)}
   <header class="top">
     <div>
       <h1>客户跟进记录本</h1>
-      <p class="sub">按客户类型记下每次发了什么、哪天发的。系统会按「几天发一次」提醒下一封的日期。</p>
+      <p class="sub">按客户类型记下每次发了什么、哪天发的。发之前先看看之前发过什么，避免重复。</p>
     </div>
     <div class="search">
       <label class="label" for="q">搜索以前发过的内容</label>
@@ -155,16 +155,10 @@ function segStatus(seg){
   const sent = S.msgs.filter(m=>m.segmentId===seg.id && m.status!=="planned").map(m=>m.date).sort();
   const planned = S.msgs.filter(m=>m.segmentId===seg.id && m.status==="planned").map(m=>m.date).sort();
   const last = sent[sent.length-1] || null;
-  const cad = Number(seg.cadenceDays)||3;
-  const today = toDay(todayStr());
-  if(!last) return { last:null, next:null, cls:"none", text:"还没发过", planned, count:sent.length };
-  const next = toDay(last) + cad, diff = next - today;
-  let cls, text;
-  if(diff<0){ cls="late"; text="逾期 "+(-diff)+" 天"; }
-  else if(diff===0){ cls="due"; text="今天该发"; }
-  else if(diff===1){ cls="due"; text="明天该发"; }
-  else { cls="ok"; text=diff+" 天后"; }
-  return { last, next:fromDay(next), cls, text, planned, count:sent.length };
+  if(!last) return { last:null, cls:"none", text:"还没发过", planned, count:sent.length };
+  const ago = toDay(todayStr()) - toDay(last);
+  const text = ago<0 ? "排在 "+last.slice(5) : ago===0 ? "今天发过" : ago===1 ? "昨天发过" : ago+" 天前发过";
+  return { last, cls: ago===0 ? "ok" : "none", text, planned, count:sent.length };
 }
 
 function renderSegs(){
@@ -175,7 +169,7 @@ function renderSegs(){
     return `<button type="button" class="seg ${seg.id===S.sel?"active":""}" data-seg="${esc(seg.id)}">
       <span class="bar"></span><span class="name">${esc(seg.name)}</span>
       <span class="pill ${st.cls}">${st.text}</span>
-      <span class="meta">每 ${esc(seg.cadenceDays)} 天一封 · 已发 ${st.count} 封${st.last?" · 上次 "+st.last.slice(5):""}</span>
+      <span class="meta">已发 ${st.count} 封${st.last?" · 上次 "+st.last.slice(5):""}</span>
     </button>`;
   }).join("");
 }
@@ -183,7 +177,6 @@ function renderSegs(){
 function segFormHTML(seg){
   return `<form id="sf" class="side" style="gap:10px">
     <div class="field"><label class="label" for="sfName">类型名称</label><input id="sfName" type="text" required maxlength="60" value="${esc(seg?.name)}" placeholder="例如：上过 Preview，还没报 3 天课"></div>
-    <div class="field"><label class="label" for="sfCad">几天发一封</label><input id="sfCad" type="number" min="1" max="60" required value="${esc(seg?.cadenceDays ?? 3)}"></div>
     <div class="field"><label class="label" for="sfNote">备注（跟进目的、注意事项）</label><textarea id="sfNote" style="min-height:70px" maxlength="500">${esc(seg?.note)}</textarea></div>
     <div class="actions"><button type="button" id="sfCancel">取消</button><button class="primary" type="submit">${seg?"保存":"建立"}</button></div>
   </form>`;
@@ -194,7 +187,7 @@ function openSegForm(seg){
   $("sfCancel").onclick=()=>{ f.hidden=true; S.editingSeg=null; };
   $("sf").onsubmit=async ev=>{
     ev.preventDefault();
-    const data={ name:$("sfName").value.trim(), cadenceDays:Math.max(1,Number($("sfCad").value)||3), note:$("sfNote").value.trim() };
+    const data={ name:$("sfName").value.trim(), note:$("sfNote").value.trim() };
     if(!data.name) return;
     try{
       if(S.editingSeg){ await S.db.doc("segments/"+S.editingSeg.id).update(data); toast("已保存"); }
@@ -250,9 +243,8 @@ function renderMain(){
       <div style="min-width:0">
         <h2>${esc(seg.name)}</h2>
         <div class="stats">
-          <span>每 <b>${esc(seg.cadenceDays)}</b> 天一封</span>
           <span>上次发：<b>${st.last||"—"}</b></span>
-          <span>下次该发：<b>${st.next||"随时"}</b> <span class="pill ${st.cls}">${st.text}</span></span>
+          <span class="pill ${st.cls}">${st.text}</span>
           <span>已发：<b>${st.count}</b> 封</span>
         </div>
         ${seg.note?`<p class="note">${esc(seg.note)}</p>`:""}
