@@ -15,9 +15,3 @@
 4. 汇报进度说「现在能做什么了」，不要报改了哪些文件、哪些函数。
 5. 每做完一步，告诉我：打开哪个网址、点哪里、应该看到什么。
 
-## 技术备注（给 Claude 看的，不用跟老板讲）
-
-- 客户跟进记录本：https://claude.ai/artifact/4y6yKRqA7nfiMedkmpBd27 ，源码 `crm/index.html`。
-- 资料（客户类型、发送记录、图片 data URL）存在网页本身的 `<script id="data">` 里，编辑者保存时网页用 `artifact.publish` 重新发布自己。
-  所以 repo 里的 `crm/index.html` 只有空资料；要改程序时，先用 Artifact read 拿线上最新版（含资料），在那份上改再发布，不然会把资料洗掉。
-- 任何人有链接都能浏览（不用登入）；只有 Editor/Owner 登入后能新增、修改。

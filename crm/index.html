@@ -3,7 +3,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap">
-<style id="app-css">/* Layout: ledger — left column lists customer types with due-status, right column is that type's dated message log */
+<style>
+/* Layout: ledger — left column lists customer types with due-status, right column is that type's dated message log */
 :root{
   --bg:#f6f7f5; --panel:#ffffff; --ink:#1b2422; --muted:#5f6b67; --line:#dde3e0;
   --accent:#0f6b5c; --accent-soft:#e2f0ec; --gold:#a8741a;
@@ -97,12 +98,9 @@ button.danger{color:var(--late);border-color:var(--late)}
 .banner{background:var(--due-soft);color:var(--due);border-radius:8px;padding:10px 14px;font-size:14px}
 .seg-of{font-weight:500;color:var(--accent)}
 @media (prefers-reduced-motion:no-preference){.seg,button{transition:background .15s,border-color .15s}}
-body.ro .edit-only{display:none!important}
-.ro-note{font-size:13px;color:var(--muted)}
-.busy{position:fixed;inset:0;z-index:50;background:color-mix(in srgb,var(--bg) 70%,transparent);display:flex;align-items:center;justify-content:center;font-weight:500}
-.busy span{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:10px 20px}</style>
-<div id="root"></div>
-<script type="text/html" id="shell"><div class="wrap">
+</style>
+
+<div class="wrap">
   <header class="top">
     <div>
       <h1>客户跟进记录本</h1>
@@ -115,13 +113,12 @@ body.ro .edit-only{display:none!important}
   </header>
 
   <div id="banner" class="banner" hidden></div>
-  <p class="ro-note" id="roNote" hidden>你现在是查看模式：可以浏览和复制内容。要新增或修改记录，请用有编辑权限的账号登录 Claude 后打开。</p>
 
   <div class="grid">
     <aside class="side">
       <div class="side-head">
         <span class="label">客户类型</span>
-        <button class="ghost edit-only" id="addSegBtn" type="button">＋ 新增类型</button>
+        <button class="ghost" id="addSegBtn" type="button">＋ 新增类型</button>
       </div>
       <div id="segForm" class="card" hidden></div>
       <div id="segList" class="side">
@@ -137,11 +134,8 @@ body.ro .edit-only{display:none!important}
 <div id="toast" class="toast" hidden></div>
 <div id="lb" class="lightbox" hidden><img id="lbImg" alt="放大的图片"></div>
 
-<div id="busy" class="busy" hidden><span id="busyText">保存中…</span></div></script>
-<script type="application/json" id="data">{"migrated":false,"segments":[],"messages":[]}</script>
-<script id="app">document.getElementById("root").innerHTML=document.getElementById("shell").textContent;
-const DATA = JSON.parse(document.getElementById("data").textContent);
-const S = { db:null, user:null, me:null, canEdit:false, name:"", segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, formOpen:false, assets:null, pending:[], keep:[], expanded:{}, q:"", names:{}, canWrite:true };
+<script>
+const S = { db:null, user:null, me:null, segs:[], msgs:[], sel:null, editing:null, editingSeg:null, confirmDel:null, formOpen:false, assets:null, pending:[], keep:[], expanded:{}, q:"", names:{}, canWrite:true };
 try { S.sel = localStorage.getItem("crm.sel"); } catch(e) {}
 
 const $ = id => document.getElementById(id);
@@ -155,11 +149,7 @@ const weekday = s => "星期" + WEEK[new Date(toDay(s)*864e5).getUTCDay()];
 const CHANNELS = ["WhatsApp","WeChat","Email","电话","Facebook / IG","其他"];
 
 function toast(msg){ const t=$("toast"); t.textContent=msg; t.hidden=false; clearTimeout(toast.t); toast.t=setTimeout(()=>t.hidden=true,2200); }
-function fail(e){ if(e&&e.code==="handled") return; console.error(e); $("busy").hidden=true;
-  const c=e&&e.code;
-  if(c==="conflict"){ toast("同事刚好也保存了，页面正在更新，请稍后再改一次"); return; }
-  if(c==="not_writer"||c==="not_granted"){ setReadOnly(); toast("你目前只有查看权限，不能修改"); return; }
-  toast("没保存成功，请检查网络后再试一次"); }
+function fail(e){ console.error(e); toast(e && e.code==="quota_exceeded" ? "存储已满，请删除一些旧记录后再试" : e && e.code==="invalid_argument" ? "你目前只有查看权限，不能修改" : "没保存成功，请检查网络后再试一次"); }
 
 function segStatus(seg){
   const sent = S.msgs.filter(m=>m.segmentId===seg.id && m.status!=="planned").map(m=>m.date).sort();
@@ -201,14 +191,14 @@ function openSegForm(seg){
     if(!data.name) return;
     try{
       if(S.editingSeg){ await S.db.doc("segments/"+S.editingSeg.id).update(data); toast("已保存"); }
-      else { data.createdAt=new Date().toISOString(); data.order=Date.now(); const ref=await S.db.collection("segments").add(data, id=>{ try{ localStorage.setItem("crm.sel",id); }catch(e){} }); select(ref.id); toast("已建立"); }
+      else { data.createdAt=new Date().toISOString(); data.order=Date.now(); const ref=await S.db.collection("segments").add(data); select(ref.id); toast("已建立"); }
       f.hidden=true; S.editingSeg=null;
     }catch(e){ fail(e); }
   };
 }
 
 function entryHTML(m, showSeg){
-  const who = m.by || "";
+  const who = m.by ? (S.names[m.by] || "同事") : "";
   const planned = m.status==="planned";
   let text = esc(m.content);
   if(S.q){ const re=new RegExp(S.q.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"); text=text.replace(re, x=>"<mark>"+x+"</mark>"); }
@@ -219,12 +209,12 @@ function entryHTML(m, showSeg){
       <div class="chips">${seg?`<span class="seg-of">${esc(seg.name)}</span>`:""}${planned?'<span class="pill plan">计划要发</span>':""}${m.channel?`<span class="chip">${esc(m.channel)}</span>`:""}${who?`<span>记录人：${esc(who)}</span>`:""}</div>
       ${(()=>{ const long=(m.content||"").length>160 || (m.content||"").split("\n").length>4; const open=S.expanded[m.id];
         return `<p class="text ${long&&!open?"clamp":""}">${text}</p>${long?`<button class="ghost more" type="button" data-more="${esc(m.id)}">${open?"收起":"展开全文"}</button>`:""}`; })()}
-      ${(m.images||[]).length?`<div class="thumbs">${m.images.map(id=>`<button type="button" class="thumb" data-zoom="${esc(id)}" aria-label="放大图片"><img loading="lazy" src="${esc(imgSrc(id))}" alt="附图"></button>`).join("")}</div>`:""}
+      ${(m.images||[]).length?`<div class="thumbs">${m.images.map(id=>`<button type="button" class="thumb" data-zoom="${esc(id)}" aria-label="放大图片"><img loading="lazy" src="/_blob/${esc(id)}" alt="附图"></button>`).join("")}</div>`:""}
       <div class="tools">
         <button class="ghost" type="button" data-copy="${esc(m.id)}">复制内容</button>
-        ${planned?`<button class="ghost edit-only" type="button" data-mark="${esc(m.id)}">标记为已发送</button>`:""}
-        <button class="ghost edit-only" type="button" data-edit="${esc(m.id)}">修改</button>
-        <button class="ghost edit-only" type="button" data-del="${esc(m.id)}">删除</button>
+        ${planned?`<button class="ghost" type="button" data-mark="${esc(m.id)}">标记为已发送</button>`:""}
+        <button class="ghost" type="button" data-edit="${esc(m.id)}">修改</button>
+        <button class="ghost" type="button" data-del="${esc(m.id)}">删除</button>
       </div>
       ${S.confirmDel===m.id?`<div class="confirm">确定删除这条记录？删除后找不回来。<button type="button" class="danger" data-delyes="${esc(m.id)}">删除</button><button type="button" data-delno="1">取消</button></div>`:""}
     </div>
@@ -259,7 +249,7 @@ function renderMain(){
         </div>
         ${seg.note?`<p class="note">${esc(seg.note)}</p>`:""}
       </div>
-      <div class="actions"><button class="primary edit-only" type="button" id="newMsg" ${S.formOpen?"hidden":""}>＋ 记一条新信息</button><button class="ghost edit-only" type="button" id="editSeg">修改类型</button><button class="ghost edit-only" type="button" id="delSeg">删除类型</button></div>
+      <div class="actions"><button class="primary" type="button" id="newMsg" ${S.formOpen?"hidden":""}>＋ 记一条新信息</button><button class="ghost" type="button" id="editSeg">修改类型</button><button class="ghost" type="button" id="delSeg">删除类型</button></div>
     </div>
     ${S.confirmDel==="seg:"+seg.id?`<div class="confirm">${list.length?`这个类型下还有 ${list.length} 条记录，请先删除或改到其他类型，才能删除这个类型。<button type="button" data-delno="1">知道了</button>`:`确定删除这个类型？<button type="button" class="danger" id="delSegYes">删除</button><button type="button" data-delno="1">取消</button>`}</div>`:""}
   </div>
@@ -271,7 +261,7 @@ function renderMain(){
     <div class="field"><label class="label" for="mfSt">状态</label><select id="mfSt"><option value="sent" ${ed?.status!=="planned"?"selected":""}>已发送</option><option value="planned" ${ed?.status==="planned"?"selected":""}>计划要发</option></select></div>
     ${ed?`<div class="field full"><label class="label" for="mfSeg">客户类型</label><select id="mfSeg">${S.segs.map(s=>`<option value="${esc(s.id)}" ${s.id===ed.segmentId?"selected":""}>${esc(s.name)}</option>`).join("")}</select></div>`:""}
     <div class="field full"><label class="label" for="mfText">发了什么内容</label><textarea id="mfText" placeholder="把发出去的信息原文贴在这里（也可以直接把截图贴进来）">${esc(ed?.content)}</textarea></div>
-    <div class="field full"><span class="label">图片</span>${S.assets?`<div class="drop" id="mfDrop"><button type="button" id="mfPick">＋ 上载图片</button><input id="mfFile" type="file" accept="image/*" multiple hidden><span>可以一次选多张，或把图片拖进来、直接贴上（Ctrl+V）</span><div class="thumbs" id="mfImgs" style="flex-basis:100%;margin-top:0"></div></div>`:""}</div>
+    <div class="field full"><span class="label">图片</span>${S.assets?`<div class="drop" id="mfDrop"><button type="button" id="mfPick">＋ 上载图片</button><input id="mfFile" type="file" accept="image/*" multiple hidden><span>可以一次选多张，或把图片拖进来、直接贴上（Ctrl+V）</span><div class="thumbs" id="mfImgs" style="flex-basis:100%;margin-top:0"></div></div>`:`<div class="drop">你目前没有上载图片的权限。请网页拥有人在「Share」里把你设为 Editor 或 Contributor。</div>`}</div>
     <div class="full actions"><button type="button" id="mfCancel">取消</button><button class="primary" type="submit">${ed?"保存修改":"保存这条记录"}</button></div>
   </form>
 
@@ -307,7 +297,7 @@ function renderMain(){
       if(ed) for(const old of (ed.images||[])) if(!ids.includes(old)) S.assets?.delete(old).catch(()=>{});
       clearPending();
       if(ed){ data.segmentId=$("mfSeg").value; data.updatedAt=new Date().toISOString(); await S.db.doc("messages/"+ed.id).update(data); S.editing=null; S.formOpen=false; toast("已保存修改"); renderSegs(); renderMain(); }
-      else { Object.assign(data,{ segmentId:seg.id, by:S.name||"", createdAt:new Date().toISOString() }); await S.db.collection("messages").add(data); S.formOpen=false; toast("已记录"); renderSegs(); renderMain(); }
+      else { Object.assign(data,{ segmentId:seg.id, by:S.me||"", createdAt:new Date().toISOString() }); await S.db.collection("messages").add(data); S.formOpen=false; toast("已记录"); renderSegs(); renderMain(); }
     }catch(e){ fail(e); if(btn){ btn.disabled=false; btn.textContent=ed?"保存修改":"保存这条记录"; } }
   };
 }
@@ -321,21 +311,21 @@ function addFiles(list){
 function clearPending(){ S.pending.forEach(p=>URL.revokeObjectURL(p.url)); S.pending=[]; }
 function renderPending(){
   const box=$("mfImgs"); if(!box) return;
-  box.innerHTML = S.keep.map((id,i)=>`<div class="thumb"><img src="${esc(imgSrc(id))}" alt="已上载的图片"><button type="button" class="x" data-rmkeep="${i}" aria-label="移除这张">×</button></div>`).join("")
+  box.innerHTML = S.keep.map((id,i)=>`<div class="thumb"><img src="/_blob/${esc(id)}" alt="已上载的图片"><button type="button" class="x" data-rmkeep="${i}" aria-label="移除这张">×</button></div>`).join("")
     + S.pending.map((p,i)=>`<div class="thumb"><img src="${p.url}" alt="待上载的图片"><button type="button" class="x" data-rmpend="${i}" aria-label="移除这张">×</button></div>`).join("");
 }
 // 大图先缩小再上载，省空间也上载得快
 async function shrink(file){
-  if(file.type==="image/gif" || file.type==="image/svg+xml" || file.size<250*1024) return file;
+  if(file.type==="image/gif" || file.type==="image/svg+xml" || file.size<800*1024) return file;
   try{
-    const bmp=await createImageBitmap(file); const max=1280; const k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const bmp=await createImageBitmap(file); const max=1800; const k=Math.min(1,max/Math.max(bmp.width,bmp.height));
     const c=document.createElement("canvas"); c.width=Math.round(bmp.width*k); c.height=Math.round(bmp.height*k);
     c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
-    const out=await new Promise(res=>c.toBlob(res,"image/jpeg",0.8));
+    const out=await new Promise(res=>c.toBlob(res,"image/jpeg",0.85));
     return out && out.size<file.size ? out : file;
   }catch(e){ return file; }
 }
-function openLightbox(id){ $("lbImg").src=imgSrc(id); $("lb").hidden=false; }
+function openLightbox(id){ $("lbImg").src="/_blob/"+id; $("lb").hidden=false; }
 $("lb").onclick=()=>{ $("lb").hidden=true; $("lbImg").removeAttribute("src"); };
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !$("lb").hidden) $("lb").click(); });
 document.addEventListener("paste",e=>{ if(!S.assets || !$("mf") || $("mf").hidden) return; const fs=[...(e.clipboardData?.files||[])]; if(fs.length){ e.preventDefault(); addFiles(fs); } });
@@ -362,89 +352,31 @@ document.addEventListener("click", async ev=>{
 $("addSegBtn").onclick=()=>openSegForm(null);
 let qt; $("q").addEventListener("input", e=>{ clearTimeout(qt); qt=setTimeout(()=>{ S.q=e.target.value.trim(); S.confirmDel=null; renderMain(); },200); });
 
-// ---- 资料就存在网页本身：保存 = 发布新版本，所有打开的人自动更新 ----
-const imgSrc=id=>String(id).startsWith("data:")?id:"/_blob/"+id;
-const newId=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-const blobToDataURL=b=>new Promise((res,rej)=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=rej; fr.readAsDataURL(b); });
-const HEAD="<title>客户跟进记录本<\/title>\n<meta name=\"claude:viewport-fit-sides\" content=\"cover\">\n<link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n<link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600;700&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap\">";
-const SKELETON='<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}<\/style><\/head><body>';
-function buildDoc(data){
-  const tag=t=>"<"+t;
-  const json=JSON.stringify(data).replace(/</g,"\\u003c");
-  return SKELETON+"\n"+HEAD+"\n"+tag("style")+' id="app-css">'+$("app-css").textContent+tag("/style>")
-    +'\n<div id="root"></div>\n'
-    +tag("script")+' type="text/html" id="shell">'+$("shell").textContent+tag("/script>")+"\n"
-    +tag("script")+' type="application/json" id="data">'+json+tag("/script>")+"\n"
-    +tag("script")+' id="app">'+$("app").textContent+tag("/script>")+"\n</body></html>";
-}
-let saving=false;
-async function save(mutate, label){
-  if(!S.art || !S.canEdit){ setReadOnly(); toast("你目前只有查看权限，不能修改"); throw {code:"handled"}; }
-  if(saving) throw {code:"handled"};
-  saving=true;
-  const next=JSON.parse(JSON.stringify(DATA)); mutate(next);
-  const doc=buildDoc(next);
-  if(doc.length>14e6){ saving=false; toast("网页已经太大（图片太多），请删除一些旧图片再试"); throw {code:"handled"}; }
-  $("busyText").textContent=label||"保存中…"; $("busy").hidden=false;
-  try{ await S.art.publish(doc); }   // 成功后页面会自动重新载入成新版本
-  finally{ saving=false; }
-}
-S.db={
-  doc(path){ const [col,id]=path.split("/"); return {
-    update: d=>save(n=>{ const x=n[col].find(o=>o.id===id); if(x) Object.assign(x,d); }),
-    delete: ()=>save(n=>{ n[col]=n[col].filter(o=>o.id!==id); }, "删除中…") }; },
-  collection(col){ return { add: async (d,before)=>{ const id=newId(); if(before) before(id); await save(n=>{ n[col].push({id,...d}); }); return {id}; } }; }
-};
-S.assets={
-  upload: async blob=>({ id: await blobToDataURL(blob) }),
-  delete: async ()=>{}
-};
-
-function setReadOnly(){ S.canEdit=false; document.body.classList.add("ro"); $("roNote").hidden=false; }
-function applyData(){
-  S.segs=(DATA.segments||[]).slice().sort((a,b)=>(a.order||0)-(b.order||0));
-  S.msgs=DATA.messages||[];
-  if(!S.sel && S.segs.length) S.sel=S.segs[0].id;
-  if(S.sel && !S.segs.find(s=>s.id===S.sel)) S.sel=S.segs[0]?.id||null;
-  render();
-}
-
-// 一次性：把旧资料库里的记录和图片搬进网页
-async function migrate(){
-  const db=await window.claude?.use("db"); if(!db){ toast("读不到旧资料，请重新整理网页再试"); return; }
-  $("busyText").textContent="正在搬旧资料…"; $("busy").hidden=false;
-  try{
-    const [sg,ms]=await Promise.all([db.collection("segments").get(), db.collection("messages").get()]);
-    const segments=sg.docs.map(d=>{ const x={id:d.id,...d.data()}; delete x.cadenceDays; return x; });
-    const messages=[];
-    let n=0; const total=ms.docs.reduce((a,d)=>a+((d.data().images||[]).length),0);
-    for(const d of ms.docs){
-      const m={id:d.id,...d.data()}; m.by=""; const imgs=[];
-      for(const id of (m.images||[])){
-        n++; $("busyText").textContent="正在搬图片 "+n+" / "+total+"…";
-        try{ const b=await (await fetch("/_blob/"+id)).blob(); imgs.push(await blobToDataURL(await shrink(new File([b],"x",{type:b.type||"image/jpeg"})))); }catch(e){ console.warn("image",id,e); }
-      }
-      m.images=imgs; messages.push(m);
-    }
-    $("busy").hidden=true;
-    await save(nx=>{ nx.migrated=true; nx.segments=segments; nx.messages=messages; }, "正在保存搬好的资料…");
-  }catch(e){ fail(e); }
+async function resolveNames(){
+  if(!S.user) return;
+  const ids=[...new Set(S.msgs.map(m=>m.by).filter(Boolean))];
+  if(!ids.length) return;
+  try{ const ps=await S.user.profiles(ids); let changed=false;
+    for(const id of ids){ const n=(ps[id]&&ps[id].name)||""; if(n && S.names[id]!==n){ S.names[id]=n; changed=true; } }
+    if(changed && !S.editing) renderMain();
+  }catch(e){}
 }
 
 (async()=>{
-  document.body.classList.add("ro");
-  applyData();
-  const [art,user]=await Promise.all([window.claude?.use("artifact") ?? null, window.claude?.use("user") ?? null]);
-  S.art=art; S.user=user;
-  let can=false; try{ can = !!(art && user && await user.canEdit()); }catch(e){}
-  if(!can){ setReadOnly(); if(!DATA.migrated){ const b=$("banner"); b.hidden=false; b.textContent="记录本正在更新中，请稍后再打开。"; } return; }
-  S.canEdit=true; document.body.classList.remove("ro"); $("roNote").hidden=true;
-  try{ S.name=(await user.me()).name||""; }catch(e){}
-  render();
-  if(!DATA.migrated){
-    const b=$("banner"); b.hidden=false;
-    b.innerHTML='最后一步：把之前的记录和图片搬进新版记录本（大约半分钟）。 <button type="button" class="primary" id="migBtn">开始搬</button>';
-    $("migBtn").onclick=migrate;
-  }
+  const [db,user,assets]=await Promise.all([window.claude?.use("db") ?? null, window.claude?.use("user") ?? null, window.claude?.use("assets") ?? null]);
+  S.assets=assets;
+  if(!db){ $("segList").innerHTML=""; const b=$("banner"); b.hidden=false; b.textContent="现在无法连接资料库。请先登入 claude.ai，再重新打开这个网页。"; return; }
+  S.db=db; S.user=user;
+  try{ S.me = user ? await user.id() : null; }catch(e){}
+  db.collection("segments").orderBy("order").onSnapshot(snap=>{
+    S.segs=snap.docs.map(d=>({id:d.id,...d.data()}));
+    if(!S.sel && S.segs.length) S.sel=S.segs[0].id;
+    if(S.sel && !S.segs.find(s=>s.id===S.sel)) S.sel=S.segs[0]?.id||null;
+    renderSegs(); if(!document.activeElement || !document.activeElement.closest("#mf")) renderMain();
+  }, fail);
+  db.collection("messages").onSnapshot(snap=>{
+    S.msgs=snap.docs.map(d=>({id:d.id,...d.data()}));
+    renderSegs(); if(!document.activeElement || !document.activeElement.closest("#mf")) renderMain(); resolveNames();
+  }, fail);
 })();
 </script>
