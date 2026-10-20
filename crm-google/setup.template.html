@@ -1,0 +1,100 @@
+<title>记录本安装步骤</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@700&family=Noto+Sans+SC:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column of numbered steps (the order matters), code box at step 1 */
+:root{--bg:#f6f7f5;--panel:#fff;--ink:#1b2422;--muted:#5f6b67;--line:#dde3e0;--accent:#0f6b5c;--accent-soft:#e2f0ec;--warn:#9a5b00;--warn-soft:#fdf0d9;
+  --f-display:"Noto Serif SC","Songti SC",serif;--f-body:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121816;--panel:#1a2220;--ink:#e6ece9;--muted:#9aa8a3;--line:#2c3633;--accent:#5cc2ad;--accent-soft:#1d3530;--warn:#f2b54f;--warn-soft:#3a2d16;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#121816;--panel:#1a2220;--ink:#e6ece9;--muted:#9aa8a3;--line:#2c3633;--accent:#5cc2ad;--accent-soft:#1d3530;--warn:#f2b54f;--warn-soft:#3a2d16;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding-block:24px 56px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1{font-family:var(--f-display);font-size:28px;line-height:1.25;margin:0 0 6px;text-wrap:balance}
+.lead{color:var(--muted);margin:0 0 24px}
+ol.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:14px;counter-reset:s}
+ol.steps>li{counter-increment:s;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px 16px 60px;position:relative}
+ol.steps>li::before{content:counter(s);position:absolute;left:16px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--accent);color:var(--panel);font-weight:700;display:flex;align-items:center;justify-content:center}
+h2{font-size:17px;margin:2px 0 6px}
+p{margin:0 0 8px}
+ul{margin:0 0 8px;padding-left:20px}
+b.ui{background:var(--accent-soft);color:var(--ink);padding:0 6px;border-radius:4px;font-weight:500;white-space:nowrap}
+.en{color:var(--muted);font-size:13px}
+button{font:inherit;cursor:pointer;border-radius:6px;border:1px solid var(--accent);background:var(--accent);color:var(--panel);padding:9px 18px;font-weight:500}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+textarea{width:100%;height:110px;margin-top:10px;font:12px/1.4 ui-monospace,Menlo,monospace;background:var(--bg);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:8px;resize:vertical}
+a{color:var(--accent);font-weight:500;overflow-wrap:anywhere}
+.pw{display:inline-block;font:700 20px/1.4 ui-monospace,Menlo,monospace;letter-spacing:.06em;background:var(--accent-soft);padding:4px 12px;border-radius:6px;user-select:all}
+.tip{background:var(--warn-soft);color:var(--warn);border-radius:8px;padding:10px 12px;font-size:14px;margin-top:8px}
+.ok{color:var(--accent);font-weight:500;margin-left:10px}
+@media (max-width:480px){ol.steps>li{padding:56px 14px 14px}ol.steps>li::before{left:14px;top:14px}}
+</style>
+
+<div class="wrap">
+  <h1>客户跟进记录本：搬到 Google</h1>
+  <p class="lead">照下面 7 步做一次，大约 10 分钟。做完后同事打开网址、输入团队密码就能用，不需要登录 Claude。资料会存在你自己的 Google Drive 里。</p>
+
+  <ol class="steps">
+    <li>
+      <h2>复制程序</h2>
+      <p>按下面的按钮，整套程序就复制好了。</p>
+      <button type="button" id="copy">复制全部程序</button><span class="ok" id="copied" hidden>已复制 ✓</span>
+      <textarea id="code" readonly aria-label="程序内容">__CODE__</textarea>
+      <p class="en">按钮没反应的话：点进上面的灰色框，按 Ctrl+A（Mac 按 ⌘+A）全选，再按 Ctrl+C 复制。</p>
+    </li>
+    <li>
+      <h2>打开资料表</h2>
+      <p>我已经在你的 Google Drive 建好了一份表格：<br><a href="https://docs.google.com/spreadsheets/d/1eG0zwVooj8E1i-pbweOpOmqS-rfi3QM7FvsToikAO_I/edit" target="_blank" rel="noopener">客户跟进记录本（资料）</a></p>
+      <p>打开后，点上方菜单的 <b class="ui">扩充功能</b> → <b class="ui">Apps Script</b>。<br><span class="en">英文界面：Extensions → Apps Script</span></p>
+      <p>会打开一个新分页，里面有几行字。</p>
+    </li>
+    <li>
+      <h2>贴上程序</h2>
+      <ul>
+        <li>点进那几行字里面，按 Ctrl+A 全选，再按 Delete 删掉。</li>
+        <li>按 Ctrl+V，把第 1 步复制的程序贴上去。</li>
+        <li>点上方的 <b class="ui">储存</b> 图标（像一个磁碟片），或按 Ctrl+S。</li>
+      </ul>
+    </li>
+    <li>
+      <h2>发布成网页</h2>
+      <ul>
+        <li>点右上角蓝色的 <b class="ui">部署</b> → <b class="ui">新增部署作业</b>。<span class="en">（Deploy → New deployment）</span></li>
+        <li>点左边「选取类型」旁的齿轮，选 <b class="ui">网页应用程式</b>。<span class="en">（Web app）</span></li>
+        <li>「执行身份」选 <b class="ui">我</b>。<span class="en">（Execute as: Me）</span></li>
+        <li>「谁可以存取」选 <b class="ui">所有人</b>。<span class="en">（Who has access: Anyone）</span>这一项最重要，选了它同事才不用登录。</li>
+        <li>按 <b class="ui">部署</b>。</li>
+      </ul>
+    </li>
+    <li>
+      <h2>允许它使用你的表格和 Drive</h2>
+      <ul>
+        <li>跳出「需要授权」，按 <b class="ui">授予存取权</b>，选你的 Google 账号。</li>
+        <li>看到「Google 尚未验证这个应用程式」时，点左下角的 <b class="ui">进阶</b>，再点 <b class="ui">前往「未命名的专案」（不安全）</b>。</li>
+        <li>最后按 <b class="ui">允许</b>。</li>
+      </ul>
+      <p class="tip">出现「不安全」是因为这套程序是你自己装的，不是 Google 商店里的。它只会读写这份表格，并把图片放进 Drive 里一个叫「客户跟进记录本 图片」的文件夹。</p>
+    </li>
+    <li>
+      <h2>打开你的新网址</h2>
+      <p>部署完成后会显示一个「网页应用程式」网址，结尾是 <b>/exec</b>。按旁边的 <b class="ui">复制</b>，贴到浏览器打开。</p>
+      <p>输入团队密码和你的名字就能进去：</p>
+      <p><span class="pw">__PASSWORD__</span></p>
+      <p>进去后，你应该看到左边 6 个客户类型，以及之前记的 10 条信息。</p>
+    </li>
+    <li>
+      <h2>发给同事</h2>
+      <p>把网址和团队密码一起发到团队的 WhatsApp 群。同事第一次打开时输入密码和自己的名字，之后同一台手机或电脑就不用再输入了。</p>
+      <p class="tip">请不要把网址和密码发给团队以外的人。有了这两样，就能看到和修改记录。</p>
+    </li>
+  </ol>
+</div>
+
+<script>
+document.getElementById("copy").addEventListener("click", async () => {
+  const ta = document.getElementById("code");
+  try { await navigator.clipboard.writeText(ta.value); }
+  catch (e) { ta.focus(); ta.select(); }
+  document.getElementById("copied").hidden = false;
+});
+</script>
