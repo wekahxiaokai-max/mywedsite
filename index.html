@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>企业股权健康度评估 | Wekah</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@600;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<!-- ============ 填写页 ============ -->
+<main id="formView" class="form-view">
+  <header class="intro">
+    <p class="eyebrow">Wekah (PG) Sdn Bhd · 全赢资本</p>
+    <h1>企业股权健康度评估</h1>
+    <p class="lede">20 道题，约 8 分钟。从股权结构、公司治理、财务合规、团队激励、资本规划五个方面，生成一份专属于贵司的 PDF 评估报告。</p>
+    <p class="privacy">🔒 所有资料只在您自己的浏览器里计算，不会上传或保存。</p>
+    <button type="button" class="link-btn" id="fillSample">填入示例资料（演示用）</button>
+  </header>
+
+  <form id="assessForm" novalidate>
+    <section class="block">
+      <h2><span class="step">1</span>基础资料</h2>
+      <div class="grid">
+        <label class="field">企业名称 <em>*</em>
+          <input id="companyName" name="companyName" maxlength="60" autocomplete="organization">
+        </label>
+        <label class="field">您的姓名 <em>*</em>
+          <input id="contactName" name="contactName" maxlength="30" autocomplete="name">
+        </label>
+        <label class="field">手机号码 <em>*</em>
+          <input id="phone" name="phone" inputmode="tel" placeholder="例如 012-345 6789" autocomplete="tel">
+        </label>
+        <label class="field">电邮
+          <input id="email" name="email" type="email" maxlength="80" autocomplete="email">
+        </label>
+        <label class="field">行业 <em>*</em>
+          <select id="industry" name="industry"></select>
+        </label>
+        <label class="field">主要营业地区 <em>*</em>
+          <select id="region" name="region"></select>
+        </label>
+        <label class="field">年营业额 <em>*</em>
+          <select id="revenue" name="revenue"></select>
+        </label>
+        <label class="field">成立年限 <em>*</em>
+          <select id="years" name="years"></select>
+        </label>
+        <label class="field">员工人数 <em>*</em>
+          <input id="staff" name="staff" type="number" min="1" max="100000" step="1" inputmode="numeric">
+        </label>
+        <label class="field">股东人数 <em>*</em>
+          <input id="shareholders" name="shareholders" type="number" min="1" max="200" step="1" inputmode="numeric">
+        </label>
+      </div>
+    </section>
+
+    <div id="questionBlocks"></div>
+
+    <div id="formError" class="form-error" role="alert" hidden></div>
+    <div class="actions">
+      <button type="submit" class="primary">生成评估报告</button>
+    </div>
+  </form>
+</main>
+
+<!-- ============ 报告页 ============ -->
+<div id="reportView" hidden>
+  <div class="toolbar no-print">
+    <button type="button" id="backBtn">← 返回修改</button>
+    <span class="toolbar-hint">点右边按钮，在弹出窗口的「目的地 / 打印机」选「另存为 PDF」</span>
+    <button type="button" class="primary" id="pdfBtn">下载 PDF 报告</button>
+  </div>
+  <div id="report" class="report"></div>
+</div>
+
+<script src="assets/rules.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
