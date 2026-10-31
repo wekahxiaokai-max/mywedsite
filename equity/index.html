@@ -3,922 +3,1011 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>股权激励系统 · 八步法</title>
+<title>员工股权激励管理后台</title>
 <style>
 :root{
-  --o:#E8792F; --o2:#FBE3D2; --o3:#FFF5EE; --ink:#222; --mut:#6b6b6b; --line:#e3e3e3;
-  --bg:#f6f6f4; --ok:#1f8a4c; --okbg:#e6f5ec; --warn:#b7600b; --warnbg:#fff3e2; --bad:#b42318; --badbg:#fdecea;
+  --brand:#E8792F; --brand2:#FBE3D2; --brand3:#FFF6EF;
+  --ink:#1d1d1b; --ink2:#52514e; --mut:#8a8984; --line:#e6e5e1; --bg:#f4f4f1; --card:#fff;
+  --side:#1f2328; --side2:#2b3036;
+  --s1:#2a78d6; --s2:#1baf7a; --s3:#eda100; --rest:#d9d8d3;
+  --ok:#1f8a4c; --okbg:#e7f5ec; --warn:#a85a07; --warnbg:#fff3e0; --bad:#b42318; --badbg:#fdecea; --info:#1f5fa8; --infobg:#e9f1fb;
 }
 *{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5}
-header{background:#fff;border-bottom:3px solid var(--o);padding:12px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-header h1{font-size:19px;margin:0}
-header .tag{background:var(--o);color:#fff;border-radius:4px;padding:1px 8px;font-size:13px}
-header .save{margin-left:auto;font-size:13px;color:var(--mut)}
-.wrap{display:flex;min-height:calc(100vh - 60px)}
-aside{width:250px;background:#fff;border-right:1px solid var(--line);padding:14px;flex-shrink:0}
-aside h3{font-size:13px;color:var(--mut);margin:6px 0 8px;font-weight:600}
-.plan{padding:9px 10px;border-radius:6px;cursor:pointer;margin-bottom:4px;border:1px solid transparent}
-.plan:hover{background:var(--o3)}
-.plan.on{background:var(--o2);border-color:var(--o)}
-.plan small{display:block;color:var(--mut);font-size:12px}
-main{flex:1;padding:18px 24px;min-width:0}
-.steps{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.steps button{border:1px solid var(--line);background:#fff;border-radius:18px;padding:6px 12px;cursor:pointer;font-size:14px;color:var(--ink)}
-.steps button.on{background:var(--o);color:#fff;border-color:var(--o)}
-.steps button b{font-weight:700;margin-right:4px}
-.card{background:#fff;border:1px solid var(--line);border-radius:10px;padding:18px 20px;margin-bottom:16px}
-.card h2{margin:0 0 4px;font-size:18px}
-.card h2 .n{display:inline-block;background:var(--o);color:#fff;border-radius:4px;padding:0 8px;margin-right:8px;font-size:15px}
-.card h4{margin:16px 0 8px;font-size:15px}
-.lead{color:var(--mut);margin:0 0 14px;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px 16px}
-label.f{display:flex;flex-direction:column;font-size:13px;color:var(--mut);gap:4px}
-label.f span.h{font-size:12px;color:#999}
-input,select,textarea{font:inherit;font-size:14px;padding:7px 9px;border:1px solid #ccc;border-radius:6px;background:#fff;color:var(--ink);width:100%}
-input:focus,select:focus,textarea:focus{outline:2px solid var(--o2);border-color:var(--o)}
-input[type=checkbox]{width:auto}
-td input,td select{padding:5px 6px;font-size:13px;min-width:70px}
-.btn{border:1px solid var(--o);background:var(--o);color:#fff;border-radius:6px;padding:7px 14px;cursor:pointer;font-size:14px}
-.btn.ghost{background:#fff;color:var(--o)}
-.btn.sm{padding:4px 9px;font-size:13px}
-.btn.del{border-color:#ddd;background:#fff;color:var(--bad)}
-.btn.full{width:100%;margin-bottom:6px}
-table{border-collapse:collapse;width:100%;font-size:14px}
-th,td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:middle}
-th{background:#f3f3f1;font-weight:600;font-size:13px;color:#444;white-space:nowrap}
+body{margin:0;font-family:-apple-system,"PingFang SC","Microsoft YaHei","Noto Sans SC",sans-serif;color:var(--ink);background:var(--bg);font-size:14px;line-height:1.55}
+.app{display:flex;min-height:100vh}
+nav{width:212px;background:var(--side);color:#cfd3d8;flex-shrink:0;padding:16px 10px;position:sticky;top:0;height:100vh;overflow:auto}
+nav .logo{color:#fff;font-weight:700;font-size:16px;padding:4px 10px 2px}
+nav .logo small{display:block;color:#8b939c;font-weight:400;font-size:12px}
+nav .grp{font-size:11px;color:#7d858e;margin:16px 10px 6px;letter-spacing:.05em}
+nav a{display:flex;align-items:center;gap:8px;color:#cfd3d8;text-decoration:none;padding:7px 10px;border-radius:6px;cursor:pointer;font-size:14px}
+nav a:hover{background:var(--side2);color:#fff}
+nav a.on{background:var(--brand);color:#fff}
+nav a .badge{margin-left:auto;background:#e5484d;color:#fff;border-radius:9px;font-size:11px;padding:0 6px}
+.mainwrap{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{background:#fff;border-bottom:1px solid var(--line);padding:10px 22px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:5}
+.top select,.top input{width:auto}
+.top .save{margin-left:auto;font-size:12px;color:var(--mut)}
+main{padding:20px 22px 60px}
+h1{font-size:21px;margin:0 0 2px}
+.sub{color:var(--ink2);margin:0 0 18px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+.card h3{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card h3 .act{margin-left:auto;display:flex;gap:6px}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:1100px){.cols{grid-template-columns:1fr}}
+.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.card .kpi{background:#fafaf8}
+.kpi small{display:block;color:var(--ink2);font-size:12px}
+.kpi b{display:block;font-size:21px;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi span{font-size:12px;color:var(--mut)}
+table{border-collapse:collapse;width:100%}
+th,td{padding:8px 9px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+th{font-size:12px;color:var(--ink2);font-weight:600;background:#fafaf8;white-space:nowrap}
 td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
-tr.tot td{font-weight:700;background:var(--o3)}
-.tblwrap{overflow-x:auto}
-.opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
-.opt{border:2px solid var(--line);border-radius:10px;padding:14px;cursor:pointer;background:#fff}
-.opt.on{border-color:var(--o);background:var(--o3)}
-.opt b{font-size:17px;display:block;margin-bottom:4px}
-.opt p{margin:4px 0 0;font-size:13px;color:var(--mut)}
-.note{border-radius:8px;padding:10px 14px;margin:10px 0;font-size:14px}
-.note.ok{background:var(--okbg);color:var(--ok)}
-.note.warn{background:var(--warnbg);color:var(--warn)}
-.note.bad{background:var(--badbg);color:var(--bad)}
-.note.tip{background:var(--o3);color:#7a3c10;border-left:4px solid var(--o)}
-.kpis{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin:10px 0}
-.kpi{background:var(--o3);border-radius:8px;padding:10px 14px}
-.kpi small{color:var(--mut);font-size:12px;display:block}
-.kpi b{font-size:20px;font-variant-numeric:tabular-nums}
-.pill{display:inline-block;border-radius:10px;padding:0 8px;font-size:12px}
-.pill.ok{background:var(--okbg);color:var(--ok)}
-.pill.bad{background:var(--badbg);color:var(--bad)}
-.pill.warn{background:var(--warnbg);color:var(--warn)}
+tr.tot td{font-weight:700;background:var(--brand3)}
+tr.click{cursor:pointer} tr.click:hover td{background:#fbfaf7}
+.tw{overflow-x:auto}
+.btn{border:1px solid var(--brand);background:var(--brand);color:#fff;border-radius:6px;padding:6px 13px;cursor:pointer;font-size:13px;white-space:nowrap;font-family:inherit}
+.btn:hover{filter:brightness(.96)}
+.btn.g{background:#fff;color:var(--brand)}
+.btn.n{background:#fff;color:var(--ink2);border-color:#ccc}
+.btn.d{background:#fff;color:var(--bad);border-color:#e3c3c0}
+.btn.sm{padding:3px 9px;font-size:12px}
+input,select,textarea{font:inherit;font-size:13px;padding:6px 8px;border:1px solid #cfcfca;border-radius:6px;background:#fff;color:var(--ink);width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--brand2);border-color:var(--brand)}
+input:disabled{background:#f6f6f3;color:var(--ink2)}
+input[type=checkbox]{width:auto}
+textarea{min-height:110px;font-family:monospace;font-size:12px}
+.form{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px 14px}
+.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--ink2)}
+.f .h{color:var(--mut);font-size:11px}
+.pill{display:inline-block;border-radius:10px;padding:0 8px;font-size:12px;white-space:nowrap}
+.p-ok{background:var(--okbg);color:var(--ok)} .p-warn{background:var(--warnbg);color:var(--warn)} .p-bad{background:var(--badbg);color:var(--bad)}
+.p-info{background:var(--infobg);color:var(--info)} .p-mut{background:#efefec;color:var(--ink2)}
+.note{border-radius:8px;padding:9px 12px;margin:8px 0;font-size:13px}
+.n-ok{background:var(--okbg);color:var(--ok)} .n-warn{background:var(--warnbg);color:var(--warn)} .n-bad{background:var(--badbg);color:var(--bad)} .n-info{background:var(--infobg);color:var(--info)}
+.n-tip{background:var(--brand3);color:#7a3c10;border-left:3px solid var(--brand)}
+.mut{color:var(--mut);font-size:12px}
 .row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.mut{color:var(--mut);font-size:13px}
-.formula{font-family:inherit;background:#f7f7f7;border-radius:6px;padding:8px 12px;font-size:13px;color:#444;margin:6px 0}
-.empty{text-align:center;padding:60px 20px;color:var(--mut)}
-.chk{display:flex;gap:8px;align-items:flex-start;padding:8px 10px;border:1px solid var(--line);border-radius:8px;cursor:pointer;background:#fff}
-.chk input{margin-top:4px}
-.navbtm{display:flex;justify-content:space-between;margin-top:6px}
-textarea{min-height:120px;font-family:monospace;font-size:12px}
-@media (max-width:820px){.wrap{flex-direction:column}aside{width:auto;border-right:0;border-bottom:1px solid var(--line)}main{padding:12px}}
-@media print{aside,header,.steps,.noprint{display:none!important}main{padding:0}.card{border:0}}
+.right{margin-left:auto}
+.empty{color:var(--mut);text-align:center;padding:26px 10px}
+.formula{background:#f6f6f3;border-radius:6px;padding:7px 11px;font-size:12px;color:var(--ink2);margin:6px 0}
+.modalbg{position:fixed;inset:0;background:rgba(20,20,20,.38);display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:20;overflow:auto}
+.modal{background:#fff;border-radius:12px;width:min(940px,100%);padding:20px 22px;box-shadow:0 10px 40px rgba(0,0,0,.2)}
+.modal h2{margin:0 0 4px;font-size:18px}
+.modal .foot{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;border-top:1px solid var(--line);padding-top:12px;flex-wrap:wrap}
+.sec{font-size:13px;font-weight:700;margin:18px 0 8px;color:var(--ink);border-bottom:1px solid var(--line);padding-bottom:4px}
+.stack{display:flex;height:22px;border-radius:4px;overflow:hidden;gap:2px;background:#fff}
+.stack div{height:100%}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink2);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.hbar{display:grid;grid-template-columns:150px 1fr 90px;gap:8px;align-items:center;font-size:13px;margin:6px 0}
+.hbar>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hbar .t{height:14px;background:#f0efeb;border-radius:0 4px 4px 0}
+.hbar .t div{height:100%;background:var(--s1);border-radius:0 4px 4px 0}
+.hbar .v{text-align:right;font-variant-numeric:tabular-nums}
+.colchart{display:flex;align-items:flex-end;gap:10px;height:150px;border-bottom:1px solid #cfcfca;padding:0 4px}
+.colchart .c{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.colchart .bar{width:60%;max-width:46px;background:var(--s1);border-radius:4px 4px 0 0;min-height:2px}
+.colchart span{font-size:11px;color:var(--ink2);margin-bottom:3px;font-variant-numeric:tabular-nums}
+.colx{display:flex;gap:10px;padding:4px 4px 0}
+.colx div{flex:1;text-align:center;font-size:11px;color:var(--mut)}
+#tip{position:fixed;pointer-events:none;background:#1d1d1b;color:#fff;font-size:12px;padding:6px 9px;border-radius:6px;display:none;z-index:50;white-space:nowrap}
+.steps{display:flex;margin:6px 0 14px;flex-wrap:wrap;gap:2px}
+.steps div{padding:4px 12px;font-size:12px;background:var(--brand2);color:#7a3c10}
+.steps div:first-child{border-radius:12px 0 0 12px}.steps div:last-child{border-radius:0 12px 12px 0}
+.welcome{max-width:760px;margin:50px auto;text-align:center}
+.welcome h1{font-size:26px}
+.flow{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin:22px 0;text-align:left}
+.flow div{background:#fff;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:12px;color:var(--ink2)}
+.flow b{display:block;color:var(--ink);font-size:13px}
+pre.doc{white-space:pre-wrap;font-family:inherit;background:#fafaf8;padding:12px;border-radius:8px;margin:0;font-size:13px}
+@media(max-width:860px){.app{flex-direction:column}nav{width:auto;height:auto;position:static;display:flex;flex-wrap:wrap;gap:2px}nav .grp,nav .logo small{display:none}main{padding:14px}}
+@media print{nav,.top,.noprint{display:none!important}main{padding:0}.card{border:0}}
 </style>
 </head>
 <body>
-<header>
-  <h1>中小企业股权激励系统</h1><span class="tag">股权激励八步法</span>
-  <span class="save" id="saveState">载入中…</span>
-</header>
-<div class="wrap">
-  <aside class="noprint">
-    <button class="btn full" id="newPlan">＋ 新增客户公司</button>
-    <div class="row" style="margin-bottom:8px">
-      <button class="btn ghost sm" data-sample="furniture">示范：家私工厂（实股）</button>
-      <button class="btn ghost sm" data-sample="option">示范：期股 ESOS</button>
-      <button class="btn ghost sm" data-sample="red">示范：轮胎厂（红股）</button>
+<div class="app">
+  <nav id="nav"></nav>
+  <div class="mainwrap">
+    <div class="top noprint">
+      <label class="row" style="gap:6px"><span class="mut">客户公司</span><select id="coSel"></select></label>
+      <button class="btn g sm" id="newCo">＋ 新公司</button>
+      <button class="btn n sm" id="demoCo">载入示范公司</button>
+      <label class="row" style="gap:6px" title="系统按这个日期计算成熟、年资。改成未来的日期，就能模拟几年后的情况。"><span class="mut">计算日期</span><input type="date" id="asOf"></label>
+      <span class="save" id="saveState">载入中…</span>
     </div>
-    <h3>客户公司</h3>
-    <div id="planList"></div>
-    <h3 style="margin-top:20px">备份</h3>
-    <button class="btn ghost sm" id="copyBackup">复制全部资料（备份）</button>
-    <button class="btn ghost sm" id="showRestore" style="margin-top:6px">贴上备份还原</button>
-    <div id="restoreBox" style="display:none;margin-top:6px">
-      <textarea id="restoreText" placeholder="把之前复制的备份资料贴在这里"></textarea>
-      <button class="btn sm" id="doRestore" style="margin-top:4px">还原</button>
-    </div>
-    <div class="mut" id="sideMsg" style="margin-top:8px"></div>
-  </aside>
-  <main id="main"></main>
+    <main id="main"></main>
+  </div>
 </div>
+<div id="modal"></div>
+<div id="tip"></div>
 
 <script>
 "use strict";
-/* ============ 基本工具 ============ */
+/* ================= 工具 ================= */
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const num = v => { const n = parseFloat(v); return isFinite(n) ? n : 0; };
-const RM = n => (n < 0 ? "-RM " : "RM ") + Math.round(Math.abs(n)).toLocaleString("en-US");
-const PCT = (f, d = 2) => (f * 100).toFixed(d).replace(/\.?0+$/, "") + "%";
+const RM = n => (n < -0.5 ? "-RM " : "RM ") + Math.round(Math.abs(n)).toLocaleString("en-US");
+const RM2 = n => "RM " + (Math.round(n * 100) / 100).toLocaleString("en-US", {minimumFractionDigits:2, maximumFractionDigits:2});
+const PCT = (f, d = 2) => { if (!isFinite(f)) return "0%"; let t = (f * 100).toFixed(d); if (t.includes(".")) t = t.replace(/\.?0+$/, ""); return t + "%"; };
 const INT = n => Math.round(n).toLocaleString("en-US");
 const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-function getPath(o, path){ return path.split(".").reduce((a, k) => a == null ? a : a[k], o); }
-function setPath(o, path, v){
-  const ks = path.split("."); let cur = o;
-  for (let i = 0; i < ks.length - 1; i++){ if (cur[ks[i]] == null) cur[ks[i]] = /^\d+$/.test(ks[i+1]) ? [] : {}; cur = cur[ks[i]]; }
-  cur[ks[ks.length - 1]] = v;
+const todayISO = () => new Date().toISOString().slice(0, 10);
+const addYears = (d, n) => { const x = new Date(d + "T00:00:00Z"); if (isNaN(x)) return d; x.setUTCFullYear(x.getUTCFullYear() + n); return x.toISOString().slice(0, 10); };
+const yearsBetween = (a, b) => (!a || !b) ? 0 : (new Date(b) - new Date(a)) / (365.25 * 864e5);
+const clone = o => JSON.parse(JSON.stringify(o));
+function getPath(o, p){ return p.split(".").reduce((a, k) => a == null ? a : a[k], o); }
+function setPath(o, p, v){
+  const ks = p.split("."); let c = o;
+  for (let i = 0; i < ks.length - 1; i++){ if (c[ks[i]] == null) c[ks[i]] = /^\d+$/.test(ks[i+1]) ? [] : {}; c = c[ks[i]]; }
+  c[ks[ks.length-1]] = v;
 }
 
-/* ============ 选项定义（来自八步法讲义） ============ */
-const LEVELS = {
-  c:        {t:"C Level（CEO/COO/CFO/CMO）", rng:[3,5],   rule:"直接符合"},
-  core:     {t:"核心高管（部门负责人）",       rng:[2,3],   rule:"直接符合"},
-  key:      {t:"项目红点（店长/厂长/分店经理）", rng:[1,2], rule:"直接符合"},
-  director: {t:"总监级",                     rng:[1,2],   rule:"需满 5 年", min:5},
-  manager:  {t:"经理级",                     rng:[0.5,1], rule:"需满 3 年", min:3},
-  staff:    {t:"其他员工",                   rng:[0.1,0.5], rule:"一般不符合（可特别批准）", never:true}
+/* ================= 字典 ================= */
+const PLAN_TYPES = {
+  virtual:{t:"虚拟分红股（红股）", s:"红股", d:"员工买的是「分红权」，不登记 SSM、不稀释股权。适合门店、项目、分公司。"},
+  rsu:{t:"实股（限制性股份）", s:"实股", d:"员工出钱买真股份，成为股东。设锁定期和回购条款，离职可以收回。"},
+  option:{t:"期权（期股 / ESOS）", s:"期权", d:"约定将来用优惠价买股份，成熟后才能「行权」（付钱买）。适合计划上市的公司。"}
 };
-const FORMS = {
-  red:    {t:"红股（虚拟分红）", d:"只拿分红、不进 SSM 登记。适合门店分红、项目分红。员工出钱买「分红权」，有期限（例如 5 年）。"},
-  real:   {t:"实股", d:"真的成为股东（分公司或总公司股份）。员工出钱买，享有净利润分红。"},
-  option: {t:"期股（员工期权 ESOS）", d:"先约定将来可以用优惠价买股份，达到条件才能买。适合未来计划上市（IPO）的企业。"}
+const VEHICLES = {
+  platform:{t:"持股平台（LLP / Sdn Bhd）", d:"员工股份装进一间平台公司，SSM 只多一个股东，投票权由创始人控制。人多时首选。"},
+  proxy:{t:"创始人代持", d:"由创始人代员工持有，投票权在创始人。人少或红股适合，要签代持协议。"},
+  direct:{t:"员工直接持有", d:"员工名字直接登记在 SSM，投票权分散。只适合极少数核心合伙人。"}
 };
-const HOLDINGS = {
-  proxy:    {t:"创始人代持", d:"由大股东代员工持有，投票由代持人决定。建议签代持协议。"},
-  platform: {t:"持股平台", d:"开一间 LLP 或 Sdn Bhd 专门装员工的股份，法人代表一般由大股东担任，投票权集中。建议签协议。"},
-  direct:   {t:"直接持有", d:"员工直接持有公司股份，SSM 资料里会直接显示员工名字。"}
+const VAL_METHODS = {pe:"净利润 × 市盈率", funding:"最新融资估值", assets:"净资产", manual:"自定数字"};
+const PRICE_BASES = {valuation:"按公司估值打折", assets:"按净资产打折", fixed:"固定每股价格"};
+const BUY_METHODS = {original:"原价", interest:"原价 + 每年利息", multiple:"原价 × 约定倍数", pe:"最近净利润 × 固定市盈率", valuation:"最新估值", valuationDiscount:"最新估值打折", assets:"净资产"};
+const EXIT_CATS = {
+  A:{t:"一般离职", s:"按计划的回购规则", items:["主动辞职并经公司同意","劳动合同期满不续约","不能胜任工作","非因公死亡或丧失劳动能力"]},
+  B:{t:"非员工原因离开", s:"按市场价或较高回报，取较高者", items:["公司战略调整要求离职","退休","因公丧失劳动能力或死亡","主动要求结束激励计划"]},
+  C:{t:"过错离职", s:"未成熟作废，已成熟原价或低价回购 + 赔偿", items:["违反公司制度被辞退","严重失职、擅自离职","侵占公司财产、泄露商业机密","触犯法律被追究责任"]}
 };
-const PRINCIPLES = [
-  ["xuhou","先虚后实","先给虚拟分红，再给实股"],
-  ["shaohou","先少后多","渐进式增加股份"],
-  ["kaohou","先考后给","通过 KPI 对赌置换股份"],
-  ["jiehou","先借后还","入股资金写欠条，用分红慢慢还"]
-];
-const GRANT_METHODS = {
-  pct:"按百分比（岗位层级 1–5%）", value:"按价值（例如 RM100k）", salary:"按基础年薪 × 倍数", uniform:"统一奖励（第一批人同价值）"
-};
-const PRICE_BASES = {
-  valuation:"公司估值（第 0 步算出的估值）", funding:"最新一轮融资估值", assets:"公司净资产", perUnit:"每份定价（红股常用：每 2.5% 卖多少钱）"
-};
-const BUY_METHODS = {
-  original:"原价（当初进入的价格）", interest:"原价 + 利息（每年 3–5%）", multiple:"倍数（事先约定 ×1 或 ×2）",
-  pe:"过去一年净利润 × 固定市盈率", valuation:"公司最新估值", valuationDiscount:"最新估值打折", assets:"公司净资产"
-};
-const REASONS = {
-  A:{t:"一般离职（较低回报回购）", items:["不能胜任工作","违反公司制度被辞退","非因公死亡或丧失劳动能力","劳动合同期满未续约","主动辞职并经公司同意"]},
-  B:{t:"非员工原因离开（较高回报回购）", items:["公司战略调整要求离职","主动要求结束股权激励计划","因公丧失劳动能力或死亡","退休"]},
-  C:{t:"过错离职（原价或低价回购 + 赔偿）", items:["严重失职、擅自离职","侵占公司财产、损害公司利益、泄露商业机密","触犯刑律被追究法律责任"]}
-};
+const PERF = {A:"A 优秀", B:"B 良好", C:"C 合格", D:"D 不合格"};
+const GSTATUS = {draft:["草稿","p-mut"], active:["生效中","p-ok"], ended:["已结束","p-info"]};
 
-/* ============ 一份方案的默认内容 ============ */
-function blankPlan(name){
-  return {
-    id: uid(), name: name || "新客户公司", industry: "", createdAt: Date.now(), updatedAt: Date.now(),
-    co: {netProfit:0, netAssets:0, funding:0, pe:5, totalUnits:1000000, valMethod:"pe", manualVal:0, ipo:false, multiUnit:false},
-    holders: [{name:"创始人", role:"老板", pct:100, after:100}],
-    dilution: "proportional",
-    form: "real", principles: [],
-    holding: "platform", platformName: "",
-    poolCap: 20,
-    grant: {uniformValue: 50000},
-    emps: [],
-    price: {base:"valuation", discount:50, unitPct:2.5, unitPrice:50000},
-    vest: {years:4, mode:"ascending", custom:[25,25,25,25], perf:false, rule:"all", threshold:80},
-    buy: {lockYears:3, inLock:"original", afterLock:"pe", rate:5, pe:4, multiple:2, valDisc:50, floor:true, redSchedule:true, redTerm:5, redBonus:20, highRate:8},
-    exit: {empId:"", year:4, cat:"A", reason:0, np:"", val:"", na:"", faultPct:100, comp:0, accel:true},
-    scen: [200000, 300000, 400000, 500000]
-  };
+/* ================= 资料结构 ================= */
+function defaultLevels(){
+  return [
+    {id:"L1", name:"C Level（CEO/COO/CFO/CMO）", coef:3, minYears:0},
+    {id:"L2", name:"核心高管（部门负责人）", coef:2, minYears:0},
+    {id:"L3", name:"项目红点（店长/厂长/分店经理）", coef:1.5, minYears:0},
+    {id:"L4", name:"总监", coef:1.5, minYears:5},
+    {id:"L5", name:"经理", coef:1, minYears:3},
+    {id:"L6", name:"骨干员工", coef:0.6, minYears:3}
+  ];
 }
-function blankEmp(){
-  return {id:uid(), name:"", position:"", level:"manager", years:0, salary:0, approved:false, method:"pct", pct:1, value:100000, mult:2, perf:[]};
+function newCompany(name){
+  return {id:uid(), name:name || "新客户公司", industry:"", regNo:"", createdAt:Date.now(), updatedAt:Date.now(),
+    valuations:[], shareholders:[{id:uid(), name:"创始人", type:"founder", shares:100000}],
+    levels:defaultLevels(), perfCoef:{A:1.2, B:1, C:0.8, D:0}, tenureCoef:[0.8, 1, 1.1, 1.2],
+    participants:[], plans:[], grants:[], payments:[], dividends:[], log:[]};
 }
-function samplePlan(kind){
-  const p = blankPlan();
-  if (kind === "furniture"){
-    Object.assign(p, {name:"示范：家私工厂", industry:"制造业"});
-    Object.assign(p.co, {netProfit:180000, pe:5, valMethod:"pe", totalUnits:60000, netAssets:400000});
-    p.holders = [{name:"A", role:"老板", pct:50, after:30},{name:"B", role:"经理", pct:50, after:25}];
-    p.dilution = "manual"; p.form = "real"; p.holding = "direct"; p.poolCap = 45;
-    p.principles = ["shaohou","jiehou"];
-    p.price.discount = 50;
-    const mk = (n, pos, lv, y, pct) => Object.assign(blankEmp(), {name:n, position:pos, level:lv, years:y, salary:60000, method:"pct", pct});
-    p.emps = [mk("C","厂长","key",6,15), mk("D","工头","manager",4,10), mk("E","营销","manager",3,10), mk("F","营销","manager",3,10)];
-    p.scen = [180000,200000,300000,400000,500000];
-  } else if (kind === "option"){
-    Object.assign(p, {name:"示范：期股 ESOS 公司", industry:"科技"});
-    Object.assign(p.co, {netProfit:800000, funding:10000000, valMethod:"funding", totalUnits:1000000, netAssets:3000000, ipo:true});
-    p.holders = [{name:"创始人", role:"CEO", pct:80, after:80},{name:"投资人", role:"投资者", pct:20, after:20}];
-    p.form = "option"; p.holding = "platform"; p.platformName = "员工持股 LLP"; p.poolCap = 10;
-    p.principles = ["kaohou","shaohou"];
-    p.price = {base:"funding", discount:70, unitPct:2.5, unitPrice:50000};
-    p.vest = {years:2, mode:"even", custom:[50,50], perf:true, rule:"all", threshold:80};
-    const e1 = Object.assign(blankEmp(), {name:"王经理", position:"项目总监", level:"director", years:6, salary:120000, method:"pct", pct:1,
-      perf:[{target:1000000, actual:1050000},{target:1200000, actual:""}]});
-    const e2 = Object.assign(blankEmp(), {name:"李经理", position:"销售经理", level:"manager", years:4, salary:96000, method:"salary", mult:2,
-      perf:[{target:800000, actual:700000},{target:900000, actual:""}]});
-    const e3 = Object.assign(blankEmp(), {name:"陈总监", position:"财务总监", level:"core", years:3, salary:150000, method:"value", value:100000});
-    p.emps = [e1, e2, e3];
-    p.scen = [500000, 800000, 1000000, 1500000];
-  } else {
-    Object.assign(p, {name:"示范：轮胎批发工厂", industry:"批发"});
-    Object.assign(p.co, {netProfit:600000, pe:5, valMethod:"pe", totalUnits:100000, netAssets:1500000, multiUnit:true});
-    p.holders = [{name:"老板", role:"老板", pct:100, after:100}];
-    p.form = "red"; p.holding = "proxy"; p.poolCap = 15;
-    p.principles = ["xuhou"];
-    p.price = {base:"perUnit", discount:0, unitPct:2.5, unitPrice:50000};
-    p.vest = {years:1, mode:"even", custom:[100], perf:false, rule:"all", threshold:80};
-    p.emps = [Object.assign(blankEmp(), {name:"a 先生", position:"仓库主管", level:"key", years:5, salary:72000, method:"pct", pct:2.5})];
-    p.exit = Object.assign(p.exit, {year:3});
-  }
-  return p;
+function newPlan(c){
+  return {id:uid(), name:`${S.asOf.slice(0,4)} 核心团队激励计划`, type:"rsu", vehicle:"platform", vehicleName:"",
+    pool:Math.round(issuedShares(c) * 0.1), priceBase:"valuation", discount:50, fixedPrice:0,
+    vestYears:4, vestMode:"ascending", vestCustom:[10,20,30,40], perf:false, perfRule:"ratio", perfThreshold:80,
+    lockYears:3, buy:{inLock:"original", afterLock:"pe", rate:5, pe:4, multiple:2, valDisc:50, floor:true, highRate:8},
+    vSchedule:true, vTerm:5, vBonus:20, startDate:S.asOf, status:"active"};
 }
+function newParticipant(){ return {id:uid(), name:"", dept:"", position:"", levelId:"L5", joinDate:S.asOf, salary:0, perf:"B", status:"active", leftDate:"", ic:"", phone:""}; }
+function newGrant(c, pl, pid, shares){ return {id:uid(), planId:pl.id, pid, date:S.asOf, shares, price:Math.round(planPrice(c, pl, S.asOf)*100)/100, status:"draft", payMode:"cash", perf:[], exercised:0, paid:0, loan:0, note:""}; }
 
-/* ============ 计算引擎 ============ */
-function valuationOf(p){
-  const c = p.co;
-  switch (c.valMethod){
-    case "pe": return num(c.netProfit) * num(c.pe);
-    case "funding": return num(c.funding);
-    case "assets": return num(c.netAssets);
-    default: return num(c.manualVal);
-  }
+/* ================= 计算核心 ================= */
+const issuedShares = c => c.shareholders.reduce((s, h) => s + num(h.shares), 0);
+const valOf = v => !v ? 0 : v.method === "pe" ? num(v.netProfit) * num(v.pe) : v.method === "funding" ? num(v.funding) : v.method === "assets" ? num(v.netAssets) : num(v.manual);
+function latestVal(c, asOf){ return c.valuations.filter(v => !asOf || v.date <= asOf).sort((a, b) => a.date < b.date ? 1 : -1)[0] || null; }
+const valuationAt = (c, d) => valOf(latestVal(c, d));
+const pps = (c, d) => { const i = issuedShares(c); return i ? valuationAt(c, d) / i : 0; };
+function planPrice(c, pl, date){
+  const i = issuedShares(c); if (!i || !pl) return 0;
+  if (pl.priceBase === "fixed") return num(pl.fixedPrice);
+  const lv = latestVal(c, date);
+  return (pl.priceBase === "assets" ? num(lv?.netAssets) : valOf(lv)) / i * (1 - num(pl.discount) / 100);
 }
-function vestWeights(p){
-  const n = Math.max(1, Math.min(10, Math.round(num(p.vest.years)) || 1));
-  if (p.vest.mode === "even") return Array.from({length:n}, () => 1/n);
-  if (p.vest.mode === "ascending"){ const s = n*(n+1)/2; return Array.from({length:n}, (_, i) => (i+1)/s); }
-  return Array.from({length:n}, (_, i) => num((p.vest.custom || [])[i]) / 100);
+const getPlan = (c, id) => c.plans.find(p => p.id === id);
+const getP = (c, id) => c.participants.find(p => p.id === id);
+const levelOf = (c, id) => c.levels.find(l => l.id === id) || {name:"(未设定)", coef:1, minYears:0};
+function weights(pl){
+  const n = Math.max(1, Math.min(10, Math.round(num(pl.vestYears)) || 1));
+  if (pl.vestMode === "even") return Array.from({length:n}, () => 1 / n);
+  if (pl.vestMode === "ascending"){ const s = n * (n + 1) / 2; return Array.from({length:n}, (_, i) => (i + 1) / s); }
+  return Array.from({length:n}, (_, i) => num((pl.vestCustom || [])[i]) / 100);
 }
-function activation(p, e, i){
-  if (!p.vest.perf) return {f:1, st:"按时间成熟", cls:"ok"};
-  const r = (e.perf || [])[i] || {};
-  const t = num(r.target), a = r.actual;
-  if (!t) return {f:1, st:"未设目标（按时间成熟）", cls:"warn"};
-  if (a === "" || a == null) return {f:1, st:"待考核（暂按达标计算）", cls:"warn", pending:true};
-  const ratio = num(a) / t;
-  if (p.vest.rule === "ratio"){
-    if (ratio >= num(p.vest.threshold)/100) return {f:Math.min(1, ratio), st:`完成 ${PCT(ratio,1)}，${ratio>=1?"全部":"按比例"}激活`, cls:ratio>=1?"ok":"warn"};
-    return {f:0, st:`完成 ${PCT(ratio,1)}，未到门槛，作废`, cls:"bad"};
-  }
-  return ratio >= 1 ? {f:1, st:`完成 ${PCT(ratio,1)}，达标激活`, cls:"ok"} : {f:0, st:`完成 ${PCT(ratio,1)}，未达标，作废`, cls:"bad"};
+const tenure = (p, d) => yearsBetween(p.joinDate, p.status === "left" && p.leftDate ? p.leftDate : d);
+function tenureCoef(c, y){ const t = c.tenureCoef || [0.8,1,1.1,1.2]; return num(y < 1 ? t[0] : y < 3 ? t[1] : y < 5 ? t[2] : t[3]); }
+function eligibility(c, p, d){
+  if (p.status === "left") return {ok:false, t:"已离职"};
+  if (p.perf === "D") return {ok:false, t:"考核不合格"};
+  const L = levelOf(c, p.levelId), y = tenure(p, d);
+  if (y + 1e-9 < num(L.minYears)) return {ok:false, t:`年资 ${y.toFixed(1)} 年，未满 ${L.minYears} 年`};
+  return {ok:true, t:"符合资格"};
 }
-function eligibility(e){
-  const L = LEVELS[e.level] || LEVELS.staff;
-  if (e.approved) return {ok:true, t:"特别批准"};
-  if (L.never) return {ok:false, t:"不在授予范围"};
-  if (L.min && num(e.years) < L.min) return {ok:false, t:`年资不足（${L.rule}）`};
-  return {ok:true, t:L.min ? `符合（${L.rule}）` : "符合"};
-}
-function calc(p){
-  const c = p.co, V = valuationOf(p), units = num(c.totalUnits), ppu = units ? V/units : 0;
-  const W = vestWeights(p), warnings = [];
-  const emps = p.emps.map(e => {
-    const el = eligibility(e);
-    let pct = 0;
-    if (e.method === "pct") pct = num(e.pct)/100;
-    else if (V > 0){
-      if (e.method === "value") pct = num(e.value)/V;
-      else if (e.method === "salary") pct = num(e.salary)*num(e.mult)/V;
-      else if (e.method === "uniform") pct = num(p.grant.uniformValue)/V;
+const score = (c, p, d) => num(levelOf(c, p.levelId).coef) * num((c.perfCoef || {})[p.perf] ?? 1) * tenureCoef(c, tenure(p, d));
+
+/* 一笔授予的成熟时间表 */
+function vestInfo(c, g, asOf){
+  const pl = getPlan(c, g.planId) || {}, W = weights(pl);
+  const endDate = g.status === "ended" && g.end ? g.end.date : null;
+  let vested = 0, lost = 0, pending = 0, future = 0;
+  const events = W.map((w, i) => {
+    const date = addYears(g.date, i + 1), sh = num(g.shares) * w;
+    if (g.status === "draft"){ future += sh; return {date, w, sh, st:"未生效", cls:"p-mut"}; }
+    if (endDate && date > endDate) return {date, w, sh, st:"离职已处理", cls:"p-mut", gone:true};
+    if (pl.perf){
+      const r = (g.perf || [])[i] || {}, t = num(r.target), a = r.actual;
+      if (a === "" || a == null){
+        if (date <= asOf){ pending += sh; return {date, w, sh, st:"待确认考核", cls:"p-warn"}; }
+        future += sh; return {date, w, sh, st:"未到期", cls:"p-mut"};
+      }
+      const ratio = t ? num(a) / t : 1;
+      const f = pl.perfRule === "ratio" ? (ratio >= num(pl.perfThreshold) / 100 ? Math.min(1, ratio) : 0) : (ratio >= 1 ? 1 : 0);
+      if (date > asOf){ future += sh * f; lost += sh * (1 - f); return {date, w, sh, st:`已考核（完成 ${PCT(ratio,0)}），到期成熟`, cls:"p-info"}; }
+      vested += sh * f; lost += sh * (1 - f);
+      return {date, w, sh, f, st: f >= 1 ? `已成熟（完成 ${PCT(ratio,0)}）` : f > 0 ? `成熟 ${PCT(f,0)}（完成 ${PCT(ratio,0)}）` : `未达标作废（完成 ${PCT(ratio,0)}）`, cls: f >= 1 ? "p-ok" : f > 0 ? "p-warn" : "p-bad"};
     }
-    const mkt = pct * V, u = pct * units;
-    let cost;
-    if (p.price.base === "perUnit") cost = num(p.price.unitPct) ? pct / (num(p.price.unitPct)/100) * num(p.price.unitPrice) : 0;
-    else {
-      const base = p.price.base === "funding" ? num(c.funding) : p.price.base === "assets" ? num(c.netAssets) : V;
-      cost = pct * base * (1 - num(p.price.discount)/100);
-    }
-    let cum = 0;
-    const sched = W.map((w, i) => {
-      const a = activation(p, e, i); cum += w * a.f;
-      return {w, act:a, pct:pct*w*a.f, units:u*w*a.f, cumPct:pct*cum, cost:cost*w*a.f};
-    });
-    return {e, el, pct, units:u, mkt, cost, gain:mkt-cost, div:pct*num(c.netProfit), sched};
+    if (date <= asOf){ vested += sh; return {date, w, sh, st:"已成熟", cls:"p-ok"}; }
+    future += sh; return {date, w, sh, st:"未到期", cls:"p-mut"};
   });
-  const T = emps.reduce((s, x) => s + x.pct, 0);
-  const sumBefore = p.holders.reduce((s, h) => s + num(h.pct), 0);
-
-  // 新增员工后的股权结构
-  const isRed = p.form === "red";
-  const holdersAfter = p.holders.map(h => {
-    const before = num(h.pct)/100;
-    const after = isRed ? before : (p.dilution === "manual" ? num(h.after)/100 : before*(1-T));
-    return {name:h.name, role:h.role, before, after};
-  });
-  // 实际权益（谁拿多少分红）
-  const benef = isRed
-    ? holdersAfter.map(h => ({name:h.name, role:h.role, pct:h.before*(1-T)}))
-    : holdersAfter.map(h => ({name:h.name, role:h.role, pct:h.after}));
-  emps.forEach(x => benef.push({name:x.e.name || "(未命名)", role:x.e.position, pct:x.pct, emp:true}));
-  // SSM 上登记的样子
-  let ssm = [];
-  if (isRed) ssm = holdersAfter.map(h => ({name:h.name, pct:h.before, note:""}));
-  else {
-    ssm = holdersAfter.map(h => ({name:h.name, pct:h.after, note:""}));
-    if (p.holding === "direct") emps.forEach(x => ssm.push({name:x.e.name || "(未命名)", pct:x.pct, note:"员工"}));
-    else if (p.holding === "platform") { if (T > 0) ssm.push({name:p.platformName || "员工持股平台（LLP / Sdn Bhd）", pct:T, note:`装 ${emps.length} 位员工`}); }
-    else if (ssm.length){ ssm[0] = {...ssm[0], pct:ssm[0].pct + T, note:`含代持员工 ${PCT(T)}`}; }
-  }
-  // 创始人能控制的投票权
-  const founderOwn = holdersAfter.length ? holdersAfter[0].after : 0;
-  const founderVote = isRed ? (holdersAfter[0]?.before || 0) : founderOwn + ((p.holding === "platform" || p.holding === "proxy") ? T : 0);
-
-  if (V <= 0) warnings.push(["bad","还没有公司估值：请到「0 公司资料」填净利润和市盈率（或融资估值 / 净资产）。"]);
-  if (Math.abs(sumBefore - 100) > 0.01) warnings.push(["bad",`原有股东比例加起来是 ${sumBefore}%，应该是 100%。`]);
-  if (T*100 > num(p.poolCap) + 1e-9) warnings.push(["bad",`员工合计拿 ${PCT(T)}，超过你定的股权池上限 ${p.poolCap}%。`]);
-  if (!isRed && p.dilution === "manual"){
-    const s = holdersAfter.reduce((a, h) => a + h.after, 0) + T;
-    if (Math.abs(s - 1) > 0.0001) warnings.push(["bad",`调整后的股东比例 + 员工比例 = ${PCT(s)}，应该刚好 100%。请到「4 授予数量」调整原股东的「调整后 %」。`]);
-  }
-  if (holdersAfter.length && T > 0){
-    if (founderVote < 0.5) warnings.push(["bad",`创始人能控制的投票权只剩 ${PCT(founderVote)}，低于 50%，普通决议都过不了，失去控制权。`]);
-    else if (founderVote < 0.75) warnings.push(["warn",`创始人能控制的投票权是 ${PCT(founderVote)}，低于 75%。马来西亚公司法：改公司章程、增资等「特别决议」要 75% 才能通过。可考虑用「持股平台」或「代持」把投票权集中回创始人。`]);
-  }
-  emps.forEach(x => { if (!x.el.ok) warnings.push(["warn",`${x.e.name || "(未命名)"}：${x.el.t}。如老板决定照样给，在「3 授予对象」勾「特别批准」。`]); });
-  if (p.vest.mode === "custom"){
-    const s = W.reduce((a, b) => a + b, 0);
-    if (Math.abs(s - 1) > 0.0001) warnings.push(["bad",`自定义成熟比例加起来是 ${PCT(s)}，应该是 100%。`]);
-  }
-  return {V, ppu, units, W, emps, T, holdersAfter, benef, ssm, founderVote, warnings, isRed};
+  return {events, vested, lost, pending, future};
 }
 
-function exitCalc(p, C){
-  const x = p.exit, ce = C.emps.find(k => k.e.id === x.empId) || C.emps[0];
-  if (!ce) return null;
-  const Y = Math.max(1, Math.round(num(x.year)) || 1), done = Y - 1, b = p.buy, lines = [];
-  let vestedF = 0, perfLost = 0;
-  ce.sched.forEach((s, i) => { if (i < done){ vestedF += s.w * s.act.f; perfLost += s.w * (1 - s.act.f); } });
-  let unvestedF = Math.max(0, 1 - vestedF - perfLost);
-  if (x.cat === "B" && x.accel && unvestedF > 0){ lines.push(`未成熟的 ${PCT(unvestedF*ce.pct)} 提前成熟（非员工原因离开，给予照顾）`); vestedF += unvestedF; unvestedF = 0; }
-  const vestedPct = ce.pct * vestedF, costV = ce.cost * vestedF;
-  const np = x.np === "" ? num(p.co.netProfit) : num(x.np);
-  const val = x.val === "" ? C.V : num(x.val);
-  const na = x.na === "" ? num(p.co.netAssets) : num(x.na);
-  const inLock = Y <= num(b.lockYears);
-  const mv = m => ({
-    original: costV, interest: costV*(1 + num(b.rate)/100*Y), multiple: costV*num(b.multiple),
-    pe: np*num(b.pe)*vestedPct, valuation: val*vestedPct, valuationDiscount: val*vestedPct*(1-num(b.valDisc)/100), assets: na*vestedPct
-  })[m] || 0;
-  const isOption = p.form === "option";
-  let buyVested = 0, refund = 0, comp = 0;
-
-  if (p.form === "red" && b.redSchedule){
-    const term = Math.max(1, num(b.redTerm));
-    buyVested = Y <= term ? ce.cost * Y / term : ce.cost * (1 + num(b.redBonus)/100);
-    lines.push(Y <= term ? `红股回购表：第 ${Y} 年离开 = 买入价 ${RM(ce.cost)} × ${Y}/${term}` : `红股回购表：满 ${term} 年后离开 = 买入价 + ${b.redBonus}% 奖励`);
-    vestedF = 1; unvestedF = 0;
-    if (x.cat === "C"){ buyVested *= num(x.faultPct)/100; lines.push(`过错离职：只按 ${x.faultPct}% 回购`); comp = num(x.comp); }
-  } else if (x.cat === "C"){
-    buyVested = costV * num(x.faultPct)/100;
-    lines.push(`过错离职：未成熟的部分立刻作废；已成熟的部分按${isOption?"行权价":"原价"}的 ${x.faultPct}% 回购`);
-    if (!isOption) refund = ce.cost * unvestedF * num(x.faultPct)/100;
-    comp = num(x.comp);
+/* 离职回购计算 */
+function exitCalc(c, g, o){
+  const pl = getPlan(c, g.planId), b = pl.buy, lines = [];
+  const vi = vestInfo(c, {...g, status:"active", end:null}, o.date);
+  const Y = Math.max(1, Math.ceil(yearsBetween(g.date, o.date) - 1e-9));
+  let vested = vi.vested, unvested = Math.max(0, num(g.shares) - vi.vested - vi.lost);
+  if (vi.lost > 0) lines.push(`业绩没达标已作废 ${INT(vi.lost)} 股，回到股权池`);
+  if (vi.pending > 0) lines.push(`还有 ${INT(vi.pending)} 股考核结果没填，暂当作未成熟`);
+  if (o.cat === "B" && o.accel && unvested > 0){ lines.push(`非员工原因离开：未成熟的 ${INT(unvested)} 股提前成熟`); vested += unvested; unvested = 0; }
+  const price = num(g.price), isOpt = pl.type === "option", costV = vested * price;
+  const lv = latestVal(c, o.date), issued = issuedShares(c);
+  const has = v => v !== "" && v != null;
+  const np = has(o.np) ? num(o.np) : num(lv?.netProfit), V = has(o.val) ? num(o.val) : valOf(lv), na = num(lv?.netAssets);
+  const pctV = issued ? vested / issued : 0;
+  const mv = m => ({original:costV, interest:costV * (1 + num(b.rate)/100 * Y), multiple:costV * num(b.multiple),
+    pe:np * num(b.pe) * pctV, valuation:V * pctV, valuationDiscount:V * pctV * (1 - num(b.valDisc)/100), assets:na * pctV})[m] || 0;
+  const inLock = Y <= num(pl.lockYears);
+  let buyback = 0, refund = 0, comp = 0, deduct = 0, kept = 0;
+  if (pl.type === "virtual" && pl.vSchedule){
+    const cost = num(g.shares) * price, term = Math.max(1, num(pl.vTerm));
+    buyback = Y <= term ? cost * Y / term : cost * (1 + num(pl.vBonus)/100);
+    lines.push(Y <= term ? `红股回购表：持有第 ${Y} 年离开 = 买入价 ${RM(cost)} × ${Y}/${term}` : `红股回购表：满 ${term} 年后离开 = 买入价 + ${pl.vBonus}% 奖励`);
+    vested = num(g.shares); unvested = 0;
+    if (o.cat === "C"){ buyback *= num(o.faultPct)/100; comp = num(o.comp); lines.push(`过错离职：只按 ${o.faultPct}% 回购`); }
+  } else if (o.cat === "C"){
+    buyback = costV * num(o.faultPct)/100;
+    lines.push(`过错离职：未成熟部分立刻作废；已成熟 ${INT(vested)} 股按${isOpt?"行权价":"原价"}的 ${o.faultPct}% 回购 = ${RM(buyback)}`);
+    if (!isOpt && unvested > 0) refund = unvested * price * num(o.faultPct)/100;
+    comp = num(o.comp);
+  } else if (o.keep){
+    kept = vested; lines.push(`公司选择不回购：员工继续持有已成熟的 ${INT(vested)} 股`);
+    if (!isOpt && unvested > 0) refund = unvested * price;
   } else {
     const m = inLock ? b.inLock : b.afterLock;
     let v = mv(m);
-    lines.push(`${inLock ? `锁定期内（第 ${Y} 年 ≤ ${b.lockYears} 年）` : `锁定期后（第 ${Y} 年 > ${b.lockYears} 年）`}：按「${BUY_METHODS[m]}」= ${RM(v)}`);
-    if (b.floor && v < costV){ lines.push(`算出来低于${isOption?"行权价":"原价"} ${RM(costV)}，按原价保底`); v = costV; }
-    if (x.cat === "B"){
-      const hi = costV * (1 + num(b.highRate)/100*Y);
-      if (hi > v){ lines.push(`非员工原因离开：按较高回报 ${b.highRate}%/年 = ${RM(hi)}（比上面高，取这个）`); v = hi; }
-    }
-    buyVested = v;
-    if (!isOption) refund = ce.cost * unvestedF;
+    lines.push(`${inLock ? `锁定期内（持有第 ${Y} 年，锁定 ${pl.lockYears} 年）` : `已过锁定期（持有第 ${Y} 年）`}：按「${BUY_METHODS[m]}」= ${RM(v)}`);
+    if (m === "pe") lines.push(`　＝ 净利润 ${RM(np)} × ${b.pe} 倍 × 已成熟股权 ${PCT(pctV,3)}`);
+    if (b.floor && v < costV){ lines.push(`低于${isOpt?"行权价":"原价"} ${RM(costV)}，按原价保底`); v = costV; }
+    if (o.cat === "B"){ const hi = costV * (1 + num(b.highRate)/100 * Y); if (hi > v){ lines.push(`较高回报 ${b.highRate}%/年 = ${RM(hi)}，取较高者`); v = hi; } }
+    buyback = v;
+    if (!isOpt && unvested > 0) refund = unvested * price;
   }
-  if (isOption && unvestedF > 0) lines.push(`还没成熟的期权 ${PCT(unvestedF*ce.pct)} 自动失效，员工不用付钱，公司也不用付钱`);
-  if (!isOption && refund > 0) lines.push(`还没成熟的部分（${PCT(unvestedF*ce.pct)}）按${x.cat==="C"?` ${x.faultPct}% 的`:""}原价退回员工：${RM(refund)}`);
-  if (perfLost > 0) lines.push(`因业绩没达标已作废：${PCT(perfLost*ce.pct)}（回到股权池，可以再分给别人）`);
-  if (comp > 0) lines.push(`扣除员工对公司造成损失的赔偿：${RM(comp)}`);
-  const total = buyVested + refund - comp;
-  return {ce, Y, vestedF, unvestedF, perfLost, vestedPct, costV, buyVested, refund, comp, total, lines, inLock, reasonText:(REASONS[x.cat]||REASONS.A).items[x.reason] || ""};
+  if (isOpt && !kept){
+    const notEx = Math.max(0, vested - num(g.exercised));
+    if (notEx > 0 && buyback > 0){ deduct = Math.min(notEx * price, buyback); lines.push(`其中 ${INT(notEx)} 股还没行权（员工没付钱），扣掉行权款 ${RM(deduct)}`); }
+  }
+  if (isOpt && unvested > 0) lines.push(`未成熟的 ${INT(unvested)} 股期权自动失效（员工没付钱，公司也不用付）`);
+  if (!isOpt && refund > 0) lines.push(`未成熟的 ${INT(unvested)} 股按${o.cat==="C"?` ${o.faultPct}% `:""}原价退款 ${RM(refund)}`);
+  const loan = num(g.loan);
+  if (loan > 0.5) lines.push(`扣除员工尚欠的入股欠款 ${RM(loan)}`);
+  if (comp > 0) lines.push(`扣除员工应赔偿公司的损失 ${RM(comp)}`);
+  return {Y, vested, unvested, lost:vi.lost, buyback, refund, deduct, loan, comp, kept, lines, inLock, total:buyback + refund - deduct - loan - comp};
 }
 
-/* ============ 资料储存（云端资料库；没有就存浏览器） ============ */
-const S = {plans:{}, cur:null, tab:"co", db:null, timers:{}, writing:{}, again:{}, readonly:false, deleteArm:null};
-const LS_KEY = "equity-plans-v1";
-function lsLoad(){ try { return JSON.parse(localStorage.getItem(LS_KEY) || "{}"); } catch(e){ return {}; } }
-function lsSave(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S.plans)); } catch(e){} }
-function setSaveState(t){ $("#saveState").textContent = t; }
+/* 有投票权、有分红的真股份 */
+function realShares(c, g){
+  const pl = getPlan(c, g.planId); if (!pl || pl.type === "virtual") return 0;
+  if (g.status === "active") return pl.type === "option" ? num(g.exercised) : num(g.shares);
+  if (g.status === "ended" && g.end) return num(g.end.kept);
+  return 0;
+}
 
-async function writePlan(id){
-  if (!S.db){ lsSave(); setSaveState("已保存（存在这台电脑的浏览器里）"); return; }
+/* 全公司汇总 */
+function summary(c, asOf){
+  const issued = issuedShares(c), V = valuationAt(c, asOf), P = issued ? V / issued : 0;
+  const plans = c.plans.map(pl => {
+    const gs = c.grants.filter(g => g.planId === pl.id);
+    let active = 0, draft = 0, vested = 0, kept = 0;
+    gs.forEach(g => {
+      if (g.status === "draft") draft += num(g.shares);
+      else if (g.status === "active"){ active += num(g.shares); vested += vestInfo(c, g, asOf).vested; }
+      else if (g.end) kept += num(g.end.kept);
+    });
+    const used = active + draft + kept;
+    return {pl, gs, active, draft, vested, kept, used, avail:num(pl.pool) - used};
+  });
+  const empReal = c.grants.reduce((s, g) => s + realShares(c, g), 0);
+  const ctrlEmp = c.grants.reduce((s, g) => { const pl = getPlan(c, g.planId); return s + (pl && pl.vehicle !== "direct" ? realShares(c, g) : 0); }, 0);
+  const realPlans = c.plans.filter(p => p.type !== "virtual");
+  const fdPool = realPlans.reduce((s, p) => s + num(p.pool), 0);
+  const founder = c.shareholders.filter(h => h.type === "founder").reduce((s, h) => s + num(h.shares), 0);
+  const totalNow = issued + empReal;
+  const vote = totalNow ? (founder + ctrlEmp) / totalNow : 0;
+  const voteFD = issued + fdPool ? (founder + realPlans.filter(p => p.vehicle !== "direct").reduce((s, p) => s + num(p.pool), 0)) / (issued + fdPool) : 0;
+  const activeGrants = c.grants.filter(g => g.status === "active");
+  let empValue = 0, empCost = 0;
+  activeGrants.forEach(g => { empValue += num(g.shares) * P; empCost += num(g.shares) * num(g.price); });
+  const people = new Set(activeGrants.map(g => g.pid)).size;
+  const alerts = [];
+  if (!c.valuations.length) alerts.push(["bad","还没有公司估值。去「公司估值」新增一笔，所有价格都靠它计算。","valuation"]);
+  if (!issued) alerts.push(["bad","股东名册还没有股数。去「股权结构」填写。","captable"]);
+  plans.forEach(x => { if (x.avail < -0.5) alerts.push(["bad",`「${x.pl.name}」授予超过股权池 ${INT(-x.avail)} 股。`,"plans"]); });
+  if (founder && totalNow){
+    if (vote < 0.5) alerts.push(["bad",`创始人目前能控制的投票权只有 ${PCT(vote)}，低于 50%，失去控制权。`,"captable"]);
+    else if (vote < 0.75) alerts.push(["warn",`创始人能控制的投票权 ${PCT(vote)}，低于 75%（马来西亚公司法「特别决议」门槛，例如改章程、增资）。`,"captable"]);
+    else if (voteFD < 0.75) alerts.push(["warn",`如果股权池全部发出去，创始人投票权会降到 ${PCT(voteFD)}，低于 75%。`,"captable"]);
+  }
+  let pendingPerf = 0;
+  activeGrants.forEach(g => vestInfo(c, g, asOf).events.forEach(e => { if (e.st === "待确认考核") pendingPerf++; }));
+  if (pendingPerf) alerts.push(["warn",`有 ${pendingPerf} 笔成熟等着填业绩考核结果。`,"vesting"]);
+  const drafts = c.grants.filter(g => g.status === "draft").length;
+  if (drafts) alerts.push(["info",`有 ${drafts} 笔授予还是草稿，签约后记得点「签约生效」。`,"grants"]);
+  activeGrants.forEach(g => { const p = getP(c, g.pid); if (p && p.status === "left") alerts.push(["bad",`${p.name} 已标记离职，但授予还在生效，请到「退出回购」办理。`,"exits"]); });
+  return {issued, V, P, plans, empReal, fdPool, founder, vote, voteFD, empValue, empCost, people, alerts, activeGrants, totalNow};
+}
+
+/* 分红分配 */
+function dividendPlan(c, year, netProfit, payout, date){
+  const issued = issuedShares(c), D = num(netProfit) * num(payout) / 100, lines = [];
+  let vPct = 0;
+  c.grants.forEach(g => {
+    const pl = getPlan(c, g.planId); if (!pl || g.status !== "active" || pl.type !== "virtual") return;
+    const pct = issued ? num(g.shares) / issued : 0; vPct += pct;
+    lines.push({kind:"红股", name:getP(c, g.pid)?.name || "?", gid:g.id, pct, amount:D * pct});
+  });
+  const R = D * Math.max(0, 1 - vPct);
+  const holders = c.shareholders.map(h => ({kind:"股东", name:h.name, sh:num(h.shares)}));
+  c.grants.forEach(g => { const sh = realShares(c, g); if (sh > 0) holders.push({kind:getPlan(c, g.planId).type === "option" ? "期权（已行权）" : "实股", name:getP(c, g.pid)?.name || "?", gid:g.id, sh}); });
+  const tot = holders.reduce((s, h) => s + h.sh, 0);
+  holders.forEach(h => lines.push({...h, pct:tot ? h.sh / tot * (1 - vPct) : 0, amount:tot ? R * h.sh / tot : 0}));
+  lines.forEach(l => { const g = l.gid && c.grants.find(x => x.id === l.gid); l.offset = Math.min(g ? Math.max(0, num(g.loan)) : 0, l.amount); l.cash = l.amount - l.offset; });
+  return {year, netProfit:num(netProfit), payout:num(payout), date, D, lines};
+}
+
+/* ================= 储存：网页自带的云端资料库；没有时存浏览器 ================= */
+const S = {cos:{}, cur:null, page:"dashboard", asOf:todayISO(), db:null, timers:{}, writing:{}, again:{}, modal:null, ui:{}};
+const LS = "equity-admin-v2";
+function lsLoad(){ try { return JSON.parse(localStorage.getItem(LS) || "{}"); } catch(e){ return {}; } }
+function lsSave(){ try { localStorage.setItem(LS, JSON.stringify(S.cos)); } catch(e){} }
+const saveState = t => { $("#saveState").textContent = t; };
+async function writeCo(id){
+  if (!S.db){ lsSave(); saveState("已保存（存在这台电脑的浏览器）"); return; }
   if (S.writing[id]){ S.again[id] = true; return; }
-  S.writing[id] = true; setSaveState("保存中…");
-  try {
-    const p = S.plans[id];
-    if (p) await S.db.collection("plans").doc(id).set(JSON.parse(JSON.stringify(p)));
-    setSaveState("已保存到云端（团队都看得到）");
-  } catch(err){
-    if (err && err.code === "invalid_argument"){ S.readonly = true; setSaveState("你只有查看权限，改动不会保存"); }
-    else if (err && err.code === "quota_exceeded") setSaveState("云端空间满了，请删除一些旧方案");
-    else setSaveState("保存失败，稍后会再试");
-  } finally {
-    S.writing[id] = false;
-    if (S.again[id]){ S.again[id] = false; writePlan(id); }
-  }
+  S.writing[id] = true; saveState("保存中…");
+  try { const c = S.cos[id]; if (c) await S.db.collection("companies").doc(id).set(clone(c)); saveState("已保存到云端"); }
+  catch(err){ saveState(err && err.code === "invalid_argument" ? "你只有查看权限，改动不会保存" : err && err.code === "quota_exceeded" ? "云端空间满了" : "保存失败，稍后再试"); }
+  finally { S.writing[id] = false; if (S.again[id]){ S.again[id] = false; writeCo(id); } }
 }
-function scheduleSave(id){
-  const p = S.plans[id]; if (p) p.updatedAt = Date.now();
-  lsSave();
-  clearTimeout(S.timers[id]);
-  setSaveState("有改动，准备保存…");
-  S.timers[id] = setTimeout(() => { delete S.timers[id]; writePlan(id); }, 900);
+function saveCo(c, msg){
+  if (!c) return;
+  c.updatedAt = Date.now();
+  if (msg){ c.log.unshift({t:Date.now(), d:S.asOf, msg}); c.log = c.log.slice(0, 150); }
+  lsSave(); saveState("有改动，准备保存…");
+  const id = c.id; clearTimeout(S.timers[id]);
+  S.timers[id] = setTimeout(() => { delete S.timers[id]; writeCo(id); }, 700);
 }
-async function removePlan(id){
-  clearTimeout(S.timers[id]); delete S.timers[id];
-  delete S.plans[id]; lsSave();
-  if (S.db){ try { await S.db.collection("plans").doc(id).delete(); } catch(e){} }
-}
-
+const save = msg => saveCo(cur(), msg);
 async function initStorage(){
-  S.plans = lsLoad();
-  renderAll();
+  S.cos = lsLoad(); pickCur(); render();
   let db = null;
-  try { if (window.claude && typeof window.claude.use === "function") db = await window.claude.use("db"); } catch(e){ db = null; }
-  if (!db){ setSaveState("资料存在这台电脑的浏览器里（记得定期「复制全部资料」备份）"); return; }
-  S.db = db;
-  setSaveState("连接云端资料库中…");
+  try { if (window.claude && typeof window.claude.use === "function") db = await window.claude.use("db"); } catch(e){}
+  if (!db){ saveState("资料存在这台电脑的浏览器（记得在「设置」备份）"); return; }
+  S.db = db; saveState("连接云端中…");
   let first = true;
-  const timer = setTimeout(() => setSaveState("暂时连不上云端，先显示这台电脑上的资料"), 10000);
-  db.collection("plans").onSnapshot(snap => {
+  const timer = setTimeout(() => saveState("暂时连不上云端，先显示这台电脑上的资料"), 10000);
+  db.collection("companies").onSnapshot(snap => {
     clearTimeout(timer);
     const cloud = {};
-    snap.docs.forEach(d => { if (d.exists) cloud[d.id] = JSON.parse(JSON.stringify(d.data())); });
-    if (first){
-      first = false;
-      // 这台电脑上有、云端还没有的方案 → 上传
-      Object.keys(S.plans).forEach(id => { if (!cloud[id]) { cloud[id] = S.plans[id]; writePlan(id); } });
-    }
-    // 正在编辑、还没存好的方案，保留本地版本
-    Object.keys(S.plans).forEach(id => { if (S.writing[id] || S.timers[id]) cloud[id] = S.plans[id]; });
-    const changedCur = S.cur && JSON.stringify(cloud[S.cur]) !== JSON.stringify(S.plans[S.cur]);
-    S.plans = cloud; lsSave();
-    renderSidebar();
-    if (!S.cur || !S.plans[S.cur] || (changedCur && !document.activeElement?.dataset?.k)) renderMain();
-    if (!snap.metadata.fromCache) setSaveState("已连接云端（团队都看得到）");
-  }, err => { clearTimeout(timer); S.db = null; setSaveState("云端连不上，改存在这台电脑的浏览器里"); });
+    snap.docs.forEach(d => { if (d.exists) cloud[d.id] = clone(d.data()); });
+    if (first){ first = false; Object.keys(S.cos).forEach(id => { if (!cloud[id]){ cloud[id] = S.cos[id]; writeCo(id); } }); }
+    Object.keys(S.cos).forEach(id => { if (S.writing[id] || S.timers[id]) cloud[id] = S.cos[id]; });
+    const changed = JSON.stringify(cloud[S.cur]) !== JSON.stringify(S.cos[S.cur]);
+    S.cos = cloud; lsSave(); pickCur();
+    const typing = document.activeElement && document.activeElement.matches && document.activeElement.matches("input,textarea");
+    if (changed && !typing) render(); else renderTop();
+    if (!snap.metadata.fromCache) saveState("已连接云端（团队共用同一份资料）");
+  }, () => { clearTimeout(timer); S.db = null; saveState("云端连不上，改存这台电脑的浏览器"); });
+}
+async function deleteCo(id){
+  clearTimeout(S.timers[id]); delete S.timers[id]; delete S.cos[id]; lsSave();
+  if (S.db){ try { await S.db.collection("companies").doc(id).delete(); } catch(e){} }
+  S.cur = null; pickCur(); S.page = "dashboard"; render();
+}
+function pickCur(){
+  if (S.cur && S.cos[S.cur]) return;
+  const l = Object.values(S.cos).sort((a, b) => (b.updatedAt||0) - (a.updatedAt||0));
+  S.cur = l[0] ? l[0].id : null;
+}
+const cur = () => S.cos[S.cur];
+
+/* ================= 示范公司 ================= */
+function demoCompany(){
+  const c = newCompany("示范：鸿发家私 Sdn Bhd");
+  c.industry = "家具制造"; c.regNo = "201501012345";
+  c.shareholders = [
+    {id:uid(), name:"黄国强（创始人）", type:"founder", shares:70000},
+    {id:uid(), name:"李美华（联合创始人）", type:"founder", shares:20000},
+    {id:uid(), name:"天使投资人 陈先生", type:"investor", shares:10000}
+  ];
+  c.valuations = [
+    {id:uid(), date:"2024-12-31", method:"pe", netProfit:1200000, pe:5, netAssets:3500000, funding:0, manual:0, note:"2024 年审计报告"},
+    {id:uid(), date:"2025-12-31", method:"pe", netProfit:1600000, pe:5, netAssets:4200000, funding:0, manual:0, note:"2025 年审计报告"}
+  ];
+  const mk = (name, position, dept, levelId, joinDate, salary, perf) => Object.assign(newParticipant(), {name, position, dept, levelId, joinDate, salary, perf});
+  const pp = c.participants = [
+    mk("陈志明","营运总监 COO","营运","L1","2018-03-01",180000,"A"),
+    mk("林美玲","财务经理","财务","L2","2019-06-15",120000,"B"),
+    mk("王俊杰","厂长","生产","L3","2016-01-10",110000,"A"),
+    mk("张伟","销售经理","销售","L5","2021-04-01",96000,"B"),
+    mk("刘小红","营销经理","营销","L5","2024-02-01",84000,"A"),
+    mk("黄志强","展厅店长（KL）","零售","L3","2020-08-01",72000,"B"),
+    mk("Tan Mei Ling","设计主管","设计","L6","2019-09-01",66000,"B")
+  ];
+  const p1 = Object.assign(newPlan(c), {name:"2025 核心团队实股计划", type:"rsu", vehicle:"platform", vehicleName:"鸿发员工持股 PLT", pool:10000,
+    discount:50, vestYears:4, vestMode:"ascending", perf:true, perfRule:"ratio", perfThreshold:80, lockYears:3, startDate:"2025-01-01"});
+  const p2 = Object.assign(newPlan(c), {name:"展厅店长分红计划（红股）", type:"virtual", vehicle:"proxy", pool:5000, discount:30,
+    vestYears:1, vestMode:"even", perf:false, lockYears:1, vSchedule:true, vTerm:5, vBonus:20, startDate:"2025-03-01"});
+  c.plans = [p1, p2];
+  const G = (pl, p, date, shares, payMode, perf) => ({id:uid(), planId:pl.id, pid:p.id, date, shares, price:Math.round(planPrice(c, pl, date)*100)/100, status:"draft", payMode, perf:perf || [], exercised:0, paid:0, loan:0, note:""});
+  const g1 = G(p1, pp[0], "2025-01-15", 3000, "cash", [{target:5000000, actual:5600000},{target:6000000, actual:""}]);
+  const g2 = G(p1, pp[1], "2025-01-15", 2000, "loan", [{target:100, actual:90},{target:100, actual:""}]);
+  const g3 = G(p1, pp[2], "2025-01-15", 2000, "cash", [{target:3000000, actual:3300000},{target:3500000, actual:""}]);
+  const g4 = G(p1, pp[3], S.asOf, 1000, "cash", []);
+  const g5 = G(p2, pp[5], "2025-03-01", 1000, "cash", []);
+  c.grants = [g1, g2, g3, g4, g5];
+  [g1, g2, g3, g5].forEach(g => activate(c, g, g.date));
+  applyDividend(c, dividendPlan(c, 2025, 1600000, 50, "2026-04-30"));
+  c.log.unshift({t:Date.now(), d:S.asOf, msg:"载入示范公司资料"});
+  return c;
 }
 
-/* ============ 画面 ============ */
-const TABS = [
-  ["co","0","公司资料"],["form","1","激励形式"],["hold","2","持股方式"],["who","3","授予对象"],["qty","4","授予数量"],
-  ["price","5","行权价格"],["vest","6","成熟计划"],["buy","7","回购价格"],["exit","8","回收条件"],["div","★","分红模拟"],["rep","★","方案总表"]
+/* ================= 动作 ================= */
+function activate(c, g, date){
+  const pl = getPlan(c, g.planId);
+  g.status = "active";
+  if (pl.type !== "option"){
+    const amt = num(g.shares) * num(g.price);
+    if (g.payMode === "loan"){ g.loan = amt; c.payments.push({id:uid(), gid:g.id, date, type:"入股欠款（先借后还）", amount:amt}); }
+    else { g.paid = amt; c.payments.push({id:uid(), gid:g.id, date, type:"入股付款", amount:amt}); }
+  }
+  c.log.unshift({t:Date.now(), d:date, msg:`授予生效：${getP(c, g.pid)?.name} · ${pl.name} · ${INT(g.shares)} 股`});
+}
+function applyDividend(c, dv){
+  dv.id = uid();
+  dv.lines.forEach(l => {
+    const g = l.gid && c.grants.find(x => x.id === l.gid); if (!g) return;
+    if (l.offset > 0){ g.loan = num(g.loan) - l.offset; g.paid = num(g.paid) + l.offset; c.payments.push({id:uid(), gid:g.id, date:dv.date, type:"分红抵扣欠款", amount:l.offset}); }
+    if (l.cash > 0) c.payments.push({id:uid(), gid:g.id, date:dv.date, type:"分红发放", amount:l.cash});
+  });
+  c.dividends.unshift(dv);
+  c.log.unshift({t:Date.now(), d:dv.date, msg:`发放 ${dv.year} 年分红 ${RM(dv.D)}`});
+}
+
+/* ================= 画面零件 ================= */
+function inp(k, o = {}){
+  const v = getPath(cur(), k), t = o.type || "number";
+  return `<input data-k="${k}" type="${t}" ${t==="number"?'step="any"':""} value="${esc(v ?? "")}" ${o.ph?`placeholder="${esc(o.ph)}"`:""}>`;
+}
+function sel(k, map){
+  const v = getPath(cur(), k);
+  return `<select data-k="${k}">${Object.entries(map).map(([a, b]) => `<option value="${esc(a)}" ${String(a)===String(v)?"selected":""}>${esc(b)}</option>`).join("")}</select>`;
+}
+const F = (label, html, hint = "") => `<label class="f">${label}${html}${hint?`<span class="h">${hint}</span>`:""}</label>`;
+const pill = (t, cls) => `<span class="pill ${cls}">${esc(t)}</span>`;
+const note = (cls, t) => `<div class="note n-${cls}">${t}</div>`;
+const card = (title, body, act = "") => `<div class="card"><h3>${title}${act?`<span class="act">${act}</span>`:""}</h3>${body}</div>`;
+const kpi = (l, v, s = "") => `<div class="kpi"><small>${l}</small><b>${v}</b>${s?`<span>${s}</span>`:""}</div>`;
+const gName = (c, g) => esc(getP(c, g.pid)?.name || "?");
+const ROLE_MAP = o => Object.fromEntries(Object.entries(o).map(([a, b]) => [a, b.t]));
+
+function poolBar(x){
+  const pool = Math.max(num(x.pl.pool), x.used, 1);
+  const seg = [[x.vested, "var(--s1)", "已成熟"], [x.active - x.vested + x.kept, "var(--s2)", "已授予未成熟"], [x.draft, "var(--s3)", "草稿（预留）"], [Math.max(0, x.avail), "var(--rest)", "剩余可分配"]];
+  return `<div class="stack">${seg.filter(s => s[0] > 0.5).map(s => `<div data-tip="${s[2]}：${INT(s[0])} 股（${PCT(s[0]/pool,1)}）" style="width:${s[0]/pool*100}%;background:${s[1]}"></div>`).join("")}</div>
+<div class="legend">${seg.map(s => `<span><i style="background:${s[1]}"></i>${s[2]} ${INT(s[0])}</span>`).join("")}</div>`;
+}
+function hbars(items, fmt){
+  const mx = Math.max(...items.map(i => i[1]), 1e-9);
+  return items.map(([n, v]) => `<div class="hbar" data-tip="${esc(n)}：${fmt(v)}"><span>${esc(n)}</span><div class="t"><div style="width:${v/mx*100}%"></div></div><span class="v">${fmt(v)}</span></div>`).join("");
+}
+
+/* ================= 页面 ================= */
+const NAV = [
+  ["", [["dashboard","📊","总览"]]],
+  ["一、公司基础", [["valuation","💰","公司估值"],["captable","🧩","股权结构"]]],
+  ["二、方案设计", [["plans","📘","激励计划"],["people","👥","激励对象"],["allocate","🧮","分配建议"]]],
+  ["三、日常管理", [["grants","📝","授予管理"],["vesting","⏳","成熟与考核"],["dividends","💵","分红发放"],["exits","🚪","退出回购"]]],
+  ["四、输出", [["reports","📄","报表与权益单"],["settings","⚙️","设置"]]]
 ];
-const cur = () => S.plans[S.cur];
+const P = {};
 
-function inp(k, p, opt = {}){
-  const v = getPath(p, k);
-  const t = opt.type || "number";
-  return `<input data-k="${k}" type="${t}" ${t==="number"?'step="any"':""} value="${esc(v ?? "")}" ${opt.ph?`placeholder="${esc(opt.ph)}"`:""} ${opt.re?'data-re="1"':""}>`;
-}
-function sel(k, p, map, opt = {}){
-  const v = getPath(p, k);
-  return `<select data-k="${k}" ${opt.re!==false?'data-re="1"':""} ${opt.num?'data-num="1"':""}>${Object.entries(map).map(([a,b]) => `<option value="${a}" ${String(a)===String(v)?"selected":""}>${esc(b)}</option>`).join("")}</select>`;
-}
-function chk(k, p, label, re = true){
-  return `<label class="row" style="font-size:14px;cursor:pointer"><input type="checkbox" data-k="${k}" ${getPath(p,k)?"checked":""} ${re?'data-re="1"':""}> ${label}</label>`;
-}
-const field = (label, html, hint = "") => `<label class="f">${label}${html}${hint?`<span class="h">${hint}</span>`:""}</label>`;
-const warnBox = C => C.warnings.length ? C.warnings.map(([c,t]) => `<div class="note ${c}">${esc(t)}</div>`).join("") : "";
-const tip = t => `<div class="note tip">${t}</div>`;
-
-const F = {}; // 每一步的「填写区」
-const O = {}; // 每一步的「计算结果区」
-
-F.co = p => `
-<div class="card"><h2><span class="n">0</span>公司资料</h2>
-<p class="lead">先把客户公司的基本数字填好，后面每一步都会自动用这些数字计算。</p>
-<div class="grid">
-  ${field("公司名称", inp("name", p, {type:"text", re:true}))}
-  ${field("行业", inp("industry", p, {type:"text"}))}
-  ${field("过去一年净利润（RM）", inp("co.netProfit", p))}
-  ${field("公司净资产（RM）", inp("co.netAssets", p), "资产减去负债")}
-  ${field("最新一轮融资估值（RM）", inp("co.funding", p), "没有融资过可以不填")}
-  ${field("市盈率倍数（P/E）", inp("co.pe", p), "大白话：公司值几年的利润。中小企业一般 3–8 倍")}
-  ${field("公司总股数（Unit）", inp("co.totalUnits", p), "SSM 上登记的总股数")}
-  ${field("估值用哪个算法", sel("co.valMethod", p, {pe:"净利润 × 市盈率", funding:"最新融资估值", assets:"净资产", manual:"自己填一个数字"}))}
-  ${p.co.valMethod==="manual" ? field("估值（RM）", inp("co.manualVal", p)) : ""}
-</div>
-<h4>公司情况（帮你推荐激励形式）</h4>
-<div class="row" style="gap:20px">${chk("co.ipo", p, "未来计划上市（IPO）")}${chk("co.multiUnit", p, "有多间门店 / 分公司 / 项目")}</div>
-</div>
-<div class="card"><h2>原有股东</h2>
-<p class="lead">现在 SSM 上的股东和比例。第一位当作「创始人」，用来检查控制权。</p>
-<div class="tblwrap"><table><tr><th>股东</th><th>岗位</th><th class="r">比例 %</th><th></th></tr>
-${p.holders.map((h,i) => `<tr><td>${inp(`holders.${i}.name`, p, {type:"text"})}</td><td>${inp(`holders.${i}.role`, p, {type:"text"})}</td><td>${inp(`holders.${i}.pct`, p)}</td>
-<td>${p.holders.length>1?`<button class="btn del sm" data-act="delHolder" data-i="${i}">删除</button>`:""}</td></tr>`).join("")}
-</table></div>
-<button class="btn ghost sm" data-act="addHolder" style="margin-top:8px">＋ 加股东</button>
-</div>
-<div id="out"></div>`;
-O.co = (p, C) => `
-<div class="card"><h2>算出来的结果</h2>
+P.dashboard = c => {
+  const s = summary(c, S.asOf), up = [];
+  s.activeGrants.forEach(g => vestInfo(c, g, S.asOf).events.forEach(e => { if (e.date > S.asOf && e.date <= addYears(S.asOf, 1) && !e.gone) up.push({g, e}); }));
+  up.sort((a, b) => a.e.date < b.e.date ? -1 : 1);
+  const tp = s.plans.reduce((t, x) => t + num(x.pl.pool), 0), tu = s.plans.reduce((t, x) => t + x.used, 0);
+  const m = {}; s.activeGrants.forEach(g => { const n = getP(c, g.pid)?.name || "?"; m[n] = (m[n] || 0) + num(g.shares) * s.P; });
+  return `<h1>${esc(c.name)}</h1><p class="sub">${esc(c.industry)}　·　计算日期 ${S.asOf}</p>
 <div class="kpis">
-  <div class="kpi"><small>公司估值</small><b>${RM(C.V)}</b></div>
-  <div class="kpi"><small>每一股（Unit）值</small><b>RM ${C.ppu.toFixed(4).replace(/\.?0+$/,"")}</b></div>
-  <div class="kpi"><small>1% 股权值</small><b>${RM(C.V/100)}</b></div>
-  <div class="kpi"><small>1% 等于几股</small><b>${INT(C.units/100)}</b></div>
+${kpi("公司估值", RM(s.V), `每股 ${RM2(s.P)}`)}
+${kpi("激励对象（生效中）", s.people + " 人", `建档员工 ${c.participants.filter(p => p.status === "active").length} 人`)}
+${kpi("股权池已用", PCT(tp ? tu/tp : 0, 1), `${INT(tu)} / ${INT(tp)} 股`)}
+${kpi("员工持有市值", RM(s.empValue), `员工付出成本 ${RM(s.empCost)}`)}
+${kpi("员工账面收益", RM(s.empValue - s.empCost), "市值 − 成本")}
+${kpi("创始人投票权", PCT(s.vote, 1), s.vote >= 0.75 ? "✔ 75% 以上，稳" : s.vote >= 0.5 ? "⚠ 低于 75%" : "✖ 低于 50%")}
 </div>
-<div class="formula">${p.co.valMethod==="pe" ? `估值 = 净利润 ${RM(num(p.co.netProfit))} × 市盈率 ${p.co.pe} = ${RM(C.V)}` : `估值 = ${RM(C.V)}`}　｜　每股价值 = 估值 ÷ 总股数 ${INT(C.units)}</div>
-${warnBox({warnings:C.warnings.filter(w => /估值|100%/.test(w[1]) && !/调整后|成熟/.test(w[1]))})}
-</div>`;
-
-F.form = p => {
-  const rec = p.co.ipo ? "option" : p.co.multiUnit ? "red" : "real";
-  const why = p.co.ipo ? "公司计划上市，期股（ESOS）最合适，上市前用低价锁定员工。" : p.co.multiUnit ? "有多间门店/项目，先用红股（门店分红、项目分红），员工看得到、算得清。" : "一般中小企业，员工出钱买实股，最有归属感；也可以「先虚后实」，先给红股再转实股。";
-  return `
-<div class="card"><h2><span class="n">1</span>激励形式（定类型）</h2>
-<p class="lead">给员工的是哪一种股？点一下选择。</p>
-<div class="opts">${Object.entries(FORMS).map(([k,v]) => `<div class="opt ${p.form===k?"on":""}" data-act="setForm" data-v="${k}"><b>${v.t}${rec===k?' <span class="pill ok">推荐</span>':""}</b><p>${v.d}</p></div>`).join("")}</div>
-${tip(`<b>系统建议：</b>${why}（根据「0 公司资料」里勾的公司情况）`)}
+${s.alerts.length ? card("需要处理的事项", s.alerts.map(([cls, t, pg]) => `<div class="note n-${cls} row"><span>${esc(t)}</span><button class="btn sm n right" data-go="${pg}">去处理 →</button></div>`).join("")) : note("ok","✔ 目前没有需要处理的事项。")}
+<div class="cols">
+${card("各计划股权池使用情况", s.plans.length ? s.plans.map(x => `<div style="margin-bottom:16px"><div class="row"><b>${esc(x.pl.name)}</b>${pill(PLAN_TYPES[x.pl.type].s,"p-info")}<span class="mut right">股权池 ${INT(x.pl.pool)} 股</span></div><div style="margin-top:6px">${poolBar(x)}</div></div>`).join("") : `<div class="empty">还没有激励计划。<br><button class="btn sm" data-go="plans" style="margin-top:8px">建立第一个计划</button></div>`)}
+${card("未来 12 个月成熟时间表", up.length ? `<table><tr><th>日期</th><th>员工</th><th class="r">股数</th><th class="r">价值</th><th>状态</th></tr>${up.slice(0, 8).map(u => `<tr class="click" data-act="openGrant" data-id="${u.g.id}"><td>${u.e.date}</td><td>${gName(c, u.g)}</td><td class="r">${INT(u.e.sh)}</td><td class="r">${RM(u.e.sh * s.P)}</td><td>${pill(u.e.st, u.e.cls)}</td></tr>`).join("")}</table>` : `<div class="empty">未来 12 个月没有成熟事件。</div>`)}
 </div>
-<div class="card"><h2>员工型股东入股的方程式</h2>
-<p class="lead">勾选这个方案要用的原则，会写进方案总表。</p>
-<div class="opts">${PRINCIPLES.map(([k,t,d]) => `<label class="chk"><input type="checkbox" data-act="togglePrinciple" data-v="${k}" ${p.principles.includes(k)?"checked":""}><div><b>${t}</b><div class="mut">${d}</div></div></label>`).join("")}</div>
-${p.principles.includes("jiehou") ? tip("「先借后还」：员工入股的钱可以先写欠条，之后用每年的分红来还。到「★ 分红模拟」可以看到员工几年能还清。") : ""}
-</div><div id="out"></div>`;
-};
-O.form = () => "";
-
-F.hold = p => {
-  const n = p.emps.length;
-  const rec = p.form === "red" ? "proxy" : n >= 3 ? "platform" : n > 0 ? "proxy" : "platform";
-  return `
-<div class="card"><h2><span class="n">2</span>持股方式（定架构）</h2>
-<p class="lead">员工的股份放在谁名下？${p.form==="red"?"（红股是虚拟分红，不会登记到 SSM，一般由创始人代持就可以）":""}</p>
-<div class="opts">${Object.entries(HOLDINGS).map(([k,v]) => `<div class="opt ${p.holding===k?"on":""}" data-act="setHolding" data-v="${k}"><b>${v.t}${rec===k?' <span class="pill ok">推荐</span>':""}</b><p>${v.d}</p></div>`).join("")}</div>
-${p.holding==="platform" ? `<div class="grid" style="margin-top:12px">${field("持股平台名称", inp("platformName", p, {type:"text", ph:"例如：XX 员工持股 LLP"}))}</div>` : ""}
-${tip(`<b>系统建议：</b>${n>=3 ? `现在有 ${n} 位员工，人多用「持股平台」：SSM 上只多一个股东，投票权集中在创始人手上，员工进出也不用每次改公司股东资料。` : "员工人数少，可以先由创始人代持，人多了再转持股平台。"}`)}
-</div><div id="out"></div>`;
-};
-O.hold = (p, C) => `
-<div class="card"><h2>SSM 上会登记成这样</h2>
-${C.isRed ? '<p class="mut">红股只是分红权，SSM 股东资料不变。</p>' : ""}
-<table><tr><th>登记股东</th><th class="r">比例</th><th>备注</th></tr>
-${C.ssm.map(s => `<tr><td>${esc(s.name)}</td><td class="r">${PCT(s.pct)}</td><td class="mut">${esc(s.note)}</td></tr>`).join("")}
-</table>
-<div class="kpis"><div class="kpi"><small>创始人能控制的投票权</small><b>${PCT(C.founderVote)}</b></div></div>
-${warnBox({warnings:C.warnings.filter(w => /投票权/.test(w[1]))})}
-</div>`;
-
-F.who = p => `
-<div class="card"><h2><span class="n">3</span>授予对象（定对象）</h2>
-<p class="lead">把要给股权的员工加进来。系统按八步法的规则自动判断谁符合资格：C Level、核心高管、项目红点直接符合；总监要满 5 年；经理要满 3 年。</p>
-<div class="tblwrap"><table>
-<tr><th>名字</th><th>职位</th><th>岗位层级</th><th>年资（年）</th><th>年薪（RM）</th><th>特别批准</th><th></th></tr>
-${p.emps.map((e,i) => `<tr>
-<td>${inp(`emps.${i}.name`, p, {type:"text"})}</td><td>${inp(`emps.${i}.position`, p, {type:"text"})}</td>
-<td>${sel(`emps.${i}.level`, p, Object.fromEntries(Object.entries(LEVELS).map(([k,v]) => [k,v.t])))}</td>
-<td>${inp(`emps.${i}.years`, p)}</td><td>${inp(`emps.${i}.salary`, p)}</td>
-<td style="text-align:center"><input type="checkbox" data-k="emps.${i}.approved" ${e.approved?"checked":""}></td>
-<td><button class="btn del sm" data-act="delEmp" data-i="${i}">删除</button></td></tr>`).join("")}
-</table></div>
-${p.emps.length ? "" : '<p class="mut">还没有员工。</p>'}
-<button class="btn ghost sm" data-act="addEmp" style="margin-top:8px">＋ 加员工</button>
-</div><div id="out"></div>`;
-O.who = (p, C) => !C.emps.length ? "" : `
-<div class="card"><h2>资格检查</h2>
-<table><tr><th>员工</th><th>层级</th><th>结果</th></tr>
-${C.emps.map(x => `<tr><td>${esc(x.e.name||"(未命名)")}</td><td>${esc(LEVELS[x.e.level]?.t)}</td><td><span class="pill ${x.el.ok?"ok":"bad"}">${esc(x.el.t)}</span></td></tr>`).join("")}
-</table></div>`;
-
-F.qty = p => `
-<div class="card"><h2><span class="n">4</span>授予数量（定数量）</h2>
-<p class="lead">每个员工可以用不同方法定数量。系统会自动换算成「百分比」和「股数」。</p>
-<div class="grid">
-  ${field("股权池上限（%）", inp("poolCap", p), "员工合计最多拿多少。建议 10–20%，先少后多")}
-  ${field("统一奖励：每人价值（RM）", inp("grant.uniformValue", p), "第一批人每人同样价值，例如 RM50k")}
-  ${p.form!=="red" ? field("原股东怎么让出股份", sel("dilution", p, {proportional:"按比例一起稀释（最公平）", manual:"自己定每位股东调整后的 %"})) : ""}
-</div>
-${p.form!=="red" && p.dilution==="manual" ? `<h4>原股东调整后比例</h4><div class="tblwrap"><table><tr><th>股东</th><th class="r">调整前 %</th><th>调整后 %</th></tr>
-${p.holders.map((h,i) => `<tr><td>${esc(h.name)}</td><td class="r">${h.pct}%</td><td>${inp(`holders.${i}.after`, p)}</td></tr>`).join("")}</table></div>` : ""}
-<h4>每个员工</h4>
-${!p.emps.length ? '<p class="mut">先到「3 授予对象」加员工。</p>' : `<div class="tblwrap"><table>
-<tr><th>员工</th><th>用什么方法</th><th>数字</th><th class="mut">参考范围</th></tr>
-${p.emps.map((e,i) => {
-  const L = LEVELS[e.level] || LEVELS.staff;
-  const box = e.method==="pct" ? `${inp(`emps.${i}.pct`, p)}<span class="mut">%</span>` :
-              e.method==="value" ? `RM ${inp(`emps.${i}.value`, p)}` :
-              e.method==="salary" ? `年薪 × ${inp(`emps.${i}.mult`, p)}<span class="mut">倍（年薪 ${RM(num(e.salary))}）</span>` :
-              `<span class="mut">每人 ${RM(num(p.grant.uniformValue))}</span>`;
-  return `<tr><td>${esc(e.name||"(未命名)")}<div class="mut">${esc(e.position)}</div></td><td>${sel(`emps.${i}.method`, p, GRANT_METHODS)}</td><td><div class="row" style="flex-wrap:nowrap">${box}</div></td><td class="mut">${esc(L.t)}：${L.rng[0]}–${L.rng[1]}%${e.method==="salary"?"<br>年薪 × 1–2 倍":""}</td></tr>`;
-}).join("")}</table></div>`}
-</div><div id="out"></div>`;
-O.qty = (p, C) => !C.emps.length ? "" : `
-<div class="card"><h2>算出来的数量</h2>
-<div class="formula">股权 % = 授予价值 ÷ 公司估值 ${RM(C.V)}　｜　股数 = 总股数 ${INT(C.units)} × 股权 %</div>
-<div class="tblwrap"><table><tr><th>员工</th><th class="r">股权 %</th><th class="r">股数（Unit）</th><th class="r">市值</th><th class="r">一年分红（按现在净利润）</th></tr>
-${C.emps.map(x => `<tr><td>${esc(x.e.name||"(未命名)")}</td><td class="r">${PCT(x.pct,3)}</td><td class="r">${INT(x.units)}</td><td class="r">${RM(x.mkt)}</td><td class="r">${RM(x.div)}</td></tr>`).join("")}
-<tr class="tot"><td>员工合计</td><td class="r">${PCT(C.T,3)}</td><td class="r">${INT(C.T*C.units)}</td><td class="r">${RM(C.T*C.V)}</td><td class="r">${RM(C.T*num(p.co.netProfit))}</td></tr>
-</table></div>
-<div class="kpis"><div class="kpi"><small>股权池用了</small><b>${PCT(C.T)} / ${p.poolCap}%</b></div><div class="kpi"><small>股权池还剩（以后可再给）</small><b>${PCT(Math.max(0, num(p.poolCap)/100 - C.T))}</b></div></div>
-${warnBox(C)}
-<h4>新增员工后的股权结构</h4>
-<div class="tblwrap"><table><tr><th>股东</th><th>岗位</th><th class="r">调整前</th><th class="r">调整后（实际权益）</th></tr>
-${C.holdersAfter.map((h,i) => `<tr><td>${esc(h.name)}</td><td>${esc(h.role)}</td><td class="r">${PCT(h.before)}</td><td class="r">${PCT(C.benef[i].pct)}</td></tr>`).join("")}
-${C.emps.map(x => `<tr><td>${esc(x.e.name||"(未命名)")}</td><td>${esc(x.e.position)}</td><td class="r">–</td><td class="r">${PCT(x.pct)}</td></tr>`).join("")}
-</table></div>
-${C.isRed ? '<p class="mut">红股：SSM 上的股权不变，上面「调整后」指的是分红的分配比例。</p>' : ""}
-</div>`;
-
-F.price = p => `
-<div class="card"><h2><span class="n">5</span>行权价格（定价格）</h2>
-<p class="lead">员工要付多少钱买这些股权。${p.form==="option"?"期股的「行权价」= 员工将来买股时要付的价钱。":"实股 / 红股 = 员工入股要付的钱。"}</p>
-<div class="grid">
-  ${field("按什么价值来算", sel("price.base", p, PRICE_BASES))}
-  ${p.price.base==="perUnit" ? field("每一份是多少 %", inp("price.unitPct", p), "例如每份 2.5%") + field("每一份卖多少钱（RM）", inp("price.unitPrice", p), "例如 RM50,000")
-    : field("给员工的优惠折扣（%）", inp("price.discount", p), "例如打折 70% = 员工只付 30%；优惠 50% = 付一半")}
-</div>
-${tip("怎么选：高科技 / 互联网公司用「最新融资估值」打折；重资产企业（工厂、地产）用「净资产」；一般中小企业用「净利润 × 市盈率」的估值打折。")}
-</div><div id="out"></div>`;
-O.price = (p, C) => {
-  const base = p.price.base==="funding" ? num(p.co.funding) : p.price.base==="assets" ? num(p.co.netAssets) : C.V;
-  return !C.emps.length ? "" : `
-<div class="card"><h2>每个员工要付多少</h2>
-<div class="formula">${p.price.base==="perUnit" ? `员工付款 = 股权 % ÷ 每份 ${p.price.unitPct}% × 每份 ${RM(num(p.price.unitPrice))}` :
-  `员工付款 = 股权 % × ${PRICE_BASES[p.price.base]} ${RM(base)} × (1 − 折扣 ${p.price.discount}%)　→　折后价值 ${RM(base*(1-num(p.price.discount)/100))}`}</div>
-<div class="tblwrap"><table><tr><th>员工</th><th class="r">股权 %</th><th class="r">市值</th><th class="r">员工付款（行权价）</th><th class="r">每股价钱</th><th class="r">员工一入股就赚</th><th class="r">几年分红回本</th></tr>
-${C.emps.map(x => `<tr><td>${esc(x.e.name||"(未命名)")}</td><td class="r">${PCT(x.pct)}</td><td class="r">${RM(x.mkt)}</td><td class="r"><b>${RM(x.cost)}</b></td>
-<td class="r">${x.units ? "RM " + (x.cost/x.units).toFixed(2) : "–"}</td><td class="r">${RM(x.gain)}</td><td class="r">${x.div>0 ? (x.cost/x.div).toFixed(1)+" 年" : "–"}</td></tr>`).join("")}
-<tr class="tot"><td>合计</td><td class="r">${PCT(C.T)}</td><td class="r">${RM(C.T*C.V)}</td><td class="r">${RM(C.emps.reduce((s,x)=>s+x.cost,0))}</td><td></td><td class="r">${RM(C.emps.reduce((s,x)=>s+x.gain,0))}</td><td></td></tr>
-</table></div>
-<p class="mut">「几年分红回本」= 员工付款 ÷ 每年分红（按现在净利润，全部成熟后）。可以拿来跟员工讲：用分红几年就回本。</p>
+<div class="cols">
+${card("员工持股市值", Object.keys(m).length ? hbars(Object.entries(m).sort((a, b) => b[1] - a[1]), RM) : '<div class="empty">还没有生效的授予。</div>')}
+${card("最近动态", c.log.length ? `<table>${c.log.slice(0, 8).map(l => `<tr><td class="mut" style="width:96px">${esc(l.d)}</td><td>${esc(l.msg)}</td></tr>`).join("")}</table>` : '<div class="empty">还没有记录。</div>')}
 </div>`;
 };
 
-F.vest = p => {
-  const n = Math.max(1, Math.min(10, Math.round(num(p.vest.years)) || 1));
-  return `
-<div class="card"><h2><span class="n">6</span>成熟计划（定条件）</h2>
-<p class="lead">股权不是一次给完，分几年慢慢「成熟」（大白话：到期才真正属于员工）。可以再加业绩考核：达标才激活。</p>
-<div class="grid">
-  ${field("分几年成熟", `<input data-k="vest.years" type="number" min="1" max="10" value="${n}" data-re="1">`)}
-  ${field("每年成熟多少", sel("vest.mode", p, {even:"每年平均", ascending:"逐年递增（1、2、3、4）", custom:"自己定每年 %"}))}
-</div>
-${p.vest.mode==="custom" ? `<h4>每年成熟 %</h4><div class="row">${Array.from({length:n},(_,i)=>`<label class="f" style="width:110px">第 ${i+1} 年<input data-k="vest.custom.${i}" type="number" step="any" value="${esc((p.vest.custom||[])[i] ?? "")}"></label>`).join("")}</div>` : ""}
-<h4>业绩考核（非时间条件）</h4>
-${chk("vest.perf", p, "要业绩考核：每年完成目标才激活当年的股权")}
-${p.vest.perf ? `<div class="grid" style="margin-top:10px">
-  ${field("没完成目标怎么处理", sel("vest.rule", p, {all:"没完成就作废（全有或全无）", ratio:"过了门槛按完成比例激活（推荐，比较有人情）"}))}
-  ${p.vest.rule==="ratio" ? field("门槛（完成率 %）", inp("vest.threshold", p), "例如 80%：完成 90% 就激活 90%") : ""}
-</div>
-${!p.emps.length ? "" : `<h4>每个员工每年的目标和实际业绩（RM）</h4><p class="mut">实际业绩还没出来就留空，系统先当作达标来算。</p>
-<div class="tblwrap"><table><tr><th>员工</th>${Array.from({length:n},(_,i)=>`<th>第 ${i+1} 年 目标 / 实际</th>`).join("")}</tr>
-${p.emps.map((e,ei)=>`<tr><td>${esc(e.name||"(未命名)")}</td>${Array.from({length:n},(_,i)=>`<td><div class="row" style="flex-wrap:nowrap"><input data-k="emps.${ei}.perf.${i}.target" type="number" step="any" placeholder="目标" value="${esc(e.perf?.[i]?.target ?? "")}"><input data-k="emps.${ei}.perf.${i}.actual" type="number" step="any" placeholder="实际" value="${esc(e.perf?.[i]?.actual ?? "")}"></div></td>`).join("")}</tr>`).join("")}
-</table></div>`}` : ""}
-</div><div id="out"></div>`;
-};
-O.vest = (p, C) => !C.emps.length ? "" : `
-<div class="card"><h2>每年成熟表</h2>
-<div class="formula">每年比例：${C.W.map((w,i)=>`第 ${i+1} 年 ${PCT(w)}`).join("　")}</div>
-${C.emps.map(x => `<h4>${esc(x.e.name||"(未命名)")}　<span class="mut">授予 ${PCT(x.pct)} / ${INT(x.units)} 股</span></h4>
-<div class="tblwrap"><table><tr><th>年份</th><th class="r">成熟股数</th><th class="r">成熟 %</th><th class="r">累计 %</th>${p.form==="option"?'<th class="r">当年要付行权款</th>':""}<th>状态</th></tr>
-${x.sched.map((s,i)=>`<tr><td>第 ${i+1} 年</td><td class="r">${INT(s.units)}</td><td class="r">${PCT(s.pct,3)}</td><td class="r">${PCT(s.cumPct,3)}</td>${p.form==="option"?`<td class="r">${RM(s.cost)}</td>`:""}<td><span class="pill ${s.act.cls}">${esc(s.act.st)}</span></td></tr>`).join("")}
-</table></div>`).join("")}
-${warnBox({warnings:C.warnings.filter(w=>/成熟/.test(w[1]))})}
-</div>`;
-
-F.buy = p => `
-<div class="card"><h2><span class="n">7</span>回购价格（定价格）</h2>
-<p class="lead">员工<b>没有过错</b>离职时，公司用什么价钱把股权买回来。能进又能退，才是正确的股权激励。</p>
-<div class="grid">
-  ${field("锁定期（年）", inp("buy.lockYears", p), "锁定期内离职，统一原价回购")}
-  ${field("锁定期内用什么价", sel("buy.inLock", p, {original:BUY_METHODS.original, interest:BUY_METHODS.interest}))}
-  ${field("锁定期后用什么价", sel("buy.afterLock", p, BUY_METHODS))}
-  ${field("利息（每年 %）", inp("buy.rate", p), "原价 + 利息用，一般 3–5%")}
-  ${field("固定市盈率（倍）", inp("buy.pe", p), "净利润 × 固定 P/E 用，例如 4 倍")}
-  ${field("倍数", inp("buy.multiple", p), "事先约定 ×1 或 ×2")}
-  ${field("估值打折（%）", inp("buy.valDisc", p), "最新估值打折用，一般 30–50%")}
-</div>
-<div style="margin-top:10px">${chk("buy.floor", p, "保底：算出来低过原价（行权价），就按原价回购")}</div>
-${p.form==="red" ? `<h4>红股（虚拟分红）回购表</h4>
-${chk("buy.redSchedule", p, "红股用「按年份回购表」：第 N 年离开 = 买入价 × N ÷ 期限")}
-<div class="grid" style="margin-top:10px">${field("红股期限（年）", inp("buy.redTerm", p))}${field("期满后离开的额外奖励（买入价的 %）", inp("buy.redBonus", p), "例如 RM50,000 的 20% = RM10,000")}</div>` : ""}
-</div><div id="out"></div>`;
-O.buy = (p, C) => {
-  if (!C.emps.length) return "";
-  const x = C.emps[0], term = Math.max(1, num(p.buy.redTerm));
-  if (p.form === "red" && p.buy.redSchedule){
-    return `<div class="card"><h2>回购表（以 ${esc(x.e.name||"第一位员工")} 为例，买入价 ${RM(x.cost)}）</h2>
-<table><tr><th>什么时候离职或被解聘</th><th class="r">公司回购价</th></tr>
-${Array.from({length:term+1},(_,i)=>`<tr><td>第 ${i+1} 年</td><td class="r">${i+1<=term ? RM(x.cost*(i+1)/term) : RM(x.cost) + " + " + RM(x.cost*num(p.buy.redBonus)/100)}</td></tr>`).join("")}
-</table></div>`;
-  }
-  const yrs = Math.max(C.W.length, num(p.buy.lockYears)) + 2;
-  const rows = [];
-  for (let Y = 1; Y <= yrs; Y++){
-    const sim = exitCalc({...p, exit:{...p.exit, empId:x.e.id, year:Y, cat:"A", np:"", val:"", na:""}}, C);
-    rows.push(`<tr><td>第 ${Y} 年</td><td class="r">${PCT(sim.vestedPct)}</td><td class="r">${RM(sim.buyVested)}</td><td class="r">${RM(sim.refund)}</td><td class="r"><b>${RM(sim.total)}</b></td><td class="mut">${Y<=num(p.buy.lockYears)?"锁定期内":"锁定期后"}</td></tr>`);
-  }
-  return `<div class="card"><h2>无过错离职回购表（以 ${esc(x.e.name||"第一位员工")} 为例，按现在的净利润 / 估值）</h2>
-<div class="formula">净利润 × 固定 P/E 例子：${RM(num(p.co.netProfit))} × ${p.buy.pe} = ${RM(num(p.co.netProfit)*num(p.buy.pe))} 公司估值 × 已成熟股权 % = 回购价</div>
-<div class="tblwrap"><table><tr><th>在第几年离职</th><th class="r">已成熟股权</th><th class="r">已成熟部分回购价</th><th class="r">未成熟部分退款</th><th class="r">公司总共要付</th><th></th></tr>${rows.join("")}</table></div>
-<p class="mut">${p.form==="option"?"期股：未成熟的期权自动失效，员工没付钱所以也不用退。":"实股：员工一开始已付全款，未成熟部分按原价退回。"}要模拟不同离职原因，去「8 回收条件」。</p></div>`;
+P.valuation = c => {
+  const list = [...c.valuations].sort((a, b) => a.date < b.date ? 1 : -1), issued = issuedShares(c), lv = latestVal(c, S.asOf);
+  return `<h1>公司估值</h1><p class="sub">每年（或每次融资）记一笔。系统用「计算日期」当天最新的一笔，来算股价、授予价和回购价。</p>
+<div class="kpis">${kpi("目前采用的估值", RM(valOf(lv)), lv ? `${lv.date} · ${VAL_METHODS[lv.method]}` : "还没有")}${kpi("已发行股数", INT(issued))}${kpi("每股价值", RM2(issued ? valOf(lv)/issued : 0))}${kpi("1% 股权值", RM(valOf(lv)/100))}</div>
+${card("估值记录", `<div class="tw"><table><tr><th>日期</th><th>算法</th><th>净利润</th><th>市盈率</th><th>净资产</th><th>融资估值</th><th class="r">估值</th><th class="r">每股</th><th>备注</th><th></th></tr>
+${list.map(v => { const i = c.valuations.indexOf(v); return `<tr><td>${inp(`valuations.${i}.date`, {type:"date"})}</td><td style="min-width:140px">${sel(`valuations.${i}.method`, VAL_METHODS)}</td>
+<td>${inp(`valuations.${i}.netProfit`)}</td><td style="width:70px">${inp(`valuations.${i}.pe`)}</td><td>${inp(`valuations.${i}.netAssets`)}</td><td>${inp(`valuations.${i}.funding`)}</td>
+<td class="r"><b>${v.method==="manual" ? inp(`valuations.${i}.manual`) : RM(valOf(v))}</b></td><td class="r">${RM2(issued ? valOf(v)/issued : 0)}</td><td>${inp(`valuations.${i}.note`, {type:"text"})}</td>
+<td><button class="btn d sm" data-act="delVal" data-id="${v.id}">删除</button></td></tr>`; }).join("")}</table></div>${!list.length ? '<div class="empty">还没有估值记录。</div>' : ""}`, `<button class="btn sm" data-act="addVal">＋ 新增估值</button>`)}
+${note("tip","<b>怎么选算法：</b>一般中小企业用「净利润 × 市盈率」（马来西亚私人公司常用 3–8 倍）；有融资的公司用「最新融资估值」；工厂、地产等重资产公司用「净资产」。")}`;
 };
 
-F.exit = p => {
-  const x = p.exit, cat = REASONS[x.cat] ? x.cat : "A";
-  return `
-<div class="card"><h2><span class="n">8</span>回收条件（定规则）· 离职模拟</h2>
-<p class="lead">选一个员工、离职年份和原因，系统算出公司要付多少钱、员工的股权怎样处理。</p>
-${!p.emps.length ? '<p class="mut">先到「3 授予对象」加员工。</p>' : `
-<div class="grid">
-  ${field("员工", `<select data-k="exit.empId" data-re="1">${p.emps.map(e=>`<option value="${e.id}" ${e.id===x.empId?"selected":""}>${esc(e.name||"(未命名)")}</option>`).join("")}</select>`)}
-  ${field("在第几年离职", inp("exit.year", p), "1 = 第一年内离职")}
-  ${field("离职类别", sel("exit.cat", p, Object.fromEntries(Object.entries(REASONS).map(([k,v])=>[k,v.t]))))}
-  ${field("具体原因", `<select data-k="exit.reason" data-num="1">${REASONS[cat].items.map((t,i)=>`<option value="${i}" ${+x.reason===i?"selected":""}>${esc(t)}</option>`).join("")}</select>`)}
+P.captable = c => {
+  const s = summary(c, S.asOf), issued = s.issued, fd = issued + s.fdPool;
+  const rows = c.shareholders.map((h, i) => `<tr><td>${inp(`shareholders.${i}.name`, {type:"text"})}</td><td style="min-width:130px">${sel(`shareholders.${i}.type`, {founder:"创始人 / 控股方", investor:"投资人", other:"其他股东"})}</td>
+<td>${inp(`shareholders.${i}.shares`)}</td><td class="r">${PCT(issued ? num(h.shares)/issued : 0)}</td><td class="r">${PCT(s.totalNow ? num(h.shares)/s.totalNow : 0)}</td><td class="r">${PCT(fd ? num(h.shares)/fd : 0)}</td>
+<td>${c.shareholders.length > 1 ? `<button class="btn d sm" data-act="delHolder" data-i="${i}">删除</button>` : ""}</td></tr>`).join("");
+  const planRows = c.plans.filter(p => p.type !== "virtual").map(p => {
+    const out = c.grants.filter(g => g.planId === p.id).reduce((t, g) => t + realShares(c, g), 0);
+    return `<tr><td>${esc(p.name)}<div class="mut">员工股权池 · ${VEHICLES[p.vehicle].t}${p.vehicleName?" · "+esc(p.vehicleName):""}</div></td><td>${PLAN_TYPES[p.type].s}</td><td class="r">${INT(num(p.pool))}<div class="mut">已发给员工 ${INT(out)}</div></td><td class="r">–</td><td class="r">${PCT(s.totalNow ? out/s.totalNow : 0)}</td><td class="r">${PCT(fd ? num(p.pool)/fd : 0)}</td><td></td></tr>`;
+  }).join("");
+  const virt = c.plans.filter(p => p.type === "virtual");
+  const bars = [...c.shareholders.map(h => [h.name || "(未命名)", num(h.shares)/(fd||1)]), ...c.plans.filter(p => p.type !== "virtual").map(p => [p.name + "（池）", num(p.pool)/(fd||1)])];
+  return `<h1>股权结构</h1><p class="sub">股东名册 + 员工股权池。看三个数字：现在登记的、加上已发员工股的、股权池全部发完后（全面稀释）的。</p>
+${card("股东名册", `<div class="tw"><table><tr><th>股东</th><th>类别</th><th>股数</th><th class="r">现在占比</th><th class="r">含已发员工股</th><th class="r">全面稀释后</th><th></th></tr>${rows}${planRows}
+<tr class="tot"><td>已发行合计</td><td></td><td class="r">${INT(issued)}</td><td class="r">100%</td><td class="r">100%</td><td class="r">100%</td><td></td></tr></table></div>`, `<button class="btn sm" data-act="addHolder">＋ 加股东</button>`)}
+<div class="cols">
+${card("全面稀释后的股权分布", hbars(bars, v => PCT(v, 1)))}
+${card("控制权检查", `<div class="kpis" style="grid-template-columns:1fr 1fr">${kpi("创始人现在能控制", PCT(s.vote,1), "自己的股份 + 平台/代持的员工股")}${kpi("股权池全部发完后", PCT(s.voteFD,1))}</div>
+${s.vote >= 0.75 ? note("ok","✔ 75% 以上：特别决议（改章程、增资、减资等）创始人自己就能通过。") : s.vote >= 0.5 ? note("warn","⚠ 50%–75%：普通决议可以过，特别决议需要其他股东同意。") : note("bad","✖ 低于 50%：创始人失去控制权。")}
+${note("tip","<b>保住控制权：</b>员工股放进「持股平台」或由创始人「代持」，员工拿分红和增值，投票权留在创始人手上。")}`)}
 </div>
-<h4>离职那时候公司的数字（不填就用现在的）</h4>
-<div class="grid">
-  ${field("离职前一年净利润（RM）", inp("exit.np", p, {ph:RM(num(p.co.netProfit))}))}
-  ${field("最新估值（RM）", inp("exit.val", p, {ph:"用现在的估值"}))}
-  ${field("最新净资产（RM）", inp("exit.na", p, {ph:RM(num(p.co.netAssets))}))}
-</div>
-${cat==="B" ? `<div class="grid" style="margin-top:10px">${field("较高回报率（每年 %）", inp("buy.highRate", p))}</div><div style="margin-top:8px">${chk("exit.accel", p, "未成熟的部分提前成熟（因公、退休等，照顾员工）")}</div>` : ""}
-${cat==="C" ? `<div class="grid" style="margin-top:10px">${field("按原价的几 % 回购", inp("exit.faultPct", p), "100 = 原价；50 = 半价")}${field("员工要赔偿公司（RM）", inp("exit.comp", p))}</div>` : ""}
-`}
-</div><div id="out"></div>`;
-};
-O.exit = (p, C) => {
-  const r = exitCalc(p, C);
-  if (!r) return "";
-  return `<div class="card"><h2>模拟结果：${esc(r.ce.e.name||"(未命名)")} 第 ${r.Y} 年离职（${esc(r.reasonText)}）</h2>
-<div class="kpis">
-  <div class="kpi"><small>原本授予</small><b>${PCT(r.ce.pct)}</b></div>
-  <div class="kpi"><small>已成熟（会被回购）</small><b>${PCT(r.vestedPct)}</b></div>
-  <div class="kpi"><small>${p.form==="option"?"失效":"退回"}的未成熟部分</small><b>${PCT(r.unvestedF*r.ce.pct)}</b></div>
-  <div class="kpi"><small>公司总共要付给员工</small><b>${RM(Math.max(0,r.total))}</b></div>
-</div>
-<div class="note tip">${r.lines.map(esc).join("<br>")}</div>
-${r.total < 0 ? `<div class="note bad">赔偿比回购款多，员工还要再付公司 ${RM(-r.total)}。</div>` : ""}
-<p class="mut">收回来的股权回到股权池，可以再分给下一批员工。</p>
-</div>
-<div class="card"><h2>回收条件总表（写进协议）</h2>
-<table><tr><th>股权激励退出情形</th><th>回购方案</th></tr>
-<tr><td>${REASONS.A.items.join("；")}</td><td>按较低的市场回报率标准回购（第 7 步的规则：锁定期内${BUY_METHODS[p.buy.inLock]}，锁定期后${BUY_METHODS[p.buy.afterLock]}${p.buy.floor?"，最低原价":""}）</td></tr>
-<tr><td>${REASONS.B.items.join("；")}</td><td>按市场价或较高的投资回报率（每年 ${p.buy.highRate}%）回购，取较高者</td></tr>
-<tr><td>${REASONS.C.items.join("；")}</td><td>未成熟部分立即终止；已成熟部分原价或低价回购，另外员工要赔偿对公司造成的损失</td></tr>
-</table></div>`;
+${virt.length ? card("虚拟分红股（不登记 SSM，不稀释）", `<table><tr><th>计划</th><th class="r">分红权池</th><th class="r">最多占利润</th><th class="r">已授予</th></tr>${virt.map(p => { const x = s.plans.find(y => y.pl.id === p.id); return `<tr><td>${esc(p.name)}</td><td class="r">${INT(p.pool)} 单位</td><td class="r">${PCT(issued ? num(p.pool)/issued : 0)}</td><td class="r">${INT(x.active)} 单位（${PCT(issued ? x.active/issued : 0)} 利润）</td></tr>`; }).join("")}</table>`) : ""}`;
 };
 
-F.div = p => `
-<div class="card"><h2>★ 分红模拟</h2>
-<p class="lead">公司赚多少，每个人分多少。拿来跟员工讲：公司做大，你也拿得多（工资 → 佣金 → 奖励 → 股权）。</p>
-<h4>净利润的几种情况（RM）</h4>
-<div class="row">${p.scen.map((s,i)=>`<div class="row" style="flex-wrap:nowrap;gap:4px"><input data-k="scen.${i}" type="number" step="any" value="${esc(s)}" style="width:130px"><button class="btn del sm" data-act="delScen" data-i="${i}">×</button></div>`).join("")}
-<button class="btn ghost sm" data-act="addScen">＋ 加一个情况</button></div>
-</div><div id="out"></div>`;
-O.div = (p, C) => {
-  const sc = p.scen.map(num);
-  return `<div class="card"><h2>分红表（全部成熟后）</h2>
-<div class="tblwrap"><table><tr><th>股东</th><th class="r">比例</th>${sc.map(s=>`<th class="r">净赚 ${RM(s)}</th>`).join("")}</tr>
-${C.benef.map(b=>`<tr${b.emp?' style="background:#fffaf5"':""}><td>${esc(b.name)}${b.emp?' <span class="pill warn">员工</span>':""}</td><td class="r">${PCT(b.pct)}</td>${sc.map(s=>`<td class="r">${INT(s*b.pct)}</td>`).join("")}</tr>`).join("")}
-<tr class="tot"><td>员工合计</td><td class="r">${PCT(C.T)}</td>${sc.map(s=>`<td class="r">${INT(s*C.T)}</td>`).join("")}</tr>
-</table></div>
-${p.principles.includes("jiehou") && C.emps.length ? `<h4>先借后还：用分红还入股钱要几年</h4>
-<table><tr><th>员工</th><th class="r">入股款</th>${sc.map(s=>`<th class="r">净赚 ${RM(s)}</th>`).join("")}</tr>
-${C.emps.map(x=>`<tr><td>${esc(x.e.name||"(未命名)")}</td><td class="r">${RM(x.cost)}</td>${sc.map(s=>`<td class="r">${s*x.pct>0?(x.cost/(s*x.pct)).toFixed(1)+" 年":"–"}</td>`).join("")}</tr>`).join("")}
-</table>` : ""}
-</div>`;
+P.plans = c => {
+  const s = summary(c, S.asOf);
+  return `<h1>激励计划</h1><p class="sub">一个计划 = 一整套规则：给什么股、放在谁名下、多少钱买、几年成熟、离职怎么回购。一家公司可以同时有几个计划，例如「核心团队实股」+「店长红股」。</p>
+${c.plans.length ? c.plans.map(pl => { const x = s.plans.find(y => y.pl.id === pl.id), W = weights(pl); return card(`${esc(pl.name)} ${pill(PLAN_TYPES[pl.type].s, "p-info")} ${pl.status==="active"?pill("进行中","p-ok"):pill("已关闭","p-mut")}`, `
+<div class="kpis">${kpi("股权池", INT(pl.pool) + " 股", `占已发行 ${PCT(s.issued ? num(pl.pool)/s.issued : 0)}`)}${kpi("目前授予价", RM2(planPrice(c, pl, S.asOf)), PRICE_BASES[pl.priceBase] + (pl.priceBase!=="fixed"?` ${pl.discount}%`:""))}${kpi("成熟", `${W.length} 年`, W.map(w => PCT(w,0)).join(" / ") + (pl.perf?" · 要考核":""))}${kpi("已用 / 剩余", `${INT(x.used)} / ${INT(x.avail)}`, `${x.gs.length} 笔授予`)}</div>
+${poolBar(x)}`, `<button class="btn sm g" data-act="editPlan" data-id="${pl.id}">编辑规则</button><button class="btn sm d" data-act="delPlan" data-id="${pl.id}">删除</button>`); }).join("") : `<div class="card empty">还没有激励计划。</div>`}
+<button class="btn" data-act="addPlan">＋ 新建激励计划</button>`;
+};
+function planEditor(c, pl){
+  const i = c.plans.indexOf(pl), k = f => `plans.${i}.${f}`, W = weights(pl), issued = issuedShares(c);
+  return `<h2>激励计划规则</h2><div class="steps">${["① 类型","② 持股","③ 股权池","④ 价格","⑤ 成熟","⑥ 回购","⑦ 退出"].map(t => `<div>${t}</div>`).join("")}</div>
+<div class="form">${F("计划名称", inp(k("name"), {type:"text"}))}${F("开始日期", inp(k("startDate"), {type:"date"}))}${F("状态", sel(k("status"), {active:"进行中", closed:"已关闭"}))}</div>
+<div class="sec">① 激励形式：给什么股</div>
+<div class="form">${F("类型", sel(k("type"), ROLE_MAP(PLAN_TYPES)), PLAN_TYPES[pl.type].d)}</div>
+<div class="sec">② 持股方式：股份放在谁名下</div>
+<div class="form">${F("持股方式", sel(k("vehicle"), ROLE_MAP(VEHICLES)), VEHICLES[pl.vehicle].d)}${pl.vehicle==="platform" ? F("平台名称", inp(k("vehicleName"), {type:"text", ph:"例如：XX 员工持股 PLT"})) : ""}</div>
+<div class="sec">③ 股权池：这个计划最多给出多少</div>
+<div class="form">${F(pl.type==="virtual"?"分红权池（单位，1 单位 = 1 股的分红）":"股权池（股数）", inp(k("pool")), `= 已发行的 ${PCT(issued ? num(pl.pool)/issued : 0)}。建议所有计划合计 10–20%，先少后多`)}</div>
+<div class="sec">④ 授予价格：员工买一股付多少</div>
+<div class="form">${F("定价方式", sel(k("priceBase"), PRICE_BASES))}${pl.priceBase==="fixed" ? F("每股价格（RM）", inp(k("fixedPrice"))) : F("给员工的折扣 %", inp(k("discount")), "打 70% 折扣 = 员工只付 30%")}
+${F("现在的授予价", `<input disabled value="${RM2(planPrice(c, pl, S.asOf))} / 股">`, "每笔授予会锁定授予当天的价格")}</div>
+<div class="sec">⑤ 成熟计划：几年慢慢变成员工的</div>
+<div class="form">${F("分几年", inp(k("vestYears")))}${F("每年比例", sel(k("vestMode"), {even:"每年平均", ascending:"逐年递增（1:2:3:4）", custom:"自己定"}))}
+${F("业绩考核", sel(k("perf"), {false:"不需要，到期就成熟", true:"需要，每年考核达标才成熟"}))}
+${pl.perf ? F("没达标怎么办", sel(k("perfRule"), {all:"当年全部作废", ratio:"过门槛按完成率成熟（推荐）"})) : ""}
+${pl.perf && pl.perfRule==="ratio" ? F("门槛 %", inp(k("perfThreshold")), "例如 80：完成 90% 就成熟 90%") : ""}</div>
+${pl.vestMode==="custom" ? `<div class="row" style="margin-top:8px">${W.map((_, j) => `<label class="f" style="width:100px">第 ${j+1} 年 %${inp(`plans.${i}.vestCustom.${j}`)}</label>`).join("")}</div>` : ""}
+<div class="formula">每年成熟：${W.map((w, j) => `第 ${j+1} 年 ${PCT(w,1)}`).join("　")}　｜　合计 ${PCT(W.reduce((a, b) => a + b, 0),1)}</div>
+${Math.abs(W.reduce((a, b) => a + b, 0) - 1) > 0.001 ? note("bad","每年比例加起来要等于 100%。") : ""}
+<div class="sec">⑥ 回购价格：无过错离职时公司用什么价买回</div>
+${pl.type==="virtual" ? `<div class="form" style="margin-bottom:10px">${F("红股回购方式", sel(k("vSchedule"), {true:"按年份回购表（第 N 年 = 买入价 × N ÷ 期限）", false:"跟实股一样用下面的规则"}))}${F("红股期限（年）", inp(k("vTerm")))}${F("期满后离开的奖励（买入价 %）", inp(k("vBonus")))}</div>` : ""}
+<div class="form">${F("锁定期（年）", inp(k("lockYears")))}${F("锁定期内", sel(k("buy.inLock"), {original:"原价", interest:"原价 + 利息"}))}${F("锁定期后", sel(k("buy.afterLock"), BUY_METHODS))}
+${F("利息 %/年", inp(k("buy.rate")), "一般 3–5%")}${F("固定市盈率", inp(k("buy.pe")), "例如 4 倍")}${F("约定倍数", inp(k("buy.multiple")))}${F("估值打折 %", inp(k("buy.valDisc")))}
+${F("保底", sel(k("buy.floor"), {true:"最低按原价回购", false:"不保底"}))}</div>
+<div class="sec">⑦ 退出规则（回收条件）</div>
+<div class="form">${F("非员工原因离开的回报率 %/年", inp(k("buy.highRate")), "公司调整、退休、因公等")}</div>
+<table style="margin-top:8px"><tr><th>离职类别</th><th>包括</th><th>处理</th></tr>${Object.values(EXIT_CATS).map(e => `<tr><td><b>${e.t}</b></td><td class="mut">${e.items.join("；")}</td><td>${e.s}</td></tr>`).join("")}</table>
+<div class="foot"><button class="btn" data-act="closeModal">完成</button></div>`;
+}
+
+P.people = c => {
+  const f = S.ui.peopleFilter || "all";
+  const shown = c.participants.filter(p => { const e = eligibility(c, p, S.asOf); return f === "all" || (f === "ok" ? e.ok : f === "left" ? p.status === "left" : !e.ok && p.status !== "left"); });
+  return `<h1>激励对象</h1><p class="sub">员工档案。系统按「岗位层级 + 年资 + 考核」自动判断谁有资格，并算出分配分数（「分配建议」会用到）。</p>
+${card(`员工名单（${c.participants.length}）`, `<div class="row" style="margin-bottom:8px">${[["all","全部"],["ok","符合资格"],["no","暂不符合"],["left","已离职"]].map(([a, b]) => `<button class="btn sm ${f===a?"":"n"}" data-act="peopleFilter" data-v="${a}">${b}</button>`).join("")}</div>
+<div class="tw"><table><tr><th>名字</th><th>部门 / 职位</th><th>岗位层级</th><th>入职日期</th><th class="r">年资</th><th class="r">年薪</th><th>考核</th><th>资格</th><th class="r">分配分数</th><th class="r">已持有</th></tr>
+${shown.map(p => { const e = eligibility(c, p, S.asOf), held = c.grants.filter(g => g.pid === p.id && g.status === "active").reduce((s, g) => s + num(g.shares), 0);
+return `<tr class="click" data-act="editPerson" data-id="${p.id}"><td><b>${esc(p.name || "(未命名)")}</b></td><td>${esc(p.dept)}<div class="mut">${esc(p.position)}</div></td><td>${esc(levelOf(c, p.levelId).name)}</td><td>${esc(p.joinDate)}</td><td class="r">${tenure(p, S.asOf).toFixed(1)} 年</td><td class="r">${RM(num(p.salary))}</td><td>${esc(PERF[p.perf] || "-")}</td><td>${pill(e.t, e.ok ? "p-ok" : p.status==="left" ? "p-mut" : "p-warn")}</td><td class="r">${e.ok ? score(c, p, S.asOf).toFixed(2) : "–"}</td><td class="r">${held ? INT(held) + " 股" : "–"}</td></tr>`; }).join("")}
+</table></div>${!shown.length ? '<div class="empty">没有员工。</div>' : '<p class="mut">点一行可以编辑。</p>'}`, `<button class="btn sm" data-act="addPerson">＋ 加员工</button>`)}
+${note("tip","<b>分配分数</b> = 岗位系数 × 考核系数 × 年资系数。系数和资格门槛（要满几年）都可以在「设置」里改。")}`;
+};
+function personEditor(c, p){
+  const i = c.participants.indexOf(p), k = f => `participants.${i}.${f}`, e = eligibility(c, p, S.asOf), gs = c.grants.filter(g => g.pid === p.id);
+  return `<h2>${esc(p.name || "新员工")}</h2><p>${pill(e.t, e.ok ? "p-ok" : "p-warn")} <span class="mut">分配分数 ${score(c, p, S.asOf).toFixed(2)}</span></p>
+<div class="form">${F("名字", inp(k("name"), {type:"text"}))}${F("部门", inp(k("dept"), {type:"text"}))}${F("职位", inp(k("position"), {type:"text"}))}
+${F("岗位层级", sel(k("levelId"), Object.fromEntries(c.levels.map(l => [l.id, l.name]))))}${F("入职日期", inp(k("joinDate"), {type:"date"}))}${F("年薪（RM）", inp(k("salary")))}
+${F("最近一次考核", sel(k("perf"), PERF))}${F("IC 号码", inp(k("ic"), {type:"text"}))}${F("电话", inp(k("phone"), {type:"text"}))}
+${F("状态", sel(k("status"), {active:"在职", left:"已离职"}))}${p.status==="left" ? F("离职日期", inp(k("leftDate"), {type:"date"})) : ""}</div>
+${gs.length ? `<div class="sec">这位员工的授予</div><table><tr><th>计划</th><th>日期</th><th class="r">股数</th><th>状态</th></tr>${gs.map(g => `<tr class="click" data-act="openGrant" data-id="${g.id}"><td>${esc(getPlan(c, g.planId)?.name)}</td><td>${g.date}</td><td class="r">${INT(g.shares)}</td><td>${pill(...GSTATUS[g.status])}</td></tr>`).join("")}</table>` : ""}
+<div class="foot">${gs.length ? "" : `<button class="btn d" data-act="delPerson" data-id="${p.id}">删除这位员工</button>`}<button class="btn" data-act="closeModal">完成</button></div>`;
+}
+
+function allocRows(c){
+  const u = S.ui.alloc, pl = getPlan(c, u.planId), issued = issuedShares(c), V = valuationAt(c, S.asOf);
+  const budget = u.mode === "shares" ? num(u.amount) : u.mode === "pct" ? issued * num(u.amount) / 100 : (V && issued ? num(u.amount) / (V / issued) : 0);
+  const chosen = c.participants.filter(p => eligibility(c, p, S.asOf).ok && u.sel.includes(p.id));
+  const tot = chosen.reduce((s, p) => s + score(c, p, S.asOf), 0);
+  const rows = chosen.map(p => { const sc = score(c, p, S.asOf), sug = tot ? Math.round(budget * sc / tot) : 0; const a = u.adj[p.id]; return {p, sc, sug, fin:a != null && a !== "" ? num(a) : sug}; });
+  return {pl, budget, rows, tot, issued, V};
+}
+P.allocate = c => {
+  if (!c.plans.length) return `<h1>分配建议</h1><div class="card empty">先到「激励计划」建立一个计划。<br><button class="btn sm" data-go="plans" style="margin-top:8px">去建立</button></div>`;
+  const u = S.ui.alloc || (S.ui.alloc = {planId:c.plans[0].id, mode:"shares", amount:null, sel:null, adj:{}});
+  if (!getPlan(c, u.planId)){ u.planId = c.plans[0].id; u.sel = null; }
+  const cands = c.participants.filter(p => eligibility(c, p, S.asOf).ok);
+  if (u.amount == null){ const x0 = summary(c, S.asOf).plans.find(y => y.pl.id === u.planId); u.amount = Math.max(0, Math.round(x0 ? x0.avail : 0)); }
+  if (!u.sel) u.sel = cands.filter(p => !c.grants.some(g => g.pid === p.id && g.planId === u.planId && g.status !== "ended")).map(p => p.id);
+  const {pl, budget, rows, tot, issued, V} = allocRows(c), price = planPrice(c, pl, S.asOf), P_ = issued ? V/issued : 0;
+  const x = summary(c, S.asOf).plans.find(y => y.pl.id === pl.id), totFin = rows.reduce((s, r) => s + r.fin, 0);
+  return `<h1>分配建议</h1><p class="sub">定好这一批要分多少，系统按每个人的分数自动分；你可以再手动调整，然后一键生成授予草稿。</p>
+${card("① 这一批分多少", `<div class="form">
+${F("激励计划", `<select data-ui="planId">${c.plans.map(p => `<option value="${p.id}" ${p.id===u.planId?"selected":""}>${esc(p.name)}</option>`).join("")}</select>`)}
+${F("用什么单位", `<select data-ui="mode"><option value="pct" ${u.mode==="pct"?"selected":""}>占公司股权 %</option><option value="shares" ${u.mode==="shares"?"selected":""}>股数</option><option value="value" ${u.mode==="value"?"selected":""}>市值（RM）</option></select>`)}
+${F("数量", `<input type="number" step="any" data-ui="amount" value="${esc(u.amount)}">`)}
+${F("换算", `<input disabled value="${INT(budget)} 股 · 市值 ${RM(budget * P_)}">`, `这个计划还剩 ${INT(x.avail)} 股可分`)}</div>
+${budget > x.avail + 0.5 ? note("bad", `这一批 ${INT(budget)} 股，超过计划剩余的 ${INT(x.avail)} 股。`) : ""}`)}
+${card("② 选人（只列出符合资格的员工，数字是分配分数）", cands.length ? `<div class="row">${cands.map(p => `<label class="row" style="gap:5px;border:1px solid var(--line);border-radius:6px;padding:4px 9px;cursor:pointer"><input type="checkbox" data-act="allocSel" data-id="${p.id}" ${u.sel.includes(p.id)?"checked":""}>${esc(p.name)} <span class="mut">${score(c, p, S.asOf).toFixed(2)}</span></label>`).join("")}</div>` : '<div class="empty">没有符合资格的员工。去「激励对象」加员工，或在「设置」调整资格门槛。</div>')}
+${card("③ 分配结果", rows.length ? `<div class="formula">每人股数 = 这一批 ${INT(budget)} 股 × 个人分数 ÷ 总分 ${tot.toFixed(2)}　｜　授予价 ${RM2(price)}/股</div>
+<div class="tw"><table><tr><th>员工</th><th>岗位</th><th class="r">分数</th><th class="r">建议股数</th><th>最终股数（可改）</th><th class="r">占公司</th><th class="r">市值</th><th class="r">员工要付</th><th class="r">相当于年薪</th></tr>
+${rows.map(r => `<tr><td>${esc(r.p.name)}</td><td class="mut">${esc(levelOf(c, r.p.levelId).name)}</td><td class="r">${r.sc.toFixed(2)}</td><td class="r">${INT(r.sug)}</td><td style="width:120px"><input type="number" data-adj="${r.p.id}" value="${esc(u.adj[r.p.id] ?? "")}" placeholder="${r.sug}"></td>
+<td class="r">${PCT(issued ? r.fin/issued : 0, 3)}</td><td class="r">${RM(r.fin * P_)}</td><td class="r">${RM(r.fin * price)}</td><td class="r">${num(r.p.salary) ? (r.fin * P_ / num(r.p.salary)).toFixed(1) + " 倍" : "–"}</td></tr>`).join("")}
+<tr class="tot"><td>合计</td><td></td><td class="r">${tot.toFixed(2)}</td><td class="r">${INT(budget)}</td><td class="r">${INT(totFin)}</td><td class="r">${PCT(issued ? totFin/issued : 0, 3)}</td><td class="r">${RM(totFin * P_)}</td><td class="r">${RM(totFin * price)}</td><td></td></tr></table></div>
+${note("tip","参考：「相当于年薪」一般在 1–2 倍比较合理。太高公司给太多，太低员工没感觉。")}
+<div class="row"><button class="btn" data-act="genDrafts">生成 ${rows.filter(r => r.fin > 0).length} 笔授予草稿 →</button><span class="mut">生成后到「授予管理」确认、签约、生效。</span></div>` : '<div class="empty">先在上面选人。</div>')}`;
 };
 
-F.rep = p => `<div class="card noprint"><div class="row"><button class="btn" data-act="copyReport">复制方案文字</button><button class="btn ghost" data-act="print">打印 / 存成 PDF</button><span class="mut" id="repMsg"></span></div></div><div id="out"></div>`;
-function reportText(p, C){
-  const L = [];
-  L.push(`【${p.name} 股权激励方案】`);
-  L.push(`公司估值：${RM(C.V)}（${({pe:`净利润 ${RM(num(p.co.netProfit))} × ${p.co.pe} 倍`,funding:"最新融资估值",assets:"净资产",manual:"自定"})[p.co.valMethod]}）；总股数 ${INT(C.units)}`);
-  L.push(`一、激励形式：${FORMS[p.form].t}${p.principles.length?`；原则：${PRINCIPLES.filter(x=>p.principles.includes(x[0])).map(x=>x[1]).join("、")}`:""}`);
-  L.push(`二、持股方式：${HOLDINGS[p.holding].t}${p.holding==="platform"&&p.platformName?`（${p.platformName}）`:""}`);
-  L.push(`三、授予对象 & 四、授予数量 & 五、行权价格：`);
-  C.emps.forEach(x=>L.push(`  - ${x.e.name||"(未命名)"}（${x.e.position||LEVELS[x.e.level]?.t}）：${PCT(x.pct,3)} / ${INT(x.units)} 股，市值 ${RM(x.mkt)}，员工付款 ${RM(x.cost)}`));
-  L.push(`  员工合计 ${PCT(C.T)}（股权池上限 ${p.poolCap}%）`);
-  L.push(`六、成熟计划：分 ${C.W.length} 年，${C.W.map((w,i)=>`第${i+1}年 ${PCT(w)}`).join("、")}${p.vest.perf?`；需业绩考核，${p.vest.rule==="ratio"?`完成 ${p.vest.threshold}% 以上按比例激活`:"未达标当年作废"}`:""}`);
-  L.push(`七、回购价格：锁定期 ${p.buy.lockYears} 年，期内按${BUY_METHODS[p.buy.inLock]}；期后按${BUY_METHODS[p.buy.afterLock]}${p.buy.floor?"，最低按原价":""}`);
-  if (p.form==="red" && p.buy.redSchedule) L.push(`  红股回购：第 N 年离开 = 买入价 × N ÷ ${p.buy.redTerm}；满期后 = 买入价 + ${p.buy.redBonus}%`);
-  L.push(`八、回收条件：一般离职按较低回报回购；非员工原因离开按市场价或较高回报（${p.buy.highRate}%/年）回购；过错离职未成熟部分作废，已成熟部分原价或低价回购并赔偿。`);
-  L.push(`调整后股权结构：${C.benef.map(b=>`${b.name} ${PCT(b.pct)}`).join("，")}`);
-  L.push(`创始人能控制的投票权：${PCT(C.founderVote)}`);
-  if (C.warnings.length) L.push(`注意事项：\n${C.warnings.map(w=>"  ! "+w[1]).join("\n")}`);
+P.grants = c => {
+  const f = S.ui.gFilter || "all", s = summary(c, S.asOf);
+  const list = c.grants.filter(g => f === "all" || g.status === f).sort((a, b) => a.date < b.date ? 1 : -1);
+  return `<h1>授予管理</h1><p class="sub">每一笔授予就是一份协议：给谁、哪个计划、几股、什么价。点一行打开详情办理。</p>
+<div class="steps"><div>① 草稿</div><div>② 签约生效（付款 / 写欠条）</div><div>③ 每年成熟（考核）</div><div>④ 期权行权</div><div>⑤ 离职回购 / 结束</div></div>
+${card("授予记录", `<div class="row" style="margin-bottom:8px">${[["all","全部"],["draft","草稿"],["active","生效中"],["ended","已结束"]].map(([a, b]) => `<button class="btn sm ${f===a?"":"n"}" data-act="gFilter" data-v="${a}">${b}</button>`).join("")}</div>
+<div class="tw"><table><tr><th>员工</th><th>计划</th><th>授予日期</th><th class="r">股数</th><th class="r">每股价</th><th class="r">员工成本</th><th class="r">现在市值</th><th class="r">已成熟</th><th class="r">欠款</th><th>状态</th></tr>
+${list.map(g => { const pl = getPlan(c, g.planId); return `<tr class="click" data-act="openGrant" data-id="${g.id}"><td><b>${gName(c, g)}</b></td><td>${esc(pl?.name)}<div class="mut">${PLAN_TYPES[pl?.type]?.s || ""}</div></td><td>${g.date}</td><td class="r">${INT(g.shares)}</td><td class="r">${RM2(num(g.price))}</td><td class="r">${RM(num(g.shares)*num(g.price))}</td><td class="r">${RM(num(g.shares)*s.P)}</td><td class="r">${g.status==="draft" ? "–" : INT(vestInfo(c, g, S.asOf).vested)}</td><td class="r">${num(g.loan)>0.5 ? RM(g.loan) : "–"}</td><td>${pill(...GSTATUS[g.status])}</td></tr>`; }).join("")}
+</table></div>${!list.length ? '<div class="empty">没有授予记录。可以用「分配建议」批量生成，或点右上「新增授予」。</div>' : ""}`, `<button class="btn sm" data-act="addGrant">＋ 新增授予</button>`)}`;
+};
+function grantEditor(c, g){
+  const i = c.grants.indexOf(g), k = f => `grants.${i}.${f}`, pl = getPlan(c, g.planId), vi = vestInfo(c, g, S.asOf), P_ = pps(c, S.asOf);
+  const pays = c.payments.filter(p => p.gid === g.id), ed = g.status === "draft";
+  const canEx = pl && pl.type === "option" && g.status === "active" ? Math.max(0, vi.vested - num(g.exercised)) : 0;
+  const dis = v => `<input disabled value="${esc(v)}">`;
+  return `<h2>${gName(c, g)} · ${esc(pl?.name)}</h2><p>${pill(...GSTATUS[g.status])} <span class="mut">${PLAN_TYPES[pl?.type]?.t || ""} · ${VEHICLES[pl?.vehicle]?.t || ""}</span></p>
+<div class="form">
+${F("员工", ed ? sel(k("pid"), Object.fromEntries(c.participants.filter(p => p.status !== "left" || p.id === g.pid).map(p => [p.id, p.name || "(未命名)"]))) : dis(getP(c, g.pid)?.name))}
+${F("计划", ed ? sel(k("planId"), Object.fromEntries(c.plans.map(p => [p.id, p.name]))) : dis(pl?.name))}
+${F("授予日期", ed ? inp(k("date"), {type:"date"}) : dis(g.date), "成熟从这天开始算")}
+${F("股数", ed ? inp(k("shares")) : dis(INT(g.shares)), `占公司 ${PCT(issuedShares(c) ? num(g.shares)/issuedShares(c) : 0, 3)}`)}
+${F("每股价（RM）", ed ? inp(k("price")) : dis(RM2(num(g.price))), ed ? `<a href="#" data-act="repriceGrant" data-id="${g.id}">按计划规则重算（${RM2(planPrice(c, pl, g.date))}）</a>` : "已锁定")}
+${F("付款方式", ed ? sel(k("payMode"), {cash:"现金付清", loan:"先借后还（写欠条，用分红还）"}) : dis(g.payMode === "loan" ? "先借后还" : "现金付清"))}
+${F("备注", inp(k("note"), {type:"text"}))}</div>
+<div class="kpis" style="margin-top:14px">${kpi("员工成本", RM(num(g.shares)*num(g.price)))}${kpi("现在市值", RM(num(g.shares)*P_))}${kpi("已成熟", INT(vi.vested) + " 股", RM(vi.vested*P_))}${kpi(pl?.type==="option" ? "已行权" : "已付款", pl?.type==="option" ? INT(g.exercised) + " 股" : RM(num(g.paid)), num(g.loan) > 0.5 ? `尚欠 ${RM(g.loan)}` : "")}</div>
+<div class="sec">成熟时间表${pl?.perf ? "（要业绩考核：填目标和实际，实际还没出来就留空）" : ""}</div>
+<table><tr><th>期数</th><th>成熟日期</th><th class="r">比例</th><th class="r">股数</th>${pl?.perf ? "<th>目标</th><th>实际</th>" : ""}<th>状态</th></tr>
+${vi.events.map((e, j) => `<tr><td>第 ${j+1} 年</td><td>${e.date}</td><td class="r">${PCT(e.w,1)}</td><td class="r">${INT(e.sh)}</td>${pl?.perf ? `<td style="width:120px">${inp(`grants.${i}.perf.${j}.target`)}</td><td style="width:120px">${inp(`grants.${i}.perf.${j}.actual`)}</td>` : ""}<td>${pill(e.st, e.cls)}</td></tr>`).join("")}</table>
+${pays.length ? `<div class="sec">付款 / 分红记录</div><table><tr><th>日期</th><th>项目</th><th class="r">金额</th></tr>${pays.map(p => `<tr><td>${p.date}</td><td>${esc(p.type)}</td><td class="r">${RM(p.amount)}</td></tr>`).join("")}</table>` : ""}
+${g.end ? `<div class="sec">结束记录</div>${note("info", `${g.end.date} · ${esc(EXIT_CATS[g.end.cat]?.t)}（${esc(g.end.reason)}）· 公司支付 ${RM(g.end.total)}${g.end.kept ? ` · 员工保留 ${INT(g.end.kept)} 股` : ""}`)}` : ""}
+<div class="foot">
+${ed ? `<button class="btn d" data-act="delGrant" data-id="${g.id}">删除草稿</button><button class="btn" data-act="activateGrant" data-id="${g.id}">签约生效${pl?.type!=="option" ? `（${g.payMode==="loan" ? "记欠款" : "收款"} ${RM(num(g.shares)*num(g.price))}）` : ""}</button>` : ""}
+${canEx > 0.5 ? `<button class="btn" data-act="exercise" data-id="${g.id}">行权 ${INT(canEx)} 股（员工付 ${RM(canEx*num(g.price))}）</button>` : ""}
+${g.status==="active" ? `<button class="btn n" data-act="goExit" data-id="${g.id}">办理离职 / 回购</button>` : ""}
+<button class="btn ${ed ? "n" : ""}" data-act="closeModal">关闭</button></div>`;
+}
+
+P.vesting = c => {
+  const rows = [], P_ = pps(c, S.asOf);
+  c.grants.filter(g => g.status === "active").forEach(g => { const pl = getPlan(c, g.planId); vestInfo(c, g, S.asOf).events.forEach((e, j) => rows.push({g, pl, e, j})); });
+  const pend = rows.filter(r => r.e.st === "待确认考核");
+  const by = {}; rows.forEach(r => { const y = r.e.date.slice(0, 4); by[y] = (by[y] || 0) + r.e.sh; });
+  const yrs = Object.keys(by).sort(), mx = Math.max(...Object.values(by), 1);
+  return `<h1>成熟与考核</h1><p class="sub">所有生效授予的成熟时间。到期要考核的，在这里填实际业绩，系统自动算成熟多少、作废多少。</p>
+${pend.length ? card(`待确认考核（${pend.length}）`, `<table><tr><th>员工</th><th>计划</th><th>成熟日期</th><th class="r">股数</th><th>目标</th><th>实际业绩</th></tr>${pend.map(r => { const i = c.grants.indexOf(r.g); return `<tr><td>${gName(c, r.g)}</td><td>${esc(r.pl.name)}</td><td>${r.e.date}</td><td class="r">${INT(r.e.sh)}</td><td style="width:130px">${inp(`grants.${i}.perf.${r.j}.target`)}</td><td style="width:130px">${inp(`grants.${i}.perf.${r.j}.actual`, {ph:"填实际业绩"})}</td></tr>`; }).join("")}</table>`) : note("ok","✔ 没有待确认的考核。")}
+${card("每年成熟股数", yrs.length ? `<div class="colchart">${yrs.map(y => `<div class="c" data-tip="${y} 年：${INT(by[y])} 股 · 现值 ${RM(by[y]*P_)}"><span>${INT(by[y])}</span><div class="bar" style="height:${by[y]/mx*85}%"></div></div>`).join("")}</div><div class="colx">${yrs.map(y => `<div>${y}</div>`).join("")}</div>` : '<div class="empty">没有生效的授予。</div>')}
+${card("全部成熟明细", rows.length ? `<div class="tw"><table><tr><th>日期</th><th>员工</th><th>计划</th><th>期数</th><th class="r">股数</th><th class="r">现值</th><th>状态</th></tr>${rows.sort((a, b) => a.e.date < b.e.date ? -1 : 1).map(r => `<tr class="click" data-act="openGrant" data-id="${r.g.id}"><td>${r.e.date}</td><td>${gName(c, r.g)}</td><td>${esc(r.pl.name)}</td><td>第 ${r.j+1} 年</td><td class="r">${INT(r.e.sh)}</td><td class="r">${RM(r.e.sh*P_)}</td><td>${pill(r.e.st, r.e.cls)}</td></tr>`).join("")}</table></div>` : '<div class="empty">没有资料。</div>')}`;
+};
+
+P.dividends = c => {
+  const u = S.ui.div || (S.ui.div = {year:+S.asOf.slice(0,4) - 1, np:num(latestVal(c, S.asOf)?.netProfit), payout:50, date:S.asOf});
+  const dv = dividendPlan(c, u.year, u.np, u.payout, u.date), sum = f => dv.lines.reduce((s, l) => s + f(l), 0);
+  return `<h1>分红发放</h1><p class="sub">公司决定分红时，在这里算每个人分多少。红股先按比例拿利润，剩下的按股数分给股东和持实股的员工。员工有入股欠款的，分红先拿来还欠款（先借后还）。</p>
+${card("① 这次分红", `<div class="form">${F("财务年度", `<input type="number" data-ui-div="year" value="${esc(u.year)}">`)}${F("当年净利润（RM）", `<input type="number" step="any" data-ui-div="np" value="${esc(u.np)}">`)}${F("拿出多少 % 来分", `<input type="number" step="any" data-ui-div="payout" value="${esc(u.payout)}">`, "其余留在公司发展")}${F("发放日期", `<input type="date" data-ui-div="date" value="${esc(u.date)}">`)}</div>
+<div class="kpis" style="margin-top:12px">${kpi("可分配金额", RM(dv.D))}${kpi("员工合计拿到", RM(sum(l => l.kind !== "股东" ? l.amount : 0)))}${kpi("其中用来还欠款", RM(sum(l => l.offset)))}</div>`)}
+${card("② 分配明细", `<div class="tw"><table><tr><th>名字</th><th>身份</th><th class="r">分红比例</th><th class="r">应得</th><th class="r">抵扣欠款</th><th class="r">实发</th></tr>${dv.lines.map(l => `<tr><td>${esc(l.name)}</td><td>${pill(l.kind, l.kind==="股东"?"p-mut":"p-info")}</td><td class="r">${PCT(l.pct, 3)}</td><td class="r">${RM(l.amount)}</td><td class="r">${l.offset>0.5?RM(l.offset):"–"}</td><td class="r"><b>${RM(l.cash)}</b></td></tr>`).join("")}
+<tr class="tot"><td>合计</td><td></td><td class="r">100%</td><td class="r">${RM(dv.D)}</td><td class="r">${RM(sum(l => l.offset))}</td><td class="r">${RM(sum(l => l.cash))}</td></tr></table></div>
+<div class="row" style="margin-top:10px"><button class="btn" data-act="payDividend">确认发放并记录</button><span class="mut">期权要「行权」后才有分红；红股和实股生效后就有。</span></div>`)}
+${card("分红历史", c.dividends.length ? `<table><tr><th>年度</th><th>发放日</th><th class="r">净利润</th><th class="r">分配 %</th><th class="r">总额</th><th class="r">员工合计</th><th></th></tr>${c.dividends.map(d => `<tr><td>${d.year}</td><td>${d.date}</td><td class="r">${RM(d.netProfit)}</td><td class="r">${d.payout}%</td><td class="r">${RM(d.D)}</td><td class="r">${RM(d.lines.filter(l => l.kind !== "股东").reduce((s, l) => s + l.amount, 0))}</td><td><button class="btn sm n" data-act="viewDiv" data-id="${d.id}">明细</button></td></tr>`).join("")}</table>` : '<div class="empty">还没有分红记录。</div>')}`;
+};
+
+P.exits = c => {
+  const active = c.grants.filter(g => g.status === "active");
+  const u = S.ui.exit || (S.ui.exit = {gid:"", date:S.asOf, cat:"A", reason:0, np:"", val:"", faultPct:100, comp:0, accel:true, keep:false});
+  if (!active.find(g => g.id === u.gid)) u.gid = active[0]?.id || "";
+  const g = c.grants.find(x => x.id === u.gid), r = g ? exitCalc(c, g, u) : null, ended = c.grants.filter(x => x.status === "ended");
+  const X = (key, html) => html.replace(/^<(input|select)/, `<$1 data-ui-exit="${key}"`);
+  return `<h1>退出回购</h1><p class="sub">员工离职时：选员工、离职日期和原因，系统按计划规则算出回购金额。确认后股份回到股权池。能进能退，才是好的股权激励。</p>
+${!active.length ? `<div class="card empty">没有生效中的授予。</div>` : card("① 离职情况", `<div class="form">
+${F("哪一笔授予", X("gid", `<select>${active.map(x => `<option value="${x.id}" ${x.id===u.gid?"selected":""}>${esc(getP(c, x.pid)?.name)} · ${esc(getPlan(c, x.planId)?.name)}</option>`).join("")}</select>`))}
+${F("离职日期", X("date", `<input type="date" value="${esc(u.date)}">`))}
+${F("离职类别", X("cat", `<select>${Object.entries(EXIT_CATS).map(([a, b]) => `<option value="${a}" ${a===u.cat?"selected":""}>${b.t}</option>`).join("")}</select>`))}
+${F("具体原因", X("reason", `<select>${EXIT_CATS[u.cat].items.map((t, j) => `<option value="${j}" ${+u.reason===j?"selected":""}>${t}</option>`).join("")}</select>`))}
+${F("离职时净利润（RM）", X("np", `<input type="number" step="any" value="${esc(u.np)}" placeholder="不填用最新估值记录">`))}
+${F("离职时估值（RM）", X("val", `<input type="number" step="any" value="${esc(u.val)}" placeholder="不填用最新估值记录">`))}
+${u.cat==="C" ? F("按原价的几 % 回购", X("faultPct", `<input type="number" value="${esc(u.faultPct)}">`), "100 = 原价；50 = 半价") + F("员工应赔偿（RM）", X("comp", `<input type="number" value="${esc(u.comp)}">`)) : ""}
+</div><div class="row" style="margin-top:10px;gap:18px">${u.cat==="B" ? `<label class="row" style="gap:6px"><input type="checkbox" data-ui-exit="accel" ${u.accel?"checked":""}>未成熟部分提前成熟（照顾员工）</label>` : ""}${u.cat!=="C" ? `<label class="row" style="gap:6px"><input type="checkbox" data-ui-exit="keep" ${u.keep?"checked":""}>公司不回购，让员工继续持有已成熟部分</label>` : ""}</div>`)}
+${r ? card("② 计算结果", `<div class="kpis">${kpi("持有第几年", r.Y + " 年", r.inLock ? "锁定期内" : "已过锁定期")}${kpi("已成熟", INT(r.vested) + " 股")}${kpi("未成熟 / 作废", INT(r.unvested + r.lost) + " 股")}${kpi("公司要付给员工", RM(Math.max(0, r.total)))}</div>
+<div class="note n-tip">${r.lines.map(esc).join("<br>")}</div>${r.total < -0.5 ? note("bad", `扣完后员工还要付公司 ${RM(-r.total)}。`) : ""}
+<button class="btn" data-act="confirmExit">确认办理（授予结束，员工标记离职）</button>`) : ""}
+${card("退出记录", ended.length ? `<table><tr><th>员工</th><th>计划</th><th>离职日</th><th>类别</th><th class="r">公司支付</th><th class="r">员工保留</th></tr>${ended.map(x => `<tr class="click" data-act="openGrant" data-id="${x.id}"><td>${gName(c, x)}</td><td>${esc(getPlan(c, x.planId)?.name)}</td><td>${x.end?.date}</td><td>${esc(EXIT_CATS[x.end?.cat]?.t)}<div class="mut">${esc(x.end?.reason)}</div></td><td class="r">${RM(x.end?.total || 0)}</td><td class="r">${INT(x.end?.kept || 0)} 股</td></tr>`).join("")}</table>` : '<div class="empty">还没有退出记录。</div>')}`;
+};
+
+function statementText(c, p){
+  if (!p) return "";
+  const P_ = pps(c, S.asOf), gs = c.grants.filter(g => g.pid === p.id && g.status !== "draft");
+  const L = [`【个人股权权益单】${c.name}`, `员工：${p.name}（${p.position || levelOf(c, p.levelId).name}）　日期：${S.asOf}`, `公司估值：${RM(valuationAt(c, S.asOf))}　每股：${RM2(P_)}`, ""];
+  let tv = 0, tc = 0, td = 0;
+  if (!gs.length) L.push("（目前没有生效的股权授予）");
+  gs.forEach(g => {
+    const pl = getPlan(c, g.planId), vi = vestInfo(c, g, S.asOf), divs = c.payments.filter(x => x.gid === g.id && /分红/.test(x.type)).reduce((s, x) => s + x.amount, 0);
+    if (g.status === "active"){ tv += num(g.shares) * P_; tc += num(g.shares) * num(g.price); }
+    td += divs;
+    L.push(`■ ${pl.name}（${PLAN_TYPES[pl.type].s}）${g.status === "ended" ? " — 已结束" : ""}`);
+    L.push(`  授予 ${INT(g.shares)} 股，授予日 ${g.date}，每股 ${RM2(num(g.price))}，成本 ${RM(num(g.shares)*num(g.price))}`);
+    L.push(`  现在市值 ${RM(num(g.shares)*P_)}，已成熟 ${INT(vi.vested)} 股${num(g.loan) > 0.5 ? `，尚欠 ${RM(g.loan)}` : ""}`);
+    L.push(`  成熟计划：${vi.events.map(e => `${e.date} ${INT(e.sh)} 股（${e.st}）`).join("；")}`);
+    if (divs) L.push(`  累计分红（含抵扣欠款）：${RM(divs)}`);
+    L.push("");
+  });
+  L.push(`合计：市值 ${RM(tv)}，成本 ${RM(tc)}，账面收益 ${RM(tv - tc)}，累计分红 ${RM(td)}`);
   return L.join("\n");
 }
-O.rep = (p, C) => `
-<div class="card"><h2>${esc(p.name)} · 股权激励方案总表</h2>
-<p class="mut">${esc(p.industry)}　更新于 ${new Date(p.updatedAt).toLocaleString()}</p>
-${warnBox(C)}
-<div class="kpis">
-  <div class="kpi"><small>公司估值</small><b>${RM(C.V)}</b></div>
-  <div class="kpi"><small>激励形式</small><b style="font-size:16px">${FORMS[p.form].t}</b></div>
-  <div class="kpi"><small>持股方式</small><b style="font-size:16px">${HOLDINGS[p.holding].t}</b></div>
-  <div class="kpi"><small>员工合计</small><b>${PCT(C.T)}</b></div>
-  <div class="kpi"><small>员工付款合计</small><b>${RM(C.emps.reduce((s,x)=>s+x.cost,0))}</b></div>
-  <div class="kpi"><small>创始人投票权</small><b>${PCT(C.founderVote)}</b></div>
+function planText(c, pl){
+  if (!pl) return "";
+  const W = weights(pl), b = pl.buy, issued = issuedShares(c);
+  return [`【${c.name} · ${pl.name}】股权激励方案要点`,
+    `一、激励形式：${PLAN_TYPES[pl.type].t}。${PLAN_TYPES[pl.type].d}`,
+    `二、持股方式：${VEHICLES[pl.vehicle].t}${pl.vehicleName ? `（${pl.vehicleName}）` : ""}。`,
+    `三、授予对象：${c.levels.map(l => `${l.name}${num(l.minYears) ? `（满 ${l.minYears} 年）` : ""}`).join("、")}；考核不合格者不授予。`,
+    `四、授予数量：本计划股权池 ${INT(pl.pool)} 股（占已发行 ${PCT(issued ? num(pl.pool)/issued : 0)}），按「岗位 × 考核 × 年资」分数分配。`,
+    `五、授予价格：${pl.priceBase === "fixed" ? `每股 ${RM2(num(pl.fixedPrice))}` : `${PRICE_BASES[pl.priceBase]} ${pl.discount}%，目前每股 ${RM2(planPrice(c, pl, S.asOf))}`}，授予当天锁定。`,
+    `六、成熟计划：分 ${W.length} 年成熟（${W.map((w, i) => `第${i+1}年 ${PCT(w,1)}`).join("、")}）${pl.perf ? `；每年要完成业绩目标，${pl.perfRule === "ratio" ? `完成 ${pl.perfThreshold}% 以上按完成率成熟，以下作废` : "没达标当年作废"}` : ""}。`,
+    `七、回购价格：锁定期 ${pl.lockYears} 年，锁定期内按${BUY_METHODS[b.inLock]}${b.inLock === "interest" ? `（${b.rate}%/年）` : ""}回购；锁定期后按${BUY_METHODS[b.afterLock]}${b.afterLock === "pe" ? `（固定 ${b.pe} 倍）` : ""}回购${b.floor ? "，最低不低于原价" : ""}。${pl.type === "virtual" && pl.vSchedule ? `红股按年份回购：第 N 年离开 = 买入价 × N ÷ ${pl.vTerm}，满期后 = 买入价 + ${pl.vBonus}%。` : ""}`,
+    `八、回收条件：${Object.values(EXIT_CATS).map(e => `${e.t}（${e.items.join("、")}）→ ${e.s}${e === EXIT_CATS.B ? `（${b.highRate}%/年）` : ""}`).join("；")}。`
+  ].join("\n");
+}
+P.reports = c => {
+  const u = S.ui.rep || (S.ui.rep = {pid:c.participants[0]?.id || "", planId:c.plans[0]?.id || ""});
+  const p = getP(c, u.pid), pl = getPlan(c, u.planId), P_ = pps(c, S.asOf), m = {};
+  c.grants.filter(g => g.status === "active").forEach(g => { const x = m[g.pid] || (m[g.pid] = {sh:0, cost:0, vested:0, loan:0}); x.sh += num(g.shares); x.cost += num(g.shares)*num(g.price); x.vested += vestInfo(c, g, S.asOf).vested; x.loan += num(g.loan); });
+  const arr = Object.entries(m), tot = arr.reduce((a, [, x]) => ({sh:a.sh + x.sh, cost:a.cost + x.cost, vested:a.vested + x.vested, loan:a.loan + x.loan}), {sh:0, cost:0, vested:0, loan:0}), iss = issuedShares(c) || 1;
+  return `<h1>报表与权益单</h1><p class="sub">给员工看的「个人权益单」，和给律师写协议用的「方案要点」。可以复制贴到 WhatsApp、Word，或打印成 PDF。</p><p class="mut" id="copyMsg"></p>
+<div class="cols">
+${card("员工个人权益单", `<div class="row noprint" style="margin-bottom:8px"><select data-ui-rep="pid" style="width:auto">${c.participants.map(x => `<option value="${x.id}" ${x.id===u.pid?"selected":""}>${esc(x.name)}</option>`).join("")}</select><button class="btn sm" data-act="copy" data-what="stmt">复制</button></div>
+${p ? `<pre class="doc">${esc(statementText(c, p))}</pre>` : '<div class="empty">没有员工。</div>'}`)}
+${card("激励方案要点（八步）", `<div class="row noprint" style="margin-bottom:8px"><select data-ui-rep="planId" style="width:auto">${c.plans.map(x => `<option value="${x.id}" ${x.id===u.planId?"selected":""}>${esc(x.name)}</option>`).join("")}</select><button class="btn sm" data-act="copy" data-what="plan">复制</button></div>
+${pl ? `<pre class="doc">${esc(planText(c, pl))}</pre>` : '<div class="empty">没有计划。</div>'}`)}
 </div>
-<h4>每个员工</h4>
-<div class="tblwrap"><table><tr><th>员工</th><th>职位</th><th class="r">股权 %</th><th class="r">股数</th><th class="r">市值</th><th class="r">员工付款</th><th class="r">每年分红</th><th>成熟</th></tr>
-${C.emps.map(x=>`<tr><td>${esc(x.e.name||"(未命名)")}</td><td>${esc(x.e.position)}</td><td class="r">${PCT(x.pct,3)}</td><td class="r">${INT(x.units)}</td><td class="r">${RM(x.mkt)}</td><td class="r">${RM(x.cost)}</td><td class="r">${RM(x.div)}</td><td class="mut">${x.sched.map(s=>PCT(s.pct,2)).join(" → ")}</td></tr>`).join("")}
-</table></div>
-<h4>八步总结</h4>
-<pre style="white-space:pre-wrap;font-family:inherit;font-size:14px;background:#fafafa;padding:12px;border-radius:8px">${esc(reportText(p, C))}</pre>
-</div>`;
+${card("全体员工持股总表", arr.length ? `<div class="tw"><table><tr><th>员工</th><th class="r">股数</th><th class="r">占公司</th><th class="r">成本</th><th class="r">市值</th><th class="r">已成熟</th><th class="r">欠款</th></tr>${arr.map(([pid, x]) => `<tr><td>${esc(getP(c, pid)?.name)}</td><td class="r">${INT(x.sh)}</td><td class="r">${PCT(x.sh/iss,3)}</td><td class="r">${RM(x.cost)}</td><td class="r">${RM(x.sh*P_)}</td><td class="r">${INT(x.vested)}</td><td class="r">${x.loan>0.5?RM(x.loan):"–"}</td></tr>`).join("")}
+<tr class="tot"><td>合计</td><td class="r">${INT(tot.sh)}</td><td class="r">${PCT(tot.sh/iss,3)}</td><td class="r">${RM(tot.cost)}</td><td class="r">${RM(tot.sh*P_)}</td><td class="r">${INT(tot.vested)}</td><td class="r">${RM(tot.loan)}</td></tr></table></div>` : '<div class="empty">没有生效的授予。</div>', `<button class="btn sm n noprint" data-act="print">打印 / 存 PDF</button>`)}`;
+};
 
-/* ============ 画面更新 ============ */
-function renderSidebar(){
-  const list = Object.values(S.plans).sort((a,b) => (b.updatedAt||0) - (a.updatedAt||0));
-  $("#planList").innerHTML = list.length ? list.map(p => `<div class="plan ${p.id===S.cur?"on":""}" data-plan="${p.id}">${esc(p.name)}<small>${esc(FORMS[p.form]?.t||"")} · ${p.emps?.length||0} 位员工</small></div>`).join("") : '<p class="mut">还没有方案。点上面「新增客户公司」，或先看一个示范。</p>';
+P.settings = c => `<h1>设置</h1><p class="sub">公司资料、资格规则、分配系数、备份。</p>
+${card("公司资料", `<div class="form">${F("公司名称", inp("name", {type:"text"}))}${F("SSM 注册号", inp("regNo", {type:"text"}))}${F("行业", inp("industry", {type:"text"}))}</div>`)}
+${card("岗位层级（资格门槛 + 岗位系数）", `<table><tr><th>层级名称</th><th>岗位系数</th><th>最少年资（年）</th><th></th></tr>${c.levels.map((l, i) => `<tr><td>${inp(`levels.${i}.name`, {type:"text"})}</td><td style="width:120px">${inp(`levels.${i}.coef`)}</td><td style="width:140px">${inp(`levels.${i}.minYears`)}</td><td>${c.participants.some(p => p.levelId === l.id) ? "" : `<button class="btn d sm" data-act="delLevel" data-i="${i}">删除</button>`}</td></tr>`).join("")}</table>`, `<button class="btn sm" data-act="addLevel">＋ 加层级</button>`)}
+<div class="cols">
+${card("考核系数", `<div class="form">${Object.entries(PERF).map(([a, b]) => F(b, inp(`perfCoef.${a}`))).join("")}</div><p class="mut">D = 0 表示考核不合格的不分配。</p>`)}
+${card("年资系数", `<div class="form">${["未满 1 年","1–3 年","3–5 年","5 年以上"].map((t, i) => F(t, inp(`tenureCoef.${i}`))).join("")}</div>`)}
+</div>
+${card("备份与还原", `<div class="row"><button class="btn sm g" data-act="backup">复制这家公司的全部资料</button><button class="btn sm n" data-act="showRestore">贴上备份还原</button><span class="mut" id="bkMsg"></span></div>
+<div id="restoreBox" style="display:none;margin-top:8px"><textarea id="restoreText" placeholder="贴上之前复制的资料"></textarea><button class="btn sm" data-act="restore" style="margin-top:6px">还原（会变成一家新公司）</button></div>`)}
+${card("危险操作", `<button class="btn d" data-act="delCo">${S.ui.delArm === c.id ? "再点一次，确认删除这家公司全部资料" : "删除这家公司"}</button>`)}`;
+
+/* ================= 渲染 ================= */
+function renderTop(){
+  const l = Object.values(S.cos).sort((a, b) => a.name > b.name ? 1 : -1);
+  $("#coSel").innerHTML = l.length ? l.map(c => `<option value="${c.id}" ${c.id===S.cur?"selected":""}>${esc(c.name)}</option>`).join("") : `<option>（还没有公司）</option>`;
+  $("#asOf").value = S.asOf;
 }
-function renderOut(){
-  const p = cur(); if (!p) return;
-  const el = $("#out"); if (!el) return;
-  el.innerHTML = O[S.tab](p, calc(p));
+function renderNav(){
+  const c = cur(), s = c ? summary(c, S.asOf) : null;
+  const badge = {dashboard:s ? s.alerts.filter(a => a[0] !== "info").length : 0, vesting:s ? s.alerts.filter(a => a[2] === "vesting").length : 0};
+  $("#nav").innerHTML = `<div class="logo">股权激励管理后台<small>员工激励系统</small></div>` + NAV.map(([g, items]) => (g ? `<div class="grp">${g}</div>` : `<div style="height:10px"></div>`) + items.map(([id, ic, t]) => `<a data-go="${id}" class="${S.page===id?"on":""}">${ic} ${t}${badge[id] ? `<span class="badge">${badge[id]}</span>` : ""}</a>`).join("")).join("");
 }
-function renderMain(){
-  const p = cur();
-  if (!p){ $("#main").innerHTML = `<div class="empty"><h2>欢迎使用股权激励系统</h2><p>左边点「＋ 新增客户公司」开始，或先打开一个示范案例看看。</p></div>`; return; }
-  const idx = TABS.findIndex(t => t[0] === S.tab);
-  $("#main").innerHTML = `
-<div class="row noprint" style="justify-content:space-between;margin-bottom:10px"><h2 style="margin:0">${esc(p.name)}</h2>
-<button class="btn del sm" data-act="delPlan">${S.deleteArm===p.id?"再点一次确认删除":"删除这个方案"}</button></div>
-<div class="steps noprint">${TABS.map(([k,n,t]) => `<button class="${k===S.tab?"on":""}" data-tab="${k}"><b>${n}</b>${t}</button>`).join("")}</div>
-${F[S.tab](p)}
-<div class="navbtm noprint">${idx>0?`<button class="btn ghost" data-tab="${TABS[idx-1][0]}">← 上一步</button>`:"<span></span>"}${idx<TABS.length-1?`<button class="btn" data-tab="${TABS[idx+1][0]}">下一步：${TABS[idx+1][2]} →</button>`:""}</div>`;
-  renderOut();
-}
-function renderAll(){
-  if (!S.cur || !S.plans[S.cur]){
-    const first = Object.values(S.plans).sort((a,b) => (b.updatedAt||0)-(a.updatedAt||0))[0];
-    S.cur = first ? first.id : null;
+function renderModal(){
+  const c = cur(), m = S.modal;
+  let html = "";
+  if (c && m){
+    if (m.type === "plan"){ const x = getPlan(c, m.id); if (x) html = planEditor(c, x); }
+    if (m.type === "person"){ const x = getP(c, m.id); if (x) html = personEditor(c, x); }
+    if (m.type === "grant"){ const x = c.grants.find(y => y.id === m.id); if (x) html = grantEditor(c, x); }
+    if (m.type === "div"){ const d = c.dividends.find(y => y.id === m.id); if (d) html = `<h2>${d.year} 年分红明细</h2><table><tr><th>名字</th><th>身份</th><th class="r">比例</th><th class="r">应得</th><th class="r">抵扣欠款</th><th class="r">实发</th></tr>${d.lines.map(l => `<tr><td>${esc(l.name)}</td><td>${esc(l.kind)}</td><td class="r">${PCT(l.pct,3)}</td><td class="r">${RM(l.amount)}</td><td class="r">${RM(l.offset)}</td><td class="r">${RM(l.cash)}</td></tr>`).join("")}</table><div class="foot"><button class="btn" data-act="closeModal">关闭</button></div>`; }
   }
-  renderSidebar(); renderMain();
+  if (!html){ S.modal = null; $("#modal").innerHTML = ""; return; }
+  const old = $(".modalbg"), sc = old ? old.scrollTop : 0;
+  $("#modal").innerHTML = `<div class="modalbg" data-act="bgClose"><div class="modal">${html}</div></div>`;
+  $(".modalbg").scrollTop = sc;
 }
-function addPlan(p){ S.plans[p.id] = p; S.cur = p.id; S.tab = "co"; scheduleSave(p.id); renderAll(); }
-
-/* ============ 操作 ============ */
-function onEdit(ev){
-  const t = ev.target, k = t.dataset && t.dataset.k, p = cur();
-  if (!k || !p) return;
-  let v;
-  if (t.type === "checkbox") v = t.checked;
-  else if (t.type === "number"){
-    v = t.value === "" ? "" : num(t.value);
-    if (/\.perf\.\d+\.actual$/.test(k) || /^exit\.(np|val|na)$/.test(k)) v = t.value === "" ? "" : num(t.value);
-    else if (v === "") v = 0;
+function render(){
+  renderTop(); renderNav();
+  const c = cur();
+  if (!c){
+    $("#main").innerHTML = `<div class="welcome"><h1>员工股权激励管理后台</h1><p class="sub">帮中小企业从「怎么设计」到「每年怎么管」，一套系统搞定。</p>
+<div class="flow"><div><b>① 公司估值</b>值多少钱、每股多少</div><div><b>② 股权结构</b>股东名册、控制权检查</div><div><b>③ 激励计划</b>红股 / 实股 / 期权的完整规则</div><div><b>④ 激励对象</b>员工档案、资格、分数</div><div><b>⑤ 分配建议</b>按分数自动分股</div><div><b>⑥ 授予管理</b>签约、付款、欠款</div><div><b>⑦ 成熟考核</b>每年考核、自动成熟</div><div><b>⑧ 分红与回购</b>分红发放、离职回购</div></div>
+<div class="row" style="justify-content:center"><button class="btn" data-act="demo">先看示范公司</button><button class="btn g" data-act="newCo">新增客户公司</button></div></div>`;
+    renderModal(); return;
   }
-  else if (t.dataset.num) v = num(t.value);
-  else v = t.value;
-  setPath(p, k, v);
-  if (k === "exit.cat") p.exit.reason = 0;
-  if (k === "vest.years"){ const n = Math.max(1, Math.min(10, Math.round(num(v))||1)); p.vest.custom = Array.from({length:n}, (_,i) => num((p.vest.custom||[])[i]) || Math.round(100/n*100)/100); }
-  scheduleSave(p.id);
-  if (k === "name") renderSidebar();
-  if (t.dataset.re && ev.type === "change") renderMain(); else renderOut();
+  $("#main").innerHTML = P[S.page](c);
+  renderModal();
 }
-document.addEventListener("input", e => { if (e.target.closest("#main") && e.target.type !== "checkbox" && e.target.tagName !== "SELECT") onEdit(e); });
-document.addEventListener("change", e => { if (e.target.closest("#main") && e.target.dataset.k) onEdit(e); });
+function rerenderKeepFocus(){
+  const a = document.activeElement, k = a && a.dataset && a.dataset.k, inModal = a && a.closest && a.closest(".modal"), y = window.scrollY;
+  render(); window.scrollTo(0, y);
+  if (k){ const el = document.querySelector(`${inModal ? ".modal " : ""}[data-k="${CSS.escape(k)}"]`); if (el) el.focus(); }
+}
 
+/* ================= 事件 ================= */
+document.addEventListener("change", e => {
+  const t = e.target, c = cur(); if (!c || t.id === "asOf" || t.id === "coSel") return;
+  if (t.dataset.k){
+    const k = t.dataset.k; let v;
+    if (t.type === "checkbox") v = t.checked;
+    else if (t.type === "number") v = t.value === "" ? (/\.(actual|target)$/.test(k) ? "" : 0) : num(t.value);
+    else if (t.tagName === "SELECT" && (t.value === "true" || t.value === "false")) v = t.value === "true";
+    else v = t.value;
+    setPath(c, k, v);
+    const m = k.match(/^plans\.(\d+)\.vestYears$/);
+    if (m){ const pl = c.plans[+m[1]], n = Math.max(1, Math.min(10, Math.round(num(pl.vestYears)) || 1)); pl.vestYears = n; pl.vestCustom = Array.from({length:n}, (_, i) => num((pl.vestCustom || [])[i]) || Math.round(10000/n)/100); }
+    if (/^grants\.\d+\.(planId|date)$/.test(k)){ const g = c.grants[+k.split(".")[1]]; g.price = Math.round(planPrice(c, getPlan(c, g.planId), g.date) * 100) / 100; }
+    save(); setTimeout(rerenderKeepFocus, 0); return;
+  }
+  const ui = (obj, key, val) => { obj[key] = val; setTimeout(rerenderKeepFocus, 0); };
+  if (t.dataset.ui){ const a = S.ui.alloc; if (t.dataset.ui === "planId"){ a.sel = null; a.adj = {}; a.amount = null; a.mode = "shares"; } ui(a, t.dataset.ui, t.value); return; }
+  if (t.dataset.adj){ ui(S.ui.alloc.adj, t.dataset.adj, t.value); return; }
+  if (t.dataset.uiDiv){ ui(S.ui.div, t.dataset.uiDiv, t.type === "number" ? num(t.value) : t.value); return; }
+  if (t.dataset.uiRep){ ui(S.ui.rep, t.dataset.uiRep, t.value); return; }
+  if (t.dataset.uiExit){ const k = t.dataset.uiExit; if (k === "cat") S.ui.exit.reason = 0; ui(S.ui.exit, k, t.type === "checkbox" ? t.checked : t.value); return; }
+});
+document.addEventListener("keydown", e => {
+  if (e.key === "Enter" && e.target.tagName === "INPUT") e.target.blur();
+  if (e.key === "Escape" && S.modal){ S.modal = null; render(); }
+});
 document.addEventListener("click", async e => {
-  const tab = e.target.closest("[data-tab]");
-  if (tab){ S.tab = tab.dataset.tab; S.deleteArm = null; renderMain(); window.scrollTo(0,0); return; }
-  const pl = e.target.closest("[data-plan]");
-  if (pl){ S.cur = pl.dataset.plan; S.deleteArm = null; renderAll(); return; }
-  const sm = e.target.closest("[data-sample]");
-  if (sm){ addPlan(samplePlan(sm.dataset.sample)); return; }
+  const go = e.target.closest("[data-go]");
+  if (go){ S.page = go.dataset.go; S.modal = null; S.ui.delArm = null; history.replaceState(null, "", "#" + S.page); render(); window.scrollTo(0, 0); return; }
   const a = e.target.closest("[data-act]");
   if (!a) return;
-  const p = cur(), act = a.dataset.act, i = +a.dataset.i;
-  if (!p) return;
-  if (act === "togglePrinciple"){ const v = a.dataset.v; p.principles = a.checked ? [...new Set([...p.principles, v])] : p.principles.filter(x => x !== v); scheduleSave(p.id); renderMain(); return; }
-  if (act === "copyReport"){
-    try { await navigator.clipboard.writeText(reportText(p, calc(p))); $("#repMsg").textContent = "已复制，可以贴到 WhatsApp / Word。"; }
-    catch(err){ $("#repMsg").textContent = "复制不了，请直接选取下面的文字复制。"; }
-    return;
+  const act = a.dataset.act, id = a.dataset.id, i = +a.dataset.i;
+  if (a.tagName === "A") e.preventDefault();
+  if (act === "bgClose"){ if (e.target === a){ S.modal = null; render(); } return; }
+  if (act === "demo"){ loadDemo(); return; }
+  if (act === "newCo"){ newCo(); return; }
+  const c = cur(); if (!c) return;
+  const done = msg => { save(msg); render(); };
+  switch (act){
+    case "closeModal": S.modal = null; render(); return;
+    case "addVal": c.valuations.push({id:uid(), date:S.asOf, method:"pe", netProfit:0, pe:5, netAssets:0, funding:0, manual:0, note:""}); return done();
+    case "delVal": c.valuations = c.valuations.filter(v => v.id !== id); return done();
+    case "addHolder": c.shareholders.push({id:uid(), name:"", type:"other", shares:0}); return done();
+    case "delHolder": c.shareholders.splice(i, 1); return done();
+    case "addPlan": { const pl = newPlan(c); c.plans.push(pl); S.modal = {type:"plan", id:pl.id}; return done(`新建激励计划：${pl.name}`); }
+    case "editPlan": S.modal = {type:"plan", id}; render(); return;
+    case "delPlan":
+      if (c.grants.some(g => g.planId === id)){ alertBox("这个计划已经有授予记录，不能删除。可以在「编辑规则」把状态改成「已关闭」。"); return; }
+      c.plans = c.plans.filter(p => p.id !== id); return done();
+    case "addPerson": { const p = newParticipant(); c.participants.push(p); S.modal = {type:"person", id:p.id}; return done(); }
+    case "editPerson": S.modal = {type:"person", id}; render(); return;
+    case "delPerson": c.participants = c.participants.filter(p => p.id !== id); S.modal = null; return done();
+    case "peopleFilter": S.ui.peopleFilter = a.dataset.v; render(); return;
+    case "gFilter": S.ui.gFilter = a.dataset.v; render(); return;
+    case "allocSel": { const s = S.ui.alloc.sel, k = s.indexOf(id); if (a.checked && k < 0) s.push(id); if (!a.checked && k >= 0) s.splice(k, 1); render(); return; }
+    case "genDrafts": {
+      const {pl, rows} = allocRows(c); let n = 0;
+      rows.forEach(r => { if (r.fin > 0){ c.grants.push(newGrant(c, pl, r.p.id, r.fin)); n++; } });
+      S.ui.alloc = null; S.page = "grants"; S.ui.gFilter = "draft";
+      return done(`按分配建议生成 ${n} 笔授予草稿（${pl.name}）`);
+    }
+    case "addGrant": {
+      const ppl = c.participants.filter(p => p.status !== "left");
+      if (!c.plans.length || !ppl.length){ alertBox("要先有「激励计划」和「激励对象」才能新增授予。"); return; }
+      const g = newGrant(c, c.plans[0], ppl[0].id, 0); c.grants.push(g); S.modal = {type:"grant", id:g.id}; return done();
+    }
+    case "openGrant": S.modal = {type:"grant", id}; render(); return;
+    case "repriceGrant": { const g = c.grants.find(x => x.id === id); g.price = Math.round(planPrice(c, getPlan(c, g.planId), g.date) * 100) / 100; return done(); }
+    case "delGrant": c.grants = c.grants.filter(g => g.id !== id); S.modal = null; return done();
+    case "activateGrant": {
+      const g = c.grants.find(x => x.id === id);
+      if (!(num(g.shares) > 0)){ alertBox("股数要大于 0。"); return; }
+      const x = summary(c, S.asOf).plans.find(y => y.pl.id === g.planId);
+      const over = x ? x.active + x.kept + num(g.shares) - num(x.pl.pool) : 0;
+      if (over > 0.5){ alertBox(`这个计划的股权池不够：签了这笔会超出 ${INT(over)} 股。请先加大股权池，或减少股数。`); return; }
+      activate(c, g, g.date > S.asOf ? g.date : S.asOf); save(); render(); return;
+    }
+    case "exercise": {
+      const g = c.grants.find(x => x.id === id), n = Math.max(0, vestInfo(c, g, S.asOf).vested - num(g.exercised)), amt = n * num(g.price);
+      g.exercised = num(g.exercised) + n;
+      if (g.payMode === "loan"){ g.loan = num(g.loan) + amt; c.payments.push({id:uid(), gid:g.id, date:S.asOf, type:"行权欠款（先借后还）", amount:amt}); }
+      else { g.paid = num(g.paid) + amt; c.payments.push({id:uid(), gid:g.id, date:S.asOf, type:"行权付款", amount:amt}); }
+      return done(`${getP(c, g.pid)?.name} 行权 ${INT(n)} 股，${RM(amt)}`);
+    }
+    case "goExit": S.ui.exit = {gid:id, date:S.asOf, cat:"A", reason:0, np:"", val:"", faultPct:100, comp:0, accel:true, keep:false}; S.modal = null; S.page = "exits"; render(); window.scrollTo(0, 0); return;
+    case "confirmExit": {
+      const u = S.ui.exit, g = c.grants.find(x => x.id === u.gid); if (!g) return;
+      const r = exitCalc(c, g, u);
+      g.status = "ended"; g.end = {date:u.date, cat:u.cat, reason:EXIT_CATS[u.cat].items[u.reason] || "", total:r.total, kept:r.kept, vested:r.vested}; g.loan = 0;
+      if (Math.abs(r.total) > 0.5) c.payments.push({id:uid(), gid:g.id, date:u.date, type:r.total >= 0 ? "离职回购付款" : "离职员工应付公司", amount:r.total});
+      const p = getP(c, g.pid);
+      if (p && !c.grants.some(x => x.pid === p.id && x.status === "active")){ p.status = "left"; p.leftDate = u.date; }
+      S.ui.exit = null;
+      return done(`${p?.name} 离职办理完成（${EXIT_CATS[u.cat].t}），公司支付 ${RM(r.total)}`);
+    }
+    case "payDividend": { const u = S.ui.div, dv = dividendPlan(c, u.year, u.np, u.payout, u.date); if (!(dv.D > 0)){ alertBox("可分配金额是 0。"); return; } applyDividend(c, dv); return done(); }
+    case "viewDiv": S.modal = {type:"div", id}; render(); return;
+    case "copy": {
+      const u = S.ui.rep, txt = a.dataset.what === "stmt" ? statementText(c, getP(c, u.pid)) : planText(c, getPlan(c, u.planId));
+      try { await navigator.clipboard.writeText(txt); $("#copyMsg").textContent = "✔ 已复制，可以贴到 WhatsApp / Word。"; } catch(err){ $("#copyMsg").textContent = "复制不了，请直接选取文字复制。"; }
+      return;
+    }
+    case "print": try { window.print(); } catch(err){} return;
+    case "addLevel": c.levels.push({id:"L" + uid(), name:"新层级", coef:1, minYears:0}); return done();
+    case "delLevel": c.levels.splice(i, 1); return done();
+    case "backup": try { await navigator.clipboard.writeText(JSON.stringify(c)); $("#bkMsg").textContent = "✔ 已复制，贴到记事本保存。"; } catch(err){ $("#bkMsg").textContent = "复制不了。"; } return;
+    case "showRestore": $("#restoreBox").style.display = "block"; return;
+    case "restore":
+      try { const d = JSON.parse($("#restoreText").value); if (!d || !d.shareholders || !d.plans) throw 0; d.id = uid(); d.name = d.name + "（还原）"; S.cos[d.id] = d; S.cur = d.id; S.page = "dashboard"; return done("从备份还原"); }
+      catch(err){ $("#bkMsg").textContent = "资料格式不对。"; } return;
+    case "delCo": if (S.ui.delArm !== c.id){ S.ui.delArm = c.id; render(); return; } S.ui.delArm = null; deleteCo(c.id); return;
   }
-  if (act === "print"){ try { window.print(); } catch(err){} $("#repMsg").textContent = "如果没有跳出打印窗口，请用「复制方案文字」。"; return; }
-  if (act === "delPlan"){
-    if (S.deleteArm !== p.id){ S.deleteArm = p.id; renderMain(); return; }
-    S.deleteArm = null; await removePlan(p.id); S.cur = null; renderAll(); return;
-  }
-  ({
-    setForm: () => { p.form = a.dataset.v; if (p.form === "red"){ p.holding = "proxy"; } },
-    setHolding: () => { p.holding = a.dataset.v; },
-    addHolder: () => p.holders.push({name:"", role:"", pct:0, after:0}),
-    delHolder: () => p.holders.splice(i, 1),
-    addEmp: () => p.emps.push(blankEmp()),
-    delEmp: () => { const [e1] = p.emps.splice(i, 1); if (e1 && p.exit.empId === e1.id) p.exit.empId = ""; },
-    addScen: () => p.scen.push(0),
-    delScen: () => p.scen.splice(i, 1)
-  }[act] || (() => {}))();
-  scheduleSave(p.id); renderMain();
 });
-$("#newPlan").onclick = () => addPlan(blankPlan());
-$("#copyBackup").onclick = async () => {
-  try { await navigator.clipboard.writeText(JSON.stringify(S.plans)); $("#sideMsg").textContent = "已复制全部资料。贴到记事本或 WhatsApp 给自己存着。"; }
-  catch(e){ $("#sideMsg").textContent = "复制不了，请换浏览器再试。"; }
-};
-$("#showRestore").onclick = () => { $("#restoreBox").style.display = "block"; };
-$("#doRestore").onclick = () => {
-  try {
-    const data = JSON.parse($("#restoreText").value);
-    let n = 0;
-    Object.values(data).forEach(p => { if (p && p.id && p.co && p.emps){ S.plans[p.id] = p; scheduleSave(p.id); n++; } });
-    $("#sideMsg").textContent = `还原了 ${n} 个方案。`; $("#restoreText").value = ""; $("#restoreBox").style.display = "none"; renderAll();
-  } catch(e){ $("#sideMsg").textContent = "资料格式不对，请贴上完整的备份。"; }
-};
-
+function alertBox(t){ const m = document.createElement("div"); m.className = "modalbg"; m.style.zIndex = 30; m.innerHTML = `<div class="modal" style="max-width:420px"><p>${esc(t)}</p><div class="foot"><button class="btn">知道了</button></div></div>`; m.onclick = ev => { if (ev.target === m || ev.target.tagName === "BUTTON") m.remove(); }; document.body.appendChild(m); }
+function newCo(){ const c = newCompany(); S.cos[c.id] = c; S.cur = c.id; S.page = "valuation"; S.ui = {}; S.modal = null; saveCo(c, "新增公司"); render(); }
+function loadDemo(){ const c = demoCompany(); S.cos[c.id] = c; S.cur = c.id; S.page = "dashboard"; S.ui = {}; S.modal = null; saveCo(c); render(); }
+$("#newCo").onclick = newCo;
+$("#demoCo").onclick = loadDemo;
+$("#coSel").onchange = e => { if (S.cos[e.target.value]){ S.cur = e.target.value; S.modal = null; S.ui = {}; render(); } };
+$("#asOf").onchange = e => { if (e.target.value){ S.asOf = e.target.value; S.ui.div = null; render(); } };
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest && e.target.closest("[data-tip]"), tip = $("#tip");
+  if (!t){ tip.style.display = "none"; return; }
+  tip.textContent = t.dataset.tip; tip.style.display = "block";
+  tip.style.left = Math.min(e.clientX + 12, innerWidth - tip.offsetWidth - 8) + "px"; tip.style.top = (e.clientY + 14) + "px";
+});
+const hashPage = () => { const h = location.hash.slice(1); if (P[h]) S.page = h; };
+hashPage();
+window.addEventListener("hashchange", () => { hashPage(); S.modal = null; render(); });
 initStorage();
 </script>
 </body>
