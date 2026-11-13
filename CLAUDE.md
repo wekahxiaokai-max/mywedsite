@@ -20,3 +20,6 @@
 - 说话风格：教练方式（先问学员情况，再引导、给建议）
 - 禁止：不提任何具体公司名字（课程案例里的公司也要隐去）
 - 课程资料：老板会放到 Google Drive（Day 3 PDF 已先在对话中上传，93 页）
+- 内部试用版网址：https://claude.ai/artifact/Hue6cakEtTzb4NXKVQbrMx （只有老板自己看得到）
+- 已放入：Day 2、Day 3（案例公司名已全部隐去）。Day 1（day 0821.pdf，11.8MB）超过 Drive 读取上限，待老板在对话里直接上传
+- 改内容：改 ai-coach/coach-prompt.md 或 day*.txt → 跑 ai-coach/build.py → 重新发布 index.html
